@@ -1,0 +1,59 @@
+import re
+from typing import Union
+
+import discord
+from discord.ext import commands
+import twemoji_parser as twemoji
+
+from .metrics import isImage
+
+
+async def getImage(ctx: commands.Context, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):
+
+    if isinstance(url, str):
+        url = await twemoji.emoji_to_url(url)
+
+    if ctx.message.reference:
+        ref = ctx.message.reference.resolved
+        if ref.embeds:
+            if ref.embeds[0].image.url != discord.Embed.Empty and isImage(
+                ref.embeds[0].image.url
+            ):
+                return ref.embeds[0].image.url
+
+            if ref.embeds[0].thumbnail.url != discord.Embed.Empty and isImage(
+                ref.embeds[0].thumbnail.url
+            ):
+                return ref.embeds[0].thumbnail.url
+
+        elif ref.attachments:
+            url = ref.attachments[0].url or ref.attachments[0].proxy_url
+            if isImage(url):
+                return url
+
+    if isinstance(url, discord.Member):
+        return str(url.avatar.url)
+    elif isinstance(url, str):
+        if re.search(
+            r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
+            url,
+        ) and isImage(url):
+            return url
+
+    if isinstance(url, (discord.Emoji, discord.PartialEmoji)):
+        return url.url
+
+    if ctx.message.attachments:
+
+        url = ctx.message.attachments[0].url or ctx.message.attachments[0].proxy_url
+
+        if isImage(url):
+            return ctx.message.attachments[0].proxy_url or ctx.message.attachments[0].url
+
+        elif isinstance(url, discord.Member):
+            return str(url.avatar.url)
+        else:
+            return str(ctx.author.avatar.url)
+
+    if url is None:
+        return str(ctx.author.avatar.url)
