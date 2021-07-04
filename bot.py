@@ -100,7 +100,7 @@ class Apollo(commands.Bot):
         if message.author.bot or isinstance(message.channel, (discord.DMChannel, discord.GroupChannel)):
             return
         if message.content.startswith('jsk') and message.author.id == int(getenv('OWNER_ID')):
-            await self.process_commands(self.user.mention + message)
+            await self.process_commands(self.user.mention + " " + message)
         await self.process_commands(message)
 
     async def get_context(self, message, *, cls=None):
