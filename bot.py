@@ -9,6 +9,7 @@ import re
 import aiosqlite
 import coloredlogs
 import discord
+import aiohttp
 from colorama import Fore as c
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -64,12 +65,8 @@ class Apollo(commands.Bot):
             '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
         self.log.addHandler(handler)
 
-        environ['JISHAKU_UNDERSCORE'] = 'True'
-        environ['JISHAKU_HIDE'] = 'True'
-
-    @property
-    def db(self) -> aiosqlite:
-        return aiosqlite.connect('bot.db')
+        self.session = aiohttp.ClientSession()
+        self.db = aiosqlite.connect('bot.db')
 
     async def create_db(self) -> None:
         async with self.db as db:
@@ -93,10 +90,12 @@ class Apollo(commands.Bot):
                       str(round((self.latency * 1000))) + "ms")
         self.load()
         self.load_extension('jishaku')
+        environ['JISHAKU_UNDERSCORE'] = 'True'
+        environ['JISHAKU_HIDE'] = 'True'
         self.log.info(f"Extensions loaded ({len(self.extensions)} loaded)")
         self.log.info("Bot ready!")
 
-    async def on_message(self, message):
+    async def on_message(self, message) -> None:
         if message.author.bot or isinstance(message.channel, (discord.DMChannel, discord.GroupChannel)):
             return
         if message.content.startswith('jsk') and message.author.id == int(getenv('OWNER_ID')):
@@ -109,3 +108,7 @@ class Apollo(commands.Bot):
     def run(self) -> None:
         self.log.info("Logging in...")
         super().run(getenv('TOKEN'), reconnect=True)
+
+    def close(self) -> None:
+        await self.session.close()
+        await super().close()
