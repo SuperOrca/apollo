@@ -66,14 +66,15 @@ class Apollo(commands.Bot):
         self.log.addHandler(handler)
 
         self.session = aiohttp.ClientSession()
+        self.db = aiosqlite.connect('bot.db')
 
     async def create_db(self) -> None:
         async with self.db as db:
             await db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
 
-    @property
-    def db(self):
-        return aiosqlite.connect('bot.db')
+    # @property
+    # def db(self):
+    #     return aiosqlite.connect('bot.db')
 
     def load(self):
         for file in Path('cogs').glob('**/*.py'):
