@@ -61,8 +61,8 @@ class Meta(commands.Cog):
         embed = discord.Embed(color=discord.Color.blurple())
         embed.add_field(name="Websocket",
                         value=f"```py\n{(self.bot.latency * 1000):.2f}ms\n```")
-        embed.add_field(name="Typing", value=f"```\npy{typing:.2f}ms\n```")
-        embed.add_field(name="Database", value=f"```\n{database:.2f}ms\n```")
+        embed.add_field(name="Typing", value=f"```py\n{typing:.2f}ms\n```")
+        embed.add_field(name="Database", value=f"```py\n{database:.2f}ms\n```")
         embed.set_thumbnail(url=ctx.author.avatar.url)
         await ctx.reply(embed=embed)
 
