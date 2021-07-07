@@ -3,7 +3,7 @@ from os import getenv
 import discord
 import pkg_resources
 from discord.ext import commands, tasks
-from time import time
+from time import time as count
 from discord.ext import menus
 from discord.ext.menus.views import ViewMenu
 
@@ -51,12 +51,12 @@ class Meta(commands.Cog):
 
     @commands.command(name='ping', description="Shows the bot ping.")
     async def _ping(self, ctx) -> None:
-        typing = time()
+        typing = count()
         async with ctx.typing():
-            typing = (time() - typing) * 1000
-            database = time()
+            typing = (count() - typing) * 1000
+            database = count()
             await self.bot.db.execute("SELECT 1")
-            database = (time() - database) * 1000
+            database = (count() - database) * 1000
         embed = discord.Embed(color=discord.Color.blurple())
         embed.add_field(name="Websocket", value=f"{self.bot.latency:.2f}ms")
         embed.add_field(name="Typing", value=f"{typing:.2f}ms")
