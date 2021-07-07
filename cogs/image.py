@@ -216,6 +216,12 @@ class Image(commands.Cog):
                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await self.dagpi_process(ctx, image, asyncdagpi.ImageFeatures.rainbow())
 
+    @commands.command(name='magik', description="Shows the image with magik.", usage="magik [image]")
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def _magik(self, ctx,
+                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+        await self.dagpi_process(ctx, image, asyncdagpi.ImageFeatures.magik())
+
 
 def setup(bot) -> None:
     bot.add_cog(Image(bot))
