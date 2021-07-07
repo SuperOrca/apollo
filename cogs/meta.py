@@ -55,7 +55,8 @@ class Meta(commands.Cog):
         async with ctx.typing():
             typing = (count() - typing) * 1000
             database = count()
-            await self.bot.db.execute("SELECT 1")
+            async with self.bot.db as db:
+                await db.execute("SELECT 1")
             database = (count() - database) * 1000
         embed = discord.Embed(color=discord.Color.blurple())
         embed.add_field(name="Websocket", value=f"{self.bot.latency:.2f}ms")
