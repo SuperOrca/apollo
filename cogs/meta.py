@@ -64,7 +64,7 @@ class Meta(commands.Cog):
         embed.add_field(name="Typing", value=f"```py\n{typing:.2f} ms\n```")
         embed.add_field(name="Database",
                         value=f"```py\n{database:.2f} ms\n```")
-        embed.set_thumbnail(url=ctx.author.avatar.url)
+        embed.set_thumbnail(url=self.bot.user.avatar.url)
         await ctx.reply(embed=embed)
 
     @commands.command(name='info', description="Shows information about the bot.")
