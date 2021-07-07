@@ -59,9 +59,10 @@ class Meta(commands.Cog):
                 await db.execute("SELECT 1")
             database = (count() - database) * 1000
         embed = discord.Embed(color=discord.Color.blurple())
-        embed.add_field(name="Websocket", value=f"{(self.bot.latency * 1000):.2f}ms")
-        embed.add_field(name="Typing", value=f"{typing:.2f}ms")
-        embed.add_field(name="Database", value=f"{database:.2f}ms")
+        embed.add_field(name="Websocket",
+                        value=f"```py\n{(self.bot.latency * 1000):.2f}ms\n```")
+        embed.add_field(name="Typing", value=f"```\npy{typing:.2f}ms\n```")
+        embed.add_field(name="Database", value=f"```\n{database:.2f}ms\n```")
         embed.set_thumbnail(url=ctx.author.avatar.url)
         await ctx.reply(embed=embed)
 
