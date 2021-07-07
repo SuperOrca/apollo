@@ -72,7 +72,7 @@ class Apollo(commands.Bot):
             await db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
 
     @property
-    def db():
+    def db(self):
         return aiosqlite.connect('bot.db')
 
     def load(self):
