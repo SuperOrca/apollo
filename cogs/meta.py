@@ -3,7 +3,7 @@ from os import getenv
 import discord
 import pkg_resources
 from discord.ext import commands, tasks
-from time import perf_counter
+from time import time
 from discord.ext import menus
 from discord.ext.menus.views import ViewMenu
 
@@ -51,12 +51,18 @@ class Meta(commands.Cog):
 
     @commands.command(name='ping', description="Shows the bot ping.")
     async def _ping(self, ctx) -> None:
-        a = perf_counter()
+        typing = time()
         async with ctx.typing():
-            b = perf_counter()
-            c = (b - a) * 1000
-        await ctx.reply(embed=discord.Embed(description=f":ping_pong: Latency is `{round(c)}ms`. API Latency is `{round(self.bot.latency * 1000)}ms`.",
-                                            color=discord.Color.blurple()))
+            typing = (time() - typing) * 1000
+            database = time()
+            await self.bot.db.execute("SELECT 1")
+            database = (time() - database) * 1000
+        embed = discord.Embed(color=discord.Color.blurple())
+        embed.add_field(name="Websocket", value=f"{self.bot.latency:.2f}ms")
+        embed.add_field(name="Typing", value=f"{typing:.2f}ms")
+        embed.add_field(name="Database", value=f"{database:.2f}ms")
+        embed.set_thumbnail(url=ctx.author.avatar.url)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='info', description="Shows information about the bot.")
     async def _info(self, ctx) -> None:
