@@ -1,9 +1,6 @@
 import discord
 from discord.ext import commands
 
-from utils.http import geturljson
-
-
 class Animals(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
@@ -12,7 +9,7 @@ class Animals(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _dog(self, ctx) -> None:
         async with ctx.typing():
-            data = await geturljson("https://some-random-api.ml/img/dog")
+            data = await (await self.bot.session.get("https://some-random-api.ml/img/dog")).json()
 
         embed = discord.Embed(title=":dog: Here is your dog!",
                               color=discord.Color.dark_green())
@@ -25,7 +22,7 @@ class Animals(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _cat(self, ctx) -> None:
         async with ctx.typing():
-            data = await geturljson("https://some-random-api.ml/img/cat")
+            data = await (await self.bot.session.get("https://some-random-api.ml/img/cat")).json()
 
         embed = discord.Embed(title=":cat: Here is your cat!",
                               color=discord.Color.dark_green())
@@ -38,7 +35,7 @@ class Animals(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _panda(self, ctx) -> None:
         async with ctx.typing():
-            data = await geturljson("https://some-random-api.ml/img/panda")
+            data = await (await self.bot.session.get("https://some-random-api.ml/img/panda")).json()
 
         embed = discord.Embed(title=":panda_face: Here is your panda!",
                               color=discord.Color.dark_green())
@@ -51,7 +48,7 @@ class Animals(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _bird(self, ctx) -> None:
         async with ctx.typing():
-            data = await geturljson("https://some-random-api.ml/img/birb")
+            data = await (await self.bot.session.get("https://some-random-api.ml/img/birb")).json()
 
         embed = discord.Embed(title=":bird: Here is your bird!",
                               color=discord.Color.dark_green())
@@ -64,7 +61,7 @@ class Animals(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _fox(self, ctx) -> None:
         async with ctx.typing():
-            data = await geturljson("https://some-random-api.ml/img/fox")
+            data = await (await self.bot.session.get("https://some-random-api.ml/img/fox")).json()
 
         embed = discord.Embed(title=":fox: Here is your fox!",
                               color=discord.Color.dark_green())
@@ -77,7 +74,7 @@ class Animals(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _koala(self, ctx) -> None:
         async with ctx.typing():
-            data = await geturljson("https://some-random-api.ml/img/koala")
+            data = await (await self.bot.session.get("https://some-random-api.ml/img/koala")).json()
 
         embed = discord.Embed(title=":koala: Here is your koala!",
                               color=discord.Color.dark_green())

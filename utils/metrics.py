@@ -1,9 +1,6 @@
 from typing import Union
 import discord
 
-from .http import geturljson
-
-
 def isImage(url):
     url = url.lower()
     return bool(
@@ -39,7 +36,7 @@ async def get_pronoun(bot: Union[discord.Client, discord.ext.commands.Bot], memb
         "None": "N/A"
     }
     try:
-        res = await geturljson(f"https://pronoundb.org/api/v1/lookup?id={member.id}&platform=discord")
+        res = await (await self.bot.session.get(f"https://pronoundb.org/api/v1/lookup?id={member.id}&platform=discord")).json()
     except Exception:
         return "Unavailable"
     try:

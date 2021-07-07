@@ -5,17 +5,16 @@ from discord.ext import commands
 from discord.ext import menus
 from discord.ext.menus.views import ViewMenu
 
-from .http import geturljson
 from .metrics import isImage
 
 
-async def getpost(channel, subreddit) -> discord.Embed:
+async def getpost(bot, channel, subreddit) -> discord.Embed:
     async def post():
         embed = None
         i = 0
         while embed is None:
             try:
-                data = await geturljson(f"https://www.reddit.com/r/{subreddit}/random/.json")
+                data = await (await bot.session.get(f"https://www.reddit.com/r/{subreddit}/random/.json")).json()
                 posts = data[0]['data']['children']
                 num = (len(posts) - 1)
                 post = posts[random.randint(0, num)]['data']

@@ -5,9 +5,6 @@ from aiogtts import aiogTTS
 from async_tio import Tio
 import humanize
 
-from utils.http import geturljson, geturl
-
-
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
@@ -27,12 +24,12 @@ class Utility(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _pypi(self, ctx, package: str) -> None:
         async with ctx.typing():
-            data = await geturl(f"https://pypi.org/pypi/{package}/json")
+            data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
 
-        if data.status_code != 200:
+        if data.status != 200:
             raise commands.BadArgument("Invalid package.")
 
-        data = data.json()['info']
+        data = (await data.json())['info']
         embed = discord.Embed(
             title=data['name'], description=data.get('summary', ''), url=data.get('project_url', 'https://pypi.org/'),
             color=0x2F3136)
@@ -56,7 +53,7 @@ class Utility(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _npm(self, ctx, package: str):
         async with ctx.typing():
-            data = await geturljson(f"https://api.npms.io/v2/package/{package}")
+            data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
         if 'CODE' in data or 'collected' not in data:
             raise commands.BadArgument("Invalid package.")
 
@@ -79,10 +76,10 @@ class Utility(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _deno(self, ctx, package: str) -> None:
         async with ctx.typing():
-            data = await geturljson(f"https://api.deno.land/modules/{package}")
+            data = await (await self.bot.session.get(f"https://api.deno.land/modules/{package}")).json()
             if data["success"]:
                 data = data['data']
-                version = await geturljson(f"https://cdn.deno.land/{data['name']}/meta/versions.json")
+                version = await (await self.bot.session.get(f"https://cdn.deno.land/{data['name']}/meta/versions.json")).json()
                 embed = discord.Embed(title=data['name'], description=data['description'],
                                       url=f"https://deno.land/x/{data['name']}", color=0x2F3136)
                 embed.add_field(name="Version", value=version['latest'])
@@ -98,7 +95,7 @@ class Utility(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _github(self, ctx, repository: str) -> None:
         async with ctx.typing():
-            data = await geturljson(f"https://api.github.com/repos/{repository}")
+            data = await (await self.bot.session.get(f"https://api.github.com/repos/{repository}")).json()
         if 'message' not in data:
             embed = discord.Embed(title=data['full_name'],
                                   url=data['html_url'], color=0x2F3136)
