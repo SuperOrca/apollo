@@ -6,7 +6,7 @@ from discord.ext import commands
 from utils.checks import check_hierarchy
 
 
-class Mod(commands.Cog):
+class Moderation(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
@@ -92,4 +92,4 @@ class Mod(commands.Cog):
 
 
 def setup(bot) -> None:
-    bot.add_cog(Mod(bot))
+    bot.add_cog(Moderation(bot))

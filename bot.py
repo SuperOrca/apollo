@@ -109,6 +109,6 @@ class Apollo(commands.Bot):
         self.log.info("Logging in...")
         super().run(getenv('TOKEN'), reconnect=True)
 
-    def close(self) -> None:
+    async def close(self) -> None:
         await self.session.close()
         await super().close()
