@@ -7,7 +7,7 @@ class Error(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error) -> None:
+    async def on_command_error(self, ctx: commands.Context, error) -> None:
         if hasattr(ctx.command, 'on_error'):
             return
 

@@ -11,7 +11,7 @@ class Statcord(commands.Cog):
         self.api.start_loop()
 
     @commands.Cog.listener()
-    async def on_command(self, ctx) -> None:
+    async def on_command(self, ctx: commands.Context) -> None:
         self.api.command_run(ctx)
 
 

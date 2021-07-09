@@ -2,55 +2,50 @@ from os import getenv
 
 import discord
 import pkg_resources
+import humanize
 from discord.ext import commands, tasks
+from datetime import datetime
 from time import time as count
 from discord.ext import menus
 from discord.ext.menus.views import ViewMenu
 
-from utils import time
 from utils.converters import PrefixConverter
 
 
 class Meta(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
-        self.status = ['Watching time pass', 'Rick Astley']
-        self.status_next = 0
         self._status.start()
 
     @tasks.loop(minutes=2.)
     async def _status(self) -> None:
-        prefix = getenv('DEFAULT_PREFIX')
-        await self.bot.change_presence(activity=discord.Game(f"{prefix}help | " + self.status[self.status_next]))
-        self.status_next += 1
-        if self.status_next > (len(self.status) - 1):
-            self.status_next = 0
+        await self.bot.change_presence(activity=discord.Game(f"@Apollo help | {len(self.bot.guilds)} guilds"))
 
     def cog_unload(self) -> None:
         self._status.cancel()
 
-    def get_uptime(self, brief=False) -> str:
-        return time.human_timedelta(self.bot.uptime, brief=brief)
+    def get_uptime(self) -> str:
+        return humanize.naturaldelta(datetime.utcnow() - self.bot.uptime)
 
     @commands.command(name='stats', description="Shows the bot stats.")
-    async def _stats(self, ctx) -> None:
+    async def _stats(self, ctx: commands.Context) -> None:
         await ctx.reply(
             embed=discord.Embed(description="View the bot stats [here](https://statcord.com/bot/847566539607769089).",
                                 color=discord.Color.blurple()))
 
     @commands.command(name='invite', description="Shows the bot invite.")
-    async def _invite(self, ctx) -> None:
+    async def _invite(self, ctx: commands.Context) -> None:
         await ctx.reply(embed=discord.Embed(
             description="Invite the bot [here](https://discord.com/api/oauth2/authorize?client_id=847566539607769089&permissions=8&scope=bot).",
             color=discord.Color.blurple()))
 
     @commands.command(name='uptime', description="Shows the bot uptime.")
-    async def _uptime(self, ctx) -> None:
+    async def _uptime(self, ctx: commands.Context) -> None:
         await ctx.reply(embed=discord.Embed(description=f"The bot has been online for `{self.get_uptime()}`.",
                                             color=discord.Color.blurple()))
 
     @commands.command(name='ping', description="Shows the bot ping.")
-    async def _ping(self, ctx) -> None:
+    async def _ping(self, ctx: commands.Context) -> None:
         typing = count()
         async with ctx.typing():
             typing = (count() - typing) * 1000
@@ -68,7 +63,7 @@ class Meta(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command(name='info', description="Shows information about the bot.")
-    async def _info(self, ctx) -> None:
+    async def _info(self, ctx: commands.Context) -> None:
         embed = discord.Embed(
             title=self.bot.user.name, description=self.bot.description, color=discord.Color.blurple())
         embed.set_thumbnail(url=self.bot.user.avatar.with_static_format('png'))
@@ -81,19 +76,19 @@ class Meta(commands.Cog):
         embed.add_field(
             name="Guilds", value=f"{len(self.bot.guilds):,}", inline=True)
         embed.add_field(
-            name="Uptime", value=f"{self.get_uptime(brief=True)}", inline=True)
+            name="Uptime", value=f"{self.get_uptime()}", inline=True)
         dpy = pkg_resources.get_distribution('discord.py').version
         embed.add_field(name="discord.py", value=f"v{dpy}")
         await ctx.reply(embed=embed)
 
     @commands.command(name='source', description="Shows source of the bot.", aliases=['src', 'contribute', 'contrib'])
-    async def _source(self, ctx) -> None:
+    async def _source(self, ctx: commands.Context) -> None:
         await ctx.reply(
             embed=discord.Embed(description="View the bot source [here](https://github.com/SuperOrca/apollo).",
                                 color=discord.Color.blurple()))
 
     @commands.command(name='help', description="Shows all commands", usage="help [command]", aliases=['commands'])
-    async def _help(self, ctx, command: str = None) -> None:
+    async def _help(self, ctx: commands.Context, command: str = None) -> None:
         if command:
             cmds = [unpack for unpack in self.bot.walk_commands()
                     if 'jishaku' not in unpack.module]
@@ -127,7 +122,7 @@ class Meta(commands.Cog):
                     self.message = None
                     self.timeout = 180
 
-                async def send_initial_message(self, ctx, channel):
+                async def send_initial_message(self, ctx: commands.Context, channel: discord.Message):
                     cogs = ' '.join(
                         f"`{ext.__name__.split('.')[1].capitalize()}`" for ext in exts)
                     self.message = await self.send_with_view(channel, embed=discord.Embed(title='Apollo Commands', description="stinky :D", color=discord.Color.blurple()))
@@ -189,7 +184,7 @@ class Meta(commands.Cog):
                             f"`{cmd.name}`" for cmd in self.ctx.bot.get_cog('Meta').get_commands())
                         await self.message.edit(embed=discord.Embed(title='Meta Commands', description=f"> {cmds}", color=discord.Color.blurple()))
 
-                async def start(self, ctx):
+                async def start(self, ctx: commands.Context):
                     await super().start(ctx)
                     self.ctx = ctx
 
@@ -200,7 +195,7 @@ class Meta(commands.Cog):
             await HelpMenu().start(ctx)
 
     @commands.command(name='prefix', description="Change the bot prefix.", usage="prefix [prefix]")
-    async def _prefix(self, ctx, prefix: PrefixConverter = None) -> None:
+    async def _prefix(self, ctx: commands.Context, prefix: PrefixConverter = None) -> None:
         if ctx.author.guild_permissions.administrator and prefix:
             async with self.bot.db as db:
                 await db.execute("INSERT OR REPLACE INTO prefixes VALUES (?, ?)", (ctx.guild.id, prefix))

@@ -13,21 +13,21 @@ class Moderation(commands.Cog):
     @commands.command(name='purge', description="Clean up messages in a channel.", aliases=['clear'],
                       usage="purge <limit> [channel]")
     @commands.has_guild_permissions(manage_messages=True)
-    async def _purge(self, ctx, limit: int, channel: commands.TextChannelConverter = None) -> None:
+    async def _purge(self, ctx: commands.Context, limit: int, channel: commands.TextChannelConverter = None) -> None:
         if limit < 1 or limit > 100:
             raise commands.BadArgument("Limit must been between 1 and 100.")
 
         channel = channel or ctx.channel
-        await channel.purge(limit=limit)
+        msgs = await channel.purge(limit=limit)
         await asyncio.sleep(1)
         m = await ctx.send(
-            embed=discord.Embed(description=f"Cleared `{limit}` messages.", color=discord.Color.dark_red()))
+            embed=discord.Embed(description=f"Cleared `{len(msgs)}` messages.", color=discord.Color.dark_red()))
         await asyncio.sleep(5)
         await m.delete()
 
     @commands.command(name='ban', description="Ban a member.", usage="ban <member> [reason]")
     @commands.has_guild_permissions(ban_members=True)
-    async def _ban(self, ctx, member: commands.MemberConverter, *, reason: str = None) -> None:
+    async def _ban(self, ctx: commands.Context, member: commands.MemberConverter, *, reason: str = None) -> None:
         check_hierarchy(ctx.author, member)
         reason = reason or "no reason provided"
         try:
@@ -43,7 +43,7 @@ class Moderation(commands.Cog):
 
     @commands.command(name='kick', description="Kick a member.", usage="kick <member> [reason]")
     @commands.has_guild_permissions(kick_members=True)
-    async def _kick(self, ctx, member: commands.MemberConverter, *, reason: str = None) -> None:
+    async def _kick(self, ctx: commands.Context, member: commands.MemberConverter, *, reason: str = None) -> None:
         check_hierarchy(ctx.author, member)
         reason = reason or "no reason provided"
         try:
@@ -60,7 +60,7 @@ class Moderation(commands.Cog):
     @commands.command(name='slowmode', description="Edit slowmode of channel.", usage="slowmode <seconds>",
                       aliases=['sm'])
     @commands.has_guild_permissions(manage_messages=True)
-    async def _slowmode(self, ctx, seconds: int, channel: commands.TextChannelConverter = None) -> None:
+    async def _slowmode(self, ctx: commands.Context, seconds: int, channel: commands.TextChannelConverter = None) -> None:
         if seconds < 0 or seconds > 21600:
             raise commands.BadArgument(
                 "Slowmode must been between 0 and 21,600.")
@@ -72,7 +72,7 @@ class Moderation(commands.Cog):
 
     @commands.command(name='unban', description="Unban a user.", usage="unban <user>")
     @commands.has_guild_permissions(manage_messages=True)
-    async def _unban(self, ctx, user: commands.UserConverter) -> None:
+    async def _unban(self, ctx: commands.Context, user: commands.UserConverter) -> None:
         member = discord.Object(id=user.id)
         await ctx.guild.unban(member)
         await ctx.reply(embed=discord.Embed(description=f"Unbanned {user.mention} (by {ctx.author.mention}).",
@@ -81,7 +81,7 @@ class Moderation(commands.Cog):
     @commands.command(name='setnick', description="Set nick of member. Set to 'reset' to reset.",
                       usage="nick <member> <nick>")
     @commands.has_guild_permissions(manage_nicknames=True)
-    async def _setnick(self, ctx, member: commands.MemberConverter, nick: str):
+    async def _setnick(self, ctx: commands.Context, member: commands.MemberConverter, nick: str):
         check_hierarchy(ctx.author, member)
         if nick == "reset":
             await member.edit(nick=None)

@@ -9,8 +9,8 @@ import re
 import aiosqlite
 import coloredlogs
 import discord
+import mystbin
 import aiohttp
-from colorama import Fore as c
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -19,7 +19,7 @@ load_dotenv()
 
 class Context(commands.Context):
     @discord.utils.copy_doc(discord.Message.reply)
-    async def reply(self, content=None, **kwargs):
+    async def reply(self, content:str=None, **kwargs):
         return await self.message.reply(content, **kwargs, mention_author=False)
 
 
@@ -51,7 +51,7 @@ class Apollo(commands.Bot):
 
         super().__init__(command_prefix=self._get_prefix, help_command=None, case_insensitive=True,
                          allowed_mentions=allowed_mentions, description=description, intents=intents,
-                         activity=discord.Game('?help'))
+                         activity=discord.Game(f'@Apollo help | {len(self.guilds)} guilds'))
 
         self.__version__ = "v1.0.0"
         self.owner_id = int(getenv('OWNER_ID'))
@@ -66,6 +66,7 @@ class Apollo(commands.Bot):
         self.log.addHandler(handler)
 
         self.session = aiohttp.ClientSession()
+        self.mystbin = mystbin.Client()
 
     async def create_db(self) -> None:
         async with self.db as db:
@@ -98,14 +99,14 @@ class Apollo(commands.Bot):
         self.log.info(f"Extensions loaded ({len(self.extensions)} loaded)")
         self.log.info("Bot ready!")
 
-    async def on_message(self, message) -> None:
+    async def on_message(self, message: discord.Message) -> None:
         if message.author.bot or isinstance(message.channel, (discord.DMChannel, discord.GroupChannel)):
             return
         if message.content.startswith('jsk') and message.author.id == int(getenv('OWNER_ID')):
             message.content = self.user.mention + " " + message.content
         await self.process_commands(message)
 
-    async def get_context(self, message, *, cls=None):
+    async def get_context(self, message: discord.Message, *, cls=None):
         return await super().get_context(message, cls=cls or Context)
 
     def run(self) -> None:

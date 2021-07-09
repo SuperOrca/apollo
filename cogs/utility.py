@@ -12,7 +12,7 @@ class Utility(commands.Cog):
         self.tio = Tio()
 
     @commands.command(name='avatar', description="Shows a user's avatar.", usage="avatar [member]")
-    async def _avatar(self, ctx, member: commands.MemberConverter = None) -> None:
+    async def _avatar(self, ctx: commands.Context, member: commands.MemberConverter = None) -> None:
         member = member or ctx.author
         embed = discord.Embed(
             description=f"[png]({member.avatar_url_as(static_format='png')}) | [jpg]({member.avatar_url_as(static_format='jpg')}) | [webp]({member.avatar_url_as(static_format='webp')})",
@@ -22,7 +22,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='pypi', description="Shows details of a python package.", usage="pypi <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _pypi(self, ctx, package: str) -> None:
+    async def _pypi(self, ctx: commands.Context, package: str) -> None:
         async with ctx.typing():
             data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
 
@@ -51,7 +51,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='npm', description="Shows details of a node package.", usage="npm <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _npm(self, ctx, package: str):
+    async def _npm(self, ctx: commands.Context, package: str):
         async with ctx.typing():
             data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
         if 'CODE' in data or 'collected' not in data:
@@ -74,7 +74,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='deno', description="Shows details of a deno package.", usage="deno <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _deno(self, ctx, package: str) -> None:
+    async def _deno(self, ctx: commands.Context, package: str) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get(f"https://api.deno.land/modules/{package}")).json()
             if data["success"]:
@@ -93,7 +93,7 @@ class Utility(commands.Cog):
     @commands.command(name='github', description="Shows details of a deno repository.", usage="github <repository>",
                       aliases=['gh'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _github(self, ctx, repository: str) -> None:
+    async def _github(self, ctx: commands.Context, repository: str) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get(f"https://api.github.com/repos/{repository}")).json()
         if 'message' not in data:
@@ -107,7 +107,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='txt', description="Text to file.", usage="txt <text>")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _txt(self, ctx, *, text: str) -> None:
+    async def _txt(self, ctx: commands.Context, *, text: str) -> None:
         file = io.StringIO()
         file.write(text)
         file.seek(0)
@@ -115,7 +115,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='serverinfo', description="Displays info about the server.", aliases=['guildinfo'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _serverinfo(self, ctx):
+    async def _serverinfo(self, ctx: commands.Context):
         description = "" if ctx.guild.description is None else ctx.guild.description
         bots = online = dnd = idle = offline = 0
         for member in ctx.guild.members:
@@ -165,7 +165,7 @@ Created at: `{created_at}` ({humanize.naturaltime(ctx.guild.created_at)})""", in
 
     @commands.command(name='userinfo', description="Displays info about the user.", usage="userinfo [member]")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _userinfo(self, ctx, member: commands.MemberConverter = None):
+    async def _userinfo(self, ctx: commands.Context, member: commands.MemberConverter = None):
         member = member or ctx.author
 
         if str(member.mobile_status) != "offline":
@@ -209,7 +209,7 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
 
     @commands.command(name='tts', description="Text to speech.", usage="tts <text>", aliases=['texttospeech'])
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _tts(self, ctx, *, text: str):
+    async def _tts(self, ctx: commands.Context, *, text: str):
         if len(text) > 200:
             raise commands.BadArgument(
                 "The text for text to speech can not be over 200 characters.")
@@ -222,7 +222,7 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
 
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _execute(self, ctx, language: str, *, code: str):
+    async def _execute(self, ctx: commands.Context, language: str, *, code: str):
         if code.startswith('```') and code.endswith('```'):
             if code.startswith('```\n') and code.endswith('\n```') in code:
                 code = code.split('\n')

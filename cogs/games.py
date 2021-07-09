@@ -10,7 +10,7 @@ class Games(commands.Cog):
 
     @commands.command(name='typeracer', description="Typeracer game!")
     @commands.cooldown(1, 90, commands.BucketType.user)
-    async def _typeracer(self, ctx) -> None:
+    async def _typeracer(self, ctx: commands.Context) -> None:
         game = typeracer.TypeRacer()
 
         await game.start(ctx, embed_color=0x2F3136, show_author=False,

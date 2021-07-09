@@ -7,7 +7,7 @@ class Animals(commands.Cog):
 
     @commands.command(name='dog', description="Shows a random dog.", aliases=['dogs'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _dog(self, ctx) -> None:
+    async def _dog(self, ctx: commands.Context) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get("https://some-random-api.ml/img/dog")).json()
 
@@ -20,7 +20,7 @@ class Animals(commands.Cog):
 
     @commands.command(name='cat', description="Shows a random cat.", aliases=['cats'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _cat(self, ctx) -> None:
+    async def _cat(self, ctx: commands.Context) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get("https://some-random-api.ml/img/cat")).json()
 
@@ -33,7 +33,7 @@ class Animals(commands.Cog):
 
     @commands.command(name='panda', description="Shows a random panda.", aliases=['pandas'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _panda(self, ctx) -> None:
+    async def _panda(self, ctx: commands.Context) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get("https://some-random-api.ml/img/panda")).json()
 
@@ -46,7 +46,7 @@ class Animals(commands.Cog):
 
     @commands.command(name='bird', description="Shows a random bird.", aliases=['birds'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _bird(self, ctx) -> None:
+    async def _bird(self, ctx: commands.Context) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get("https://some-random-api.ml/img/birb")).json()
 
@@ -59,7 +59,7 @@ class Animals(commands.Cog):
 
     @commands.command(name='fox', description="Shows a random fox.", aliases=['foxes'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _fox(self, ctx) -> None:
+    async def _fox(self, ctx: commands.Context) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get("https://some-random-api.ml/img/fox")).json()
 
@@ -72,7 +72,7 @@ class Animals(commands.Cog):
 
     @commands.command(name='koala', description="Shows a random koala.", aliases=['koalas'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _koala(self, ctx) -> None:
+    async def _koala(self, ctx: commands.Context) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get("https://some-random-api.ml/img/koala")).json()
 
