@@ -1,16 +1,16 @@
 from discord.ext import commands
 class ApolloHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping):
-        await self.context.send("This is help")
+        print(mapping)
 
     async def send_command_help(self, command):
-        await self.context.send("This is help command")
+        print(command)
 
     async def send_group_help(self, group):
-        await self.context.send("This is help group")
+        print(group)
 
     async def send_cog_help(self, cog):
-        await self.context.send("This is help cog")
+        print(cog)
 
     # @commands.command(name='help', description="Shows all commands", usage="help [command]", aliases=['commands'])
     # async def _help(self, ctx: commands.Context, command: str = None) -> None:
