@@ -2,6 +2,7 @@ import youtube_dl
 import functools
 import asyncio
 import discord
+from discord.ext import commands
 
 youtube_dl.utils.bug_reports_message = lambda: ''
 
