@@ -5,7 +5,7 @@ from discord.ext import commands
 class ApolloHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping: dict):
         embed = discord.Embed(title="Apollo Help", description=f"""
-        Total Commands: `{len(self.context.bot.commands())}`
+        Total Commands: `{len(self.context.bot.commands)}`
         ```diff
         - <> | Required Argument
         - [] | Optional Argument
