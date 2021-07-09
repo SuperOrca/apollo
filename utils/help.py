@@ -15,7 +15,7 @@ class ApolloHelp(commands.HelpCommand):
         """, color=discord.Color.blurple())
         embed.add_field(
             name=":gear: Modules",
-            value='\n'.join(module.name for module in mapping),
+            value='\n'.join(module.__class__.__name__ for module in mapping),
             inline=True,
         )
         embed.add_field(name=":newspaper: News", value="Invite my bot to ur server pls :)")
