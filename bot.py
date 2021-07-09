@@ -11,6 +11,7 @@ import coloredlogs
 import discord
 import mystbin
 import aiohttp
+from utils.help import ApolloHelp
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -49,7 +50,7 @@ class Apollo(commands.Bot):
         The all-in-one discord bot.
         """
 
-        super().__init__(command_prefix=self._get_prefix, help_command=None, case_insensitive=True,
+        super().__init__(command_prefix=self._get_prefix, help_command=ApolloHelp, case_insensitive=True,
                          allowed_mentions=allowed_mentions, description=description, intents=intents,
                          activity=discord.Game(f'@Apollo help | {len(self.guilds)} guilds'))
 

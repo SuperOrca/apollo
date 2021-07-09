@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils.music import YTDLError, Song, YTDLSource
 import io
 from aiogtts import aiogTTS
 from async_tio import Tio
@@ -115,7 +116,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='serverinfo', description="Displays info about the server.", aliases=['guildinfo'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _serverinfo(self, ctx: commands.Context):
+    async def _serverinfo(self, ctx: commands.Context) -> None:
         description = "" if ctx.guild.description is None else ctx.guild.description
         bots = online = dnd = idle = offline = 0
         for member in ctx.guild.members:
@@ -165,7 +166,7 @@ Created at: `{created_at}` ({humanize.naturaltime(ctx.guild.created_at)})""", in
 
     @commands.command(name='userinfo', description="Displays info about the user.", usage="userinfo [member]")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _userinfo(self, ctx: commands.Context, member: commands.MemberConverter = None):
+    async def _userinfo(self, ctx: commands.Context, member: commands.MemberConverter = None) -> None:
         member = member or ctx.author
 
         if str(member.mobile_status) != "offline":
@@ -209,7 +210,7 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
 
     @commands.command(name='tts', description="Text to speech.", usage="tts <text>", aliases=['texttospeech'])
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _tts(self, ctx: commands.Context, *, text: str):
+    async def _tts(self, ctx: commands.Context, *, text: str) -> None:
         if len(text) > 200:
             raise commands.BadArgument(
                 "The text for text to speech can not be over 200 characters.")
@@ -219,10 +220,24 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
             await self.tts.write_to_fp(text, buffer, slow=True, lang="en")
         buffer.seek(0)
         await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
+    
+    @commands.command(name='youtube')
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def _youtube(self, ctx: commands.Context, query: str) -> None:
+        async with ctx.typing():
+            try:
+                source = await YTDLSource.create_source(ctx, query, loop=self.bot.loop)
+            except YTDLError as e:
+                await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
+            else:
+                song = Song(source)
+
+                await ctx.voice_state.songs.put(song)
+                await ctx.send('Enqueued {}'.format(str(source)))
 
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _execute(self, ctx: commands.Context, language: str, *, code: str):
+    async def _execute(self, ctx: commands.Context, language: str, *, code: str) -> None:
         if code.startswith('```') and code.endswith('```'):
             if code.startswith('```\n') and code.endswith('\n```') in code:
                 code = code.split('\n')
