@@ -1,6 +1,4 @@
 from discord.ext import commands
-
-
 class ApolloHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping):
         await self.context.send("This is help")
