@@ -11,6 +11,7 @@ import coloredlogs
 import discord
 import mystbin
 import aiohttp
+import statcord
 from utils.help import ApolloHelp
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -20,7 +21,7 @@ load_dotenv()
 
 class Context(commands.Context):
     @discord.utils.copy_doc(discord.Message.reply)
-    async def reply(self, content:str=None, **kwargs):
+    async def reply(self, content: str = None, **kwargs):
         return await self.message.reply(content, **kwargs, mention_author=False)
 
 
@@ -69,6 +70,9 @@ class Apollo(commands.Bot):
         self.session = aiohttp.ClientSession()
         self.mystbin = mystbin.Client()
 
+        self.statcord = statcord.Client(self, environ["STATCORD"])
+        self.statcord.start_loop()
+
     async def create_db(self) -> None:
         async with self.db as db:
             await db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
@@ -106,6 +110,25 @@ class Apollo(commands.Bot):
         if message.content.startswith('jsk') and message.author.id == int(getenv('OWNER_ID')):
             message.content = self.user.mention + " " + message.content
         await self.process_commands(message)
+
+    async def on_command_error(self, ctx: commands.Context, error) -> None:
+        if hasattr(ctx.command, 'on_error'):
+            return
+
+        ignored = (commands.CommandNotFound,
+                   commands.DisabledCommand, commands.NoPrivateMessage)
+
+        if isinstance(error, ignored):
+            return
+
+        if isinstance(error, commands.MissingRequiredArgument):
+            error = f"You are missing the required `{str(error).split()[0].upper()}` argument."
+
+        self.log.error(f"{ctx.command} -> {error}")
+        await ctx.reply(embed=discord.Embed(description=error, color=discord.Color.red()))
+
+    async def on_command(self, ctx: commands.Context) -> None:
+        self.statcord.command_run(ctx)
 
     async def get_context(self, message: discord.Message, *, cls=None):
         return await super().get_context(message, cls=cls or Context)

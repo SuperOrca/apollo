@@ -1,7 +1,25 @@
+import discord
 from discord.ext import commands
+
+
 class ApolloHelp(commands.HelpCommand):
-    async def send_bot_help(self, mapping):
-        print(mapping)
+    async def send_bot_help(self, mapping: dict):
+        embed = discord.Embed(title="Apollo Help", description=f"""
+        Total Commands: `{len(self.context.me.walk_commands())}`
+        ```diff
+        - <> | Required Argument
+        - [] | Optional Argument
+        + Type >help [Command | Module] for more info on a command and/or module!
+        ```
+        `@Apollo invite` | `@Apollo info`
+        """, color=discord.Color.blurple())
+        embed.add_field(
+            name=":gear: Modules",
+            value='\n'.join(module.name for module in mapping),
+            inline=True,
+        )
+        embed.add_field(name=":newspaper: News", value="Invite my bot to ur server pls :)")
+        await self.context.send(embed=embed)
 
     async def send_command_help(self, command):
         print(command)
