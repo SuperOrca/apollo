@@ -12,6 +12,7 @@ import discord
 import mystbin
 import aiohttp
 import statcord
+from databases import Database
 from utils.help import ApolloHelp
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -27,13 +28,8 @@ class Context(commands.Context):
 
 class Apollo(commands.Bot):
     @staticmethod
-    async def _get_prefix(bot, message):
-        async with bot.db as db:
-            cursor = await db.execute("SELECT * FROM prefixes WHERE id=?", (message.guild.id,))
-            row = await cursor.fetchone()
-            await cursor.close()
-            return commands.when_mentioned_or(row[1])(bot, message) if row is not None else commands.when_mentioned_or(
-                getenv('DEFAULT_PREFIX'))(bot, message)
+    async def _get_prefix(bot, message: discord.Message):
+        return bot.get_guild_prefix(message)
 
     def __init__(self) -> None:
         allowed_mentions = discord.AllowedMentions.none()
@@ -46,18 +42,14 @@ class Apollo(commands.Bot):
             messages=True,
             reactions=True
         )
-
         description = """
         The all-in-one discord bot.
         """
-
         super().__init__(command_prefix=self._get_prefix, help_command=ApolloHelp(), case_insensitive=True,
                          allowed_mentions=allowed_mentions, description=description, intents=intents,
                          activity=discord.Game(f'@Apollo help'))
-
         self.__version__ = "v1.0.0"
         self.owner_id = int(getenv('OWNER_ID'))
-
         coloredlogs.install()
         self.log = logging.getLogger('discord')
         self.log.setLevel(logging.INFO)
@@ -66,20 +58,21 @@ class Apollo(commands.Bot):
         handler.setFormatter(logging.Formatter(
             '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
         self.log.addHandler(handler)
-
         self.session = aiohttp.ClientSession()
         self.mystbin = mystbin.Client()
-
         self.statcord = statcord.Client(self, environ["STATCORD"])
         self.statcord.start_loop()
+        self.db = None
 
     async def create_db(self) -> None:
-        async with self.db as db:
-            await db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
+        self.db: Database = Database('sqlite:///bot.db')
+        await self.db.connect()
+        await self.db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
 
-    @property
-    def db(self):
-        return aiosqlite.connect('bot.db')
+    async def get_guild_prefix(self, message: discord.Message):
+        prefix = await self.db.fetch("SELECT * FROM prefixes WHERE id=?", (message.guild.id,))
+        return commands.when_mentioned_or(prefix[1])(self, message) if prefix is not None else commands.when_mentioned_or(
+            getenv('DEFAULT_PREFIX'))(self, message)
 
     def load(self):
         for file in Path('cogs').glob('**/*.py'):
@@ -92,7 +85,7 @@ class Apollo(commands.Bot):
 
     async def on_ready(self) -> None:
         self.log.info("Running setup...")
-        await self.create_db()
+        await self.init_db()
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.utcnow()
         self.log.info("Bot connected. DWSP latency: " +
@@ -139,4 +132,5 @@ class Apollo(commands.Bot):
 
     async def close(self) -> None:
         await self.session.close()
+        await self.db.close()
         await super().close()

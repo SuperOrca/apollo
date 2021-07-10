@@ -50,8 +50,7 @@ class Meta(commands.Cog):
         async with ctx.typing():
             typing = (count() - typing) * 1000
             database = count()
-            async with self.bot.db as db:
-                await db.execute("SELECT 1")
+            await self.bot.db.execute("SELECT 1")
             database = (count() - database) * 1000
         embed = discord.Embed(color=discord.Color.blurple())
         embed.add_field(name="Websocket",
@@ -90,24 +89,13 @@ class Meta(commands.Cog):
     @commands.command(name='prefix', description="Change the bot prefix.", usage="prefix [prefix]")
     async def _prefix(self, ctx: commands.Context, prefix: PrefixConverter = None) -> None:
         if ctx.author.guild_permissions.administrator and prefix:
-            async with self.bot.db as db:
-                await db.execute("INSERT OR REPLACE INTO prefixes VALUES (?, ?)", (ctx.guild.id, prefix))
-                await db.commit()
+            await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (?, ?)", (ctx.guild.id, prefix))
             await ctx.reply(embed=discord.Embed(description=f"Set the server prefix to `{prefix}`.",
                                                 color=discord.Color.blurple()))
         else:
-            async with self.bot.db as db:
-                cursor = await db.execute("SELECT * FROM prefixes WHERE id=?", (ctx.guild.id,))
-                row = await cursor.fetchone()
-                await cursor.close()
-            if row is not None:
-                await ctx.reply(embed=discord.Embed(description=f"The current server prefix is `{row[1]}`.",
-                                                    color=discord.Color.blurple()))
-            else:
-                await ctx.reply(mention_author=False,
-                                embed=discord.Embed(
-                                    description=f"The current server prefix is `{getenv('DEFAULT_PREFIX')}`.",
-                                    color=discord.Color.blurple()))
+            prefix = await self.bot.get_guild_prefix(ctx.message)
+            await ctx.reply(embed=discord.Embed(description=f"The current server prefix is `{prefix[1]}`.",
+                                                color=discord.Color.blurple()))
 
 
 def setup(bot) -> None:
