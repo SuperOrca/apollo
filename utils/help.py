@@ -32,7 +32,7 @@ Total Commands: `{len(valid_commands)}`
         print(command, dir(command))
         embed = discord.Embed(
             title=f"**`{command.usage}`**", color=discord.Color.blurple())
-        if command.aliases is not None:
+        if command.aliases != []:
             embed.add_field(name=f"Aliases [{len(command.aliases)}]", value='\n'.join(
                 f'- `{aliase}`' for aliase in command.aliases))
         await self.context.reply(embed=embed)
