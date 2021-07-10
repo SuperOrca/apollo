@@ -4,7 +4,7 @@ from discord.ext import commands
 
 class ApolloHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping: dict):
-        prefix = (await self.context.bot.get_guild_prefix(self.context.message))[0]
+        prefix = (await self.context.bot.get_guild_prefix(self.context.message))[1]
         modules = list(mapping.keys())[:-2]
         valid_commands = []
         for module in modules:
@@ -48,7 +48,7 @@ Total Commands: `{len(valid_commands)}`
         print(group, dir(group))
 
     async def send_cog_help(self, cog: commands.Cog):
-        prefix = (await self.context.bot.get_guild_prefix(self.context.message))[0]
+        prefix = (await self.context.bot.get_guild_prefix(self.context.message))[1]
         embed = discord.Embed(title=f"{cog.__class__.__name__} Help [{len(cog.get_commands())}]", description=f"""
 ```diff
 - ⚠️ DO NOT TYPE THESE WHEN USING A COMMAND ⚠️
