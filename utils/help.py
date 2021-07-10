@@ -47,4 +47,13 @@ Total Commands: `{len(valid_commands)}`
         print(group, dir(group))
 
     async def send_cog_help(self, cog: commands.Cog):
-        print(cog, dir(cog))
+        embed = discord.Embed(title=f"{cog.__class__.__name__} Help [{len(cog.get_commands())}]", description=f"""
+```diff
+- ⚠️ DO NOT TYPE THESE WHEN USING A COMMAND ⚠️
+- <> | Required Argument
+- [] | Optional Argument
++ Type >help [Command | Module] for more info on a command and/or module!
+```
+> {', '.join(f'`{cmd.name}`' for cmd in cog.get_commands())}
+        """)
+        await self.context.reply(embed=embed)
