@@ -4,8 +4,12 @@ from discord.ext import commands
 
 class ApolloHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping: dict):
+        modules = list(mapping.keys())[:-2]
+        valid_commands = []
+        # for module in modules:
+        #     valid_commands += module.
         embed = discord.Embed(title="Apollo Help", description=f"""
-Total Commands: `{len(self.context.bot.commands)}`
+Total Commands: `{len(valid_commands)}`
 ```diff
 - <> | Required Argument
 - [] | Optional Argument
@@ -15,7 +19,7 @@ Total Commands: `{len(self.context.bot.commands)}`
 """, color=discord.Color.blurple())
         embed.add_field(
             name=":gear: Modules",
-            value='\n'.join(f"- `{module.__class__.__name__}`" for module in list(mapping.keys())[:-2]),
+            value='\n'.join(f"- `{module.__class__.__name__}`" for module in modules),
             inline=True,
         )
         embed.add_field(name=":newspaper: News", value="Invite my bot to ur server pls :)")
