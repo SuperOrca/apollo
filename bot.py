@@ -28,7 +28,7 @@ class Context(commands.Context):
 class Apollo(commands.Bot):
     @staticmethod
     async def _get_prefix(bot, message: discord.Message):
-        return bot.get_guild_prefix(message)
+        return await bot.get_guild_prefix(message)
 
     def __init__(self) -> None:
         allowed_mentions = discord.AllowedMentions.none()
