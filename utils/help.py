@@ -6,8 +6,8 @@ class ApolloHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping: dict):
         modules = list(mapping.keys())[:-2]
         valid_commands = []
-        # for module in modules:
-        #     valid_commands += module.
+        for module in modules:
+            valid_commands += module.get_commands()
         embed = discord.Embed(title="Apollo Help", description=f"""
 Total Commands: `{len(valid_commands)}`
 ```diff
@@ -19,10 +19,12 @@ Total Commands: `{len(valid_commands)}`
 """, color=discord.Color.blurple())
         embed.add_field(
             name=":gear: Modules",
-            value='\n'.join(f"- `{module.__class__.__name__}`" for module in modules),
+            value='\n'.join(
+                f"- `{module.__class__.__name__}`" for module in modules),
             inline=True,
         )
-        embed.add_field(name=":newspaper: News", value="Invite my bot to ur server pls :)")
+        embed.add_field(name=":newspaper: News",
+                        value="Invite my bot to ur server pls :)")
         await self.context.send(embed=embed)
 
     async def send_command_help(self, command):
