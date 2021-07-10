@@ -69,7 +69,7 @@ class Apollo(commands.Bot):
         await self.db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
 
     async def get_guild_prefix(self, message: discord.Message):
-        prefix = await self.db.fetch_one("SELECT * FROM prefixes WHERE id=?", (message.guild.id,))
+        prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id={message.guild.id}")
         return commands.when_mentioned_or(prefix[1])(self, message) if prefix is not None else commands.when_mentioned_or(
             getenv('DEFAULT_PREFIX'))(self, message)
 
