@@ -31,7 +31,8 @@ Total Commands: `{len(valid_commands)}`
     async def send_command_help(self, command: commands.Command):
         embed = discord.Embed(
             title=f"**`{command.usage if command.usage is not None else command.name}`**", description=command.description, color=discord.Color.blurple())
-        embed.add_field(name="Module", value=command.module)
+        embed.add_field(
+            name="Module", value=command.module.split('.')[1].capitalize())
         if command.aliases != []:
             embed.add_field(name=f"Aliases [{len(command.aliases)}]", value='\n'.join(
                 f'- `{aliase}`' for aliase in command.aliases))
