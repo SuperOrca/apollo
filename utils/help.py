@@ -15,7 +15,7 @@ Total Commands: `{len(self.context.bot.commands)}`
 """, color=discord.Color.blurple())
         embed.add_field(
             name=":gear: Modules",
-            value='\n'.join(f"- `{module.__class__.__name__}`" for module in mapping[:-2]),
+            value='\n'.join(f"- `{module.__class__.__name__}`" for module in mapping.keys()[:-2]),
             inline=True,
         )
         embed.add_field(name=":newspaper: News", value="Invite my bot to ur server pls :)")
