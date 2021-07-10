@@ -6,7 +6,6 @@ from os import getenv, environ
 from pathlib import Path
 import re
 
-import aiosqlite
 import coloredlogs
 import discord
 import mystbin
