@@ -29,7 +29,7 @@ class Context(commands.Context):
 class Apollo(commands.Bot):
     @staticmethod
     async def _get_prefix(bot, message: discord.Message):
-        return await bot.get_guild_prefix(message)
+        return commands.when_mentioned_or(await bot.get_guild_prefix(message))(bot, message)
 
     def __init__(self) -> None:
         allowed_mentions = discord.AllowedMentions.none()
@@ -75,8 +75,7 @@ class Apollo(commands.Bot):
             prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id=:id", values={"id": message.guild.id})
         except AttributeError:
             prefix = None
-        return commands.when_mentioned_or(prefix[1])(self, message) if prefix is not None else commands.when_mentioned_or(
-            getenv('DEFAULT_PREFIX'))(self, message)
+        return getenv('DEFAULT_PREFIX') if prefix is None else prefix[1]
 
     def load(self):
         for file in Path('cogs').glob('**/*.py'):

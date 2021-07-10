@@ -94,7 +94,7 @@ class Meta(commands.Cog):
                                                 color=discord.Color.blurple()))
         else:
             prefix = await self.bot.get_guild_prefix(ctx.message)
-            await ctx.reply(embed=discord.Embed(description=f"The current server prefix is `{prefix[1]}`.",
+            await ctx.reply(embed=discord.Embed(description=f"The current server prefix is `{prefix}`.",
                                                 color=discord.Color.blurple()))
 
 
