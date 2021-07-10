@@ -11,6 +11,7 @@ class ApolloHelp(commands.HelpCommand):
         embed = discord.Embed(title="Apollo Help", description=f"""
 Total Commands: `{len(valid_commands)}`
 ```diff
+- ⚠️ DO NOT TYPE THESE WHEN USING A COMMAND ⚠️
 - <> | Required Argument
 - [] | Optional Argument
 + Type >help [Command | Module] for more info on a command and/or module!
@@ -18,20 +19,26 @@ Total Commands: `{len(valid_commands)}`
 `?invite` | `?info`
 """, color=discord.Color.blurple())
         embed.add_field(
-            name=":gear: Modules",
+            name=f":gear: Modules [{len(modules)}]",
             value='\n'.join(
                 f"- `{module.__class__.__name__}`" for module in modules),
             inline=True,
         )
-        embed.add_field(name=":newspaper: News",
+        embed.add_field(name=":newspaper: News - July 9, 2021",
                         value="Invite my bot to ur server pls :)")
-        await self.context.send(embed=embed)
+        await self.context.reply(embed=embed)
 
-    async def send_command_help(self, command):
-        print(command)
+    async def send_command_help(self, command: commands.Command):
+        print(command, dir(command))
+        embed = discord.Embed(
+            title=f"**`{command.usage}`**", color=discord.Color.blurple())
+        if command.aliases is not None:
+            embed.add_field(name=f"Aliases [{len(command.aliases)}]", value='\n'.join(
+                f'- `{aliase}`' for aliase in command.aliases))
+        await self.context.reply(embed=embed)
 
-    async def send_group_help(self, group):
-        print(group)
+    async def send_group_help(self, group: commands.Group):
+        print(group, dir(group))
 
-    async def send_cog_help(self, cog):
-        print(cog)
+    async def send_cog_help(self, cog: commands.Cog):
+        print(cog, dir(cog))
