@@ -89,12 +89,12 @@ class Meta(commands.Cog):
     @commands.command(name='prefix', description="Change the bot prefix.", usage="prefix [prefix]")
     async def _prefix(self, ctx: commands.Context, prefix: PrefixConverter = None) -> None:
         if ctx.author.guild_permissions.administrator and prefix:
-            await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (?, ?)", (ctx.guild.id, prefix))
+            await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)", values={"id": ctx.guild.id, "prefix": prefix}])
             await ctx.reply(embed=discord.Embed(description=f"Set the server prefix to `{prefix}`.",
                                                 color=discord.Color.blurple()))
         else:
             prefix = await self.bot.get_guild_prefix(ctx.message)
-            await ctx.reply(embed=discord.Embed(description=f"The current server prefix is `{prefix[1]}`.",
+            await ctx.reply(embed=discord.Embed(description=f"The current server prefix is `{prefix[0]}`.",
                                                 color=discord.Color.blurple()))
 
 

@@ -9,6 +9,7 @@ import re
 import coloredlogs
 import discord
 import mystbin
+import asyncdagpi
 import aiohttp
 import statcord
 from databases import Database
@@ -62,6 +63,7 @@ class Apollo(commands.Bot):
         self.statcord = statcord.Client(self, environ["STATCORD"])
         self.statcord.start_loop()
         self.db = None
+        self.dagpi = asyncdagpi.Client(getenv('DAGPI'))
 
     async def create_db(self) -> None:
         self.db: Database = Database('sqlite:///bot.db')
@@ -70,7 +72,7 @@ class Apollo(commands.Bot):
 
     async def get_guild_prefix(self, message: discord.Message):
         try:
-            prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id={message.guild.id}")
+            prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id=:id", values={"id": message.guild.id})
         except AttributeError:
             prefix = None
         return commands.when_mentioned_or(prefix[1])(self, message) if prefix is not None else commands.when_mentioned_or(
@@ -133,4 +135,5 @@ class Apollo(commands.Bot):
     async def close(self) -> None:
         await self.session.close()
         await self.db.disconnect()
+        await self.dagpi.close()
         await super().close()

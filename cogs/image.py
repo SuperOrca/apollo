@@ -12,12 +12,11 @@ from utils.wrappers import typing
 class Image(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
-        self.dagpi = asyncdagpi.Client(getenv('DAGPI'))
 
     async def dagpi_process(self, ctx: commands.Context, image, feature, end="png", **kwargs) -> discord.Embed:
         url = await getImage(ctx, image)
         async with ctx.typing():
-            img = await self.dagpi.image_process(feature, url=str(url), **kwargs)
+            img = await self.bot.dagpi.image_process(feature, url=str(url), **kwargs)
             file = discord.File(img.image, f"{ctx.command.name}.{end}")
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.{end}")
