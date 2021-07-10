@@ -94,8 +94,6 @@ class Apollo(commands.Bot):
                       str(round((self.latency * 1000))) + "ms")
         self.load()
         self.load_extension('jishaku')
-        environ['JISHAKU_UNDERSCORE'] = 'True'
-        environ['JISHAKU_HIDE'] = 'True'
         self.log.info(f"Extensions loaded ({len(self.extensions)} loaded)")
         self.log.info("Bot ready!")
 
