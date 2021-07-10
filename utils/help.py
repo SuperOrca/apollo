@@ -55,5 +55,5 @@ Total Commands: `{len(valid_commands)}`
 + Type >help [Command | Module] for more info on a command and/or module!
 ```
 > {', '.join(f'`{cmd.name}`' for cmd in cog.get_commands())}
-        """)
+        """, color=discord.Color.blurple())
         await self.context.reply(embed=embed)
