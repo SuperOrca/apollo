@@ -84,7 +84,7 @@ class Apollo(commands.Bot):
 
     async def on_ready(self) -> None:
         self.log.info("Running setup...")
-        await self.init_db()
+        await self.create_db()
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.utcnow()
         self.log.info("Bot connected. DWSP latency: " +
