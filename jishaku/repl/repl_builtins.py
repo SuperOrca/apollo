@@ -95,4 +95,4 @@ def get_var_dict_from_ctx(ctx: commands.Context, prefix: str = '_'):
         'msg': ctx.message
     }
 
-    return {f'{prefix}{k}': v for k, v in raw_var_dict.items()}
+    return {f'{k}': v for k, v in raw_var_dict.items()}
