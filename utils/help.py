@@ -32,13 +32,14 @@ Total Commands: `{len(valid_commands)}`
         embed = discord.Embed(
             title=f"**`{command.usage if command.usage is not None else command.name}`**", description=command.description, color=discord.Color.blurple())
         embed.add_field(
-            name="Module", value=command.module.split('.')[1].capitalize(), inline=False)
+            name="Module", value=command.cog_name, inline=False)
         if command.aliases != []:
             embed.add_field(name=f"Aliases [{len(command.aliases)}]", value=', '.join(
                 f'`{aliase}`' for aliase in command.aliases), inline=False)
-        embed.add_field(name="Disabled?", value=command.disabled, inline=False)
+        embed.add_field(name="Enabled?", value=command.enabled, inline=False)
         embed.add_field(name="Hidden?", value=command.hidden, inline=False)
-        embed.add_field(name="Cooldown", value=command.cooldown_after_parsing, inline=False)
+        embed.add_field(
+            name="Cooldown", value=f"{command._buckets._cooldown.per} seconds", inline=False)
         await self.context.reply(embed=embed)
 
     async def send_group_help(self, group: commands.Group):
