@@ -236,7 +236,8 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def _execute(self, ctx: commands.Context, language: str, *, code: codeblock_converter) -> None:
-        output = await self.bot.tio.execute(code.content, language=language)
+        async with ctx.typing():
+            output = await self.bot.tio.execute(code.content, language=language)
         await ctx.reply(embed=discord.Embed(description=f"```\n{output}\n```", color=0x2F3136))
 
 
