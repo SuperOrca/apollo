@@ -37,7 +37,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
                     f"Could not find a image from `{subreddit}`.")
         return embed
 
-    class Reddit(ui.View):
+    class RedditMenu(ui.View):
         def __init__(self):
             super().__init__()
             self.timeout = 180
@@ -84,4 +84,4 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
         def build(self):
             return self()
 
-    return PostMenu()
+    return RedditMenu()
