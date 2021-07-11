@@ -13,7 +13,7 @@ class Context(commands.Context):
                 super().__init__()
                 self.author = author
 
-            @ui.button(label='🗑️', style=discord.ButtonStyle.red)
+            @ui.button(emoji='🗑️', style=discord.ButtonStyle.red)
             async def delete(self, button: ui.Button, interaction: discord.Interaction):
                 if self.author == interaction.user:
                     await interaction.message.delete()
