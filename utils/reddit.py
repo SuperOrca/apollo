@@ -38,8 +38,8 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
         return embed
 
     class RedditMenu(ui.View):
-        def __init__(self):
-            super().__init__()
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
             self.timeout = 180
 
         @ui.button(label='⬅️', style=discord.ButtonStyle.blurple)
