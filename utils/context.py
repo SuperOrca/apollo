@@ -12,10 +12,10 @@ class Context(commands.Context):
             def __init__(self):
                 super().__init__()
 
-        @ui.button(label='🗑', style=discord.ButtonStyle.red)
-        async def previous(self, button: ui.Button, interaction: discord.Interaction):
-            if self.author == interaction.user:
-                await interaction.message.delete()
-            else:
-                await interaction.response.send_message("This is not your command.", ephemeral=True)
+            @ui.button(label='🗑', style=discord.ButtonStyle.red)
+            async def previous(self, button: ui.Button, interaction: discord.Interaction):
+                if self.author == interaction.user:
+                    await interaction.message.delete()
+                else:
+                    await interaction.response.send_message("This is not your command.", ephemeral=True)
         return await self.message.reply(content, **kwargs, mention_author=False, view=TrashView())
