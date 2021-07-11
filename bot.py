@@ -16,16 +16,11 @@ from aiogtts import aiogTTS
 from async_tio import Tio
 from databases import Database
 from utils.help import ApolloHelp
+from utils.context import Context
 from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
-
-
-class Context(commands.Context):
-    @discord.utils.copy_doc(discord.Message.reply)
-    async def reply(self, content: str = None, **kwargs):
-        return await self.message.reply(content, **kwargs, mention_author=False)
 
 
 class Apollo(commands.Bot):

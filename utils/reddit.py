@@ -44,7 +44,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
 
         @ui.button(label='⬅️', style=discord.ButtonStyle.blurple)
         async def previous(self, button: ui.Button, interaction: discord.Interaction):
-            if self.ctx.author.id == interaction.user.id:
+            if self.ctx.author == interaction.user:
                 if self.num > 0:
                     self.num -= 1
                     await self.message.edit(embed=self.log[self.num])
@@ -55,14 +55,14 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
 
         @ui.button(label='🛑', style=discord.ButtonStyle.red)
         async def on_stop(self, button: ui.Button, interaction: discord.Interaction):
-            if self.ctx.author.id == interaction.user.id:
+            if self.ctx.author == interaction.user:
                 await self.message.edit(view=None)
             else:
                 await interaction.response.send_message("This is not your command.", ephemeral=True)
 
         @ui.button(label='➡️', style=discord.ButtonStyle.blurple)
         async def forwards(self, button: ui.Button, interaction: discord.Interaction):
-            if self.ctx.author.id == interaction.user.id:
+            if self.ctx.author == interaction.user:
                 self.num += 1
                 try:
                     await self.message.edit(embed=self.log[self.num])
