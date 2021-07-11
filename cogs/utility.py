@@ -5,6 +5,7 @@ from jishaku.codeblocks import codeblock_converter
 import io
 import humanize
 
+
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
@@ -217,7 +218,7 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
             await self.tts.write_to_fp(text, buffer, slow=True, lang="en")
         buffer.seek(0)
         await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
-    
+
     @commands.command(name='youtube')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def _youtube(self, ctx: commands.Context, query: str) -> None:
@@ -234,30 +235,8 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
 
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _execute(self, ctx: commands.Context, language: str, *, code: str) -> None:
-        if code.startswith('```') and code.endswith('```'):
-            if code.startswith('```\n') and code.endswith('\n```') in code:
-                code = code.split('\n')
-                code = code[1:]
-                code = code[:-1]
-                code = '\n'.join(code)
-            elif code.startswith('```\n') and code.endswith('```'):
-                code = code.split('\n')
-                code = code[1:]
-                code = '\n'.join(code)
-                code = code[:-3]
-            elif code.startswith('```') and code.endswith('\n```'):
-                code = code.split('\n')
-                code = code[:-1]
-                code = '\n'.join(code)
-                code = code[3:]
-            else:
-                code = code[3:]
-                code = code[:-3]
-        elif code.startswith('`') and code.endswith('`'):
-            code = code[1:]
-            code = code[:-1]
-        output = await self.bot.tio.execute(code, language=language)
+    async def _execute(self, ctx: commands.Context, language: str, *, code: codeblock_converter) -> None:
+        output = await self.bot.tio.execute(code.content, language=language)
         await ctx.reply(embed=discord.Embed(description=f"```\n{output}\n```", color=0x2F3136))
 
 
