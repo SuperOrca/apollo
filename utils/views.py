@@ -32,6 +32,7 @@ class ViewMenu(menus.Menu):
             return callback
 
         view = discord.ui.View(timeout=self.timeout)
+        print(self.buttons)
         for i, (emoji, button) in enumerate(self.buttons.items()):
             item = discord.ui.Button(style=discord.ButtonStyle.secondary, emoji=emoji, row=i // 5)
             item.callback = make_callback(button)
@@ -148,7 +149,7 @@ class ViewMenu(menus.Menu):
                 await self._event.wait()
 
     def send_with_view(self, messageable, *args, **kwargs):
-        return messageable.reply(*args, **kwargs, view=self.build_view())
+        return messageable.send(*args, **kwargs, view=self.build_view())
 
     def stop(self):
         self._running = False

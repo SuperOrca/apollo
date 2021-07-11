@@ -37,49 +37,45 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
                     f"Could not find a image from `{subreddit}`.")
         return embed
 
-    class RedditMenu(ui.View):
-        def __init__(self, **kwargs):
-            super().__init__(**kwargs)
-            self.timeout = 90
+    class PostMenu(ViewMenu):
+        def __init__(self):
+            super().__init__(clear_reactions_after=True)
+            self.message = None
+            self.timeout = 180
+            self.log = []
+            self.num = 0
 
-        @ui.button(label='⬅️', style=discord.ButtonStyle.blurple)
-        async def previous(self, button: ui.Button, interaction: discord.Interaction):
+        async def send_initial_message(self, ctx, channel):
+            embed = await post()
+            self.log.append(embed)
+            self.message = await self.send_with_view(channel, embed=embed)
+            return self.message
+
+        @menus.button("⬅️")
+        async def back(self, interaction):
             if self.ctx.author.id == interaction.user.id:
                 if self.num > 0:
                     self.num -= 1
-                    await self.message.edit(embed=self.log[self.num], view=self())
-                else:
-                    await interaction.response.send_message("Cannot go to previous.", ephemeral=True)
-            else:
-                await interaction.response.send_message("This is not your command.", ephemeral=True)
+                    await self.message.edit(embed=self.log[self.num])
 
-        @ui.button(label='🛑', style=discord.ButtonStyle.red)
-        async def on_stop(self, button: ui.Button, interaction: discord.Interaction):
+        @menus.button("🛑")
+        async def on_stop(self, interaction):
             if self.ctx.author.id == interaction.user.id:
-                await self.message.edit(view=None)
-            else:
-                await interaction.response.send_message("This is not your command.", ephemeral=True)
+                self.stop()
 
-        @ui.button(label='➡️', style=discord.ButtonStyle.blurple)
-        async def forwards(self, button: ui.Button, interaction: discord.Interaction):
+        @menus.button("➡️")
+        async def forward(self, interaction):
             if self.ctx.author.id == interaction.user.id:
                 self.num += 1
                 try:
-                    await self.message.edit(embed=self.log[self.num], view=self())
+                    await self.message.edit(embed=self.log[self.num])
                 except IndexError:
                     embed = await post()
                     self.log.append(embed)
-                    await self.message.edit(embed=embed, view=self())
-            else:
-                await interaction.response.send_message("This is not your command.", ephemeral=True)
+                    await self.message.edit(embed=embed)
 
-        @classmethod
-        async def start(self, ctx: commands.Context):
+        async def start(self, ctx):
+            await super().start(ctx)
             self.ctx = ctx
-            self.log = []
-            self.num = 0
-            embed = await post()
-            self.log.append(embed)
-            self.message = await ctx.reply(embed=embed, view=self())
 
-    return RedditMenu
+    return PostMenu()
