@@ -24,7 +24,7 @@ async def dagpi_process(ctx: commands.Context, image, feature, end="png", **kwar
 async def imageToPIL(ctx, image) -> Image:
     url = await getImage(ctx, image)
     response = await ctx.bot.session.get(url)
-    image = Image.open(BytesIO(await response.read()))
+    return Image.open(BytesIO(await response.read()))
 
 
 def fileFromBytes(ctx, image) -> discord.File:
