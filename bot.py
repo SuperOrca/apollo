@@ -12,6 +12,8 @@ import mystbin
 import asyncdagpi
 import aiohttp
 import statcord
+from aiogtts import aiogTTS
+from async_tio import Tio
 from databases import Database
 from utils.help import ApolloHelp
 from discord.ext import commands
@@ -64,11 +66,14 @@ class Apollo(commands.Bot):
         self.statcord.start_loop()
         self.db = None
         self.dagpi = asyncdagpi.Client(getenv('DAGPI'))
+        self.tts = aiogTTS()
+        self.tio = None
 
-    async def create_db(self) -> None:
-        self.db: Database = Database('sqlite:///bot.db')
+    async def create(self) -> None:
+        self.db = Database('sqlite:///bot.db')
         await self.db.connect()
         await self.db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
+        self.tio = await Tio()
 
     async def get_guild_prefix(self, message: discord.Message):
         try:
@@ -88,7 +93,7 @@ class Apollo(commands.Bot):
 
     async def on_ready(self) -> None:
         self.log.info("Running setup...")
-        await self.create_db()
+        await self.create()
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.utcnow()
         self.log.info("Bot connected. DWSP latency: " +
@@ -135,4 +140,6 @@ class Apollo(commands.Bot):
         await self.session.close()
         await self.db.disconnect()
         await self.dagpi.close()
+        await self.tio.close()
+        await self.mystbin.close()
         await super().close()

@@ -1,16 +1,13 @@
 import discord
 from discord.ext import commands
 from utils.music import YTDLError, Song, YTDLSource
+from jishaku.codeblocks import codeblock_converter
 import io
-from aiogtts import aiogTTS
-from async_tio import Tio
 import humanize
 
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
-        self.tts = aiogTTS()
-        self.tio = Tio()
 
     @commands.command(name='avatar', description="Shows a user's avatar.", usage="avatar [member]")
     async def _avatar(self, ctx: commands.Context, member: commands.MemberConverter = None) -> None:
@@ -260,7 +257,7 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
         elif code.startswith('`') and code.endswith('`'):
             code = code[1:]
             code = code[:-1]
-        output = await self.tio.execute(code, language=language)
+        output = await self.bot.tio.execute(code, language=language)
         await ctx.reply(embed=discord.Embed(description=f"```\n{output}\n```", color=0x2F3136))
 
 
