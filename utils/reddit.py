@@ -40,14 +40,14 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
     class RedditMenu(ui.View):
         def __init__(self, **kwargs):
             super().__init__(**kwargs)
-            self.timeout = 180
+            self.timeout = 90
 
         @ui.button(label='⬅️', style=discord.ButtonStyle.blurple)
         async def previous(self, button: ui.Button, interaction: discord.Interaction):
             if self.ctx.author.id == interaction.user.id:
                 if self.num > 0:
                     self.num -= 1
-                    await self.message.edit(embed=self.log[self.num], view=self.build())
+                    await self.message.edit(embed=self.log[self.num], view=self())
                 else:
                     await interaction.response.send_message("Cannot go to previous.", ephemeral=True)
             else:
@@ -65,23 +65,21 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             if self.ctx.author.id == interaction.user.id:
                 self.num += 1
                 try:
-                    await self.message.edit(embed=self.log[self.num], view=self.build())
+                    await self.message.edit(embed=self.log[self.num], view=self())
                 except IndexError:
                     embed = await post()
                     self.log.append(embed)
-                    await self.message.edit(embed=embed, view=self.build())
+                    await self.message.edit(embed=embed, view=self())
             else:
                 await interaction.response.send_message("This is not your command.", ephemeral=True)
 
+        @classmethod
         async def start(self, ctx: commands.Context):
             self.ctx = ctx
             self.log = []
             self.num = 0
             embed = await post()
             self.log.append(embed)
-            self.message = await ctx.reply(embed=embed, view=self.build())
-
-        def build(self):
-            return self()
+            self.message = await ctx.reply(embed=embed, view=self())
 
     return RedditMenu
