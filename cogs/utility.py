@@ -144,7 +144,7 @@ class Utility(commands.Cog):
     async def _execute(self, ctx: commands.Context, language: str, *, code: codeblock_converter) -> None:
         async with ctx.typing():
             output = await self.bot.tio.execute(code.content, language=language)
-        await ctx.reply(embed=discord.Embed(description=f"```\n{output[:6000]}\n```", color=0x2F3136))
+        await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:6000]}\n```", color=0x2F3136))
 
 
 def setup(bot) -> None:
