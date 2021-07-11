@@ -21,7 +21,7 @@ async def dagpi_process(ctx: commands.Context, image, feature, end="png", **kwar
     await ctx.reply(file=file, embed=embed)
 
 
-async def imageToPIL(ctx, image) -> PIL.Image:
+async def imageToPIL(ctx, image) -> Image:
     url = await getImage(ctx, image)
     response = await ctx.bot.session.get(url)
     image = Image.open(BytesIO(await response.read()))
