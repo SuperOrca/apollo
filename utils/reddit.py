@@ -39,7 +39,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
 
     class RedditView(ui.View):
         def __init__(self):
-            super().__init__()
+            super().__init__(timeout=120)
 
         @ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple)
         async def previous(self, button: ui.Button, interaction: discord.Interaction):

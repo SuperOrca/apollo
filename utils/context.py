@@ -10,7 +10,7 @@ class Context(commands.Context):
     async def trash(self, content: str = None, **kwargs):
         class TrashView(ui.View):
             def __init__(self, author):
-                super().__init__()
+                super().__init__(timeout=60)
                 self.author = author
 
             @ui.button(emoji='🗑️', style=discord.ButtonStyle.red)
