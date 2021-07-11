@@ -1,11 +1,14 @@
 import re
 from typing import Union
+from io import BytesIO
 
 import discord
 from discord.ext import commands
+from PIL import Image
 import twemoji_parser as twemoji
 
 from .metrics import isImage
+
 
 async def dagpi_process(ctx: commands.Context, image, feature, end="png", **kwargs) -> discord.Embed:
     url = await getImage(ctx, image)
@@ -16,6 +19,19 @@ async def dagpi_process(ctx: commands.Context, image, feature, end="png", **kwar
         embed.set_image(url=f"attachment://{ctx.command.name}.{end}")
         embed.set_footer(text="Powered by https://dagpi.xyz/")
     await ctx.reply(file=file, embed=embed)
+
+
+async def imageToPIL(ctx, image) -> PIL.Image:
+    url = await getImage(ctx, image)
+    response = await ctx.bot.session.get(url)
+    image = Image.open(BytesIO(await response.read()))
+
+
+def fileFromBytes(ctx, image) -> discord.File:
+    buffer = BytesIO()
+    image.save(buffer, "png")
+    buffer.seek(0)
+    return discord.File(buffer, f"{ctx.command.name}.png")
 
 
 async def getImage(ctx: commands.Context, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):

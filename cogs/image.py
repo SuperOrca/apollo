@@ -1,11 +1,12 @@
 from os import getenv
 from typing import Union
+from io import BytesIO
 
 import asyncdagpi
 import discord
 from discord.ext import commands
 
-from utils.image import dagpi_process
+from utils.image import dagpi_process, imageToPIL, fileFromBytes
 from utils.wrappers import typing
 
 
@@ -210,6 +211,17 @@ class Image(commands.Cog):
     async def _magik(self, ctx: commands.Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.magik())
+
+    @commands.command(name='flip', descripton="Flip an image.", usage="flip [image]")
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def _flip(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+        image = await imageToPIL(ctx, image)
+
+        image = image.rotate(180)
+
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        await ctx.reply(file=fileFromBytes(ctx, image), embed=embed)
 
 
 def setup(bot) -> None:
