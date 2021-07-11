@@ -48,7 +48,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
         async def send_initial_message(self, ctx, channel):
             embed = await post()
             self.log.append(embed)
-            self.message = await self.reply_with_view(channel, embed=embed)
+            self.message = await self.send_with_view(channel, embed=embed)
             return self.message
 
         @menus.button("⬅️")

@@ -29,19 +29,19 @@ class Meta(commands.Cog):
 
     @commands.command(name='stats', description="Shows the bot stats.")
     async def _stats(self, ctx: commands.Context) -> None:
-        await ctx.reply(
+        await ctx.send(
             embed=discord.Embed(description="View the bot stats [here](https://statcord.com/bot/847566539607769089).",
                                 color=discord.Color.blurple()))
 
     @commands.command(name='invite', description="Shows the bot invite.")
     async def _invite(self, ctx: commands.Context) -> None:
-        await ctx.reply(embed=discord.Embed(
+        await ctx.send(embed=discord.Embed(
             description="Invite the bot [here](https://discord.com/api/oauth2/authorize?client_id=847566539607769089&permissions=8&scope=bot).",
             color=discord.Color.blurple()))
 
     @commands.command(name='uptime', description="Shows the bot uptime.")
     async def _uptime(self, ctx: commands.Context) -> None:
-        await ctx.reply(embed=discord.Embed(description=f"The bot has been online for `{self.get_uptime()}`.",
+        await ctx.send(embed=discord.Embed(description=f"The bot has been online for `{self.get_uptime()}`.",
                                             color=discord.Color.blurple()))
 
     @commands.command(name='ping', description="Shows the bot ping.")
@@ -59,7 +59,7 @@ class Meta(commands.Cog):
         embed.add_field(name="Database",
                         value=f"```py\n{database:.2f} ms\n```")
         embed.set_thumbnail(url=self.bot.user.avatar.url)
-        await ctx.reply(embed=embed)
+        await ctx.send(embed=embed)
 
     @commands.command(name='info', description="Shows information about the bot.")
     async def _info(self, ctx: commands.Context) -> None:
@@ -78,11 +78,11 @@ class Meta(commands.Cog):
             name="Uptime", value=f"{self.get_uptime()}", inline=True)
         dpy = pkg_resources.get_distribution('discord.py').version
         embed.add_field(name="discord.py", value=f"v{dpy}")
-        await ctx.reply(embed=embed)
+        await ctx.send(embed=embed)
 
     @commands.command(name='source', description="Shows source of the bot.", aliases=['src', 'contribute', 'contrib'])
     async def _source(self, ctx: commands.Context) -> None:
-        await ctx.reply(
+        await ctx.send(
             embed=discord.Embed(description="View the bot source [here](https://github.com/SuperOrca/apollo).",
                                 color=discord.Color.blurple()))
 
@@ -90,11 +90,11 @@ class Meta(commands.Cog):
     async def _prefix(self, ctx: commands.Context, prefix: PrefixConverter = None) -> None:
         if ctx.author.guild_permissions.administrator and prefix:
             await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)", values={"id": ctx.guild.id, "prefix": prefix})
-            await ctx.reply(embed=discord.Embed(description=f"Set the server prefix to `{prefix}`.",
+            await ctx.send(embed=discord.Embed(description=f"Set the server prefix to `{prefix}`.",
                                                 color=discord.Color.blurple()))
         else:
             prefix = await self.bot.get_guild_prefix(ctx.message)
-            await ctx.reply(embed=discord.Embed(description=f"The current server prefix is `{prefix}`.",
+            await ctx.send(embed=discord.Embed(description=f"The current server prefix is `{prefix}`.",
                                                 color=discord.Color.blurple()))
 
 

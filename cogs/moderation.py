@@ -37,7 +37,7 @@ class Moderation(commands.Cog):
         except discord.HTTPException:
             ...
         await member.ban(reason=reason)
-        await ctx.reply(
+        await ctx.send(
             embed=discord.Embed(description=f"Banned {member.mention} for `{reason}`. (by {ctx.author.mention})",
                                 color=discord.Color.dark_red()))
 
@@ -53,7 +53,7 @@ class Moderation(commands.Cog):
         except discord.HTTPException:
             ...
         await member.kick(reason=reason)
-        await ctx.reply(
+        await ctx.send(
             embed=discord.Embed(description=f"Kicked {member.mention} for `{reason}`. (by {ctx.author.mention})",
                                 color=discord.Color.dark_red()))
 
@@ -67,7 +67,7 @@ class Moderation(commands.Cog):
 
         channel = channel or ctx.channel
         await ctx.channel.edit(slowmode_delay=seconds)
-        await ctx.reply(embed=discord.Embed(
+        await ctx.send(embed=discord.Embed(
             description=f"Set slowmode of {channel.mention} to `{seconds}` seconds.", color=discord.Color.dark_red()))
 
     @commands.command(name='unban', description="Unban a user.", usage="unban <user>")
@@ -75,7 +75,7 @@ class Moderation(commands.Cog):
     async def _unban(self, ctx: commands.Context, user: commands.UserConverter) -> None:
         member = discord.Object(id=user.id)
         await ctx.guild.unban(member)
-        await ctx.reply(embed=discord.Embed(description=f"Unbanned {user.mention} (by {ctx.author.mention}).",
+        await ctx.send(embed=discord.Embed(description=f"Unbanned {user.mention} (by {ctx.author.mention}).",
                                             color=discord.Color.dark_red()))
 
     @commands.command(name='setnick', description="Set nick of member. Set to 'reset' to reset.",
@@ -87,7 +87,7 @@ class Moderation(commands.Cog):
             await member.edit(nick=None)
         else:
             await member.edit(nick=nick)
-        await ctx.reply(embed=discord.Embed(description=f"Changed {member.mention} nickname to `{nick}`.",
+        await ctx.send(embed=discord.Embed(description=f"Changed {member.mention} nickname to `{nick}`.",
                                             color=discord.Color.dark_red()))
 
 

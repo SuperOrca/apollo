@@ -27,7 +27,7 @@ Total Commands: `{len(valid_commands)}`
         )
         embed.add_field(name=":newspaper: News - July 9, 2021",
                         value="Invite my bot to ur server pls :)")
-        await self.context.reply(embed=embed)
+        await self.context.send(embed=embed)
 
     async def send_command_help(self, command: commands.Command):
         embed = discord.Embed(
@@ -42,7 +42,7 @@ Total Commands: `{len(valid_commands)}`
         if command._buckets._cooldown is not None:
             embed.add_field(
                 name="Cooldown", value=f"{command._buckets._cooldown.per} seconds")
-        await self.context.reply(embed=embed)
+        await self.context.send(embed=embed)
 
     async def send_group_help(self, group: commands.Group):
         print(group, dir(group))
@@ -58,4 +58,4 @@ Total Commands: `{len(valid_commands)}`
 ```
 > {', '.join(f'`{cmd.name}`' for cmd in cog.get_commands())}
         """, color=discord.Color.blurple())
-        await self.context.reply(embed=embed)
+        await self.context.send(embed=embed)

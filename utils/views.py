@@ -150,9 +150,6 @@ class ViewMenu(menus.Menu):
     def send_with_view(self, messageable, *args, **kwargs):
         return messageable.send(*args, **kwargs, view=self.build_view())
 
-    def reply_with_view(self, messageable, *args, **kwargs):
-        return messageable.reply(*args, **kwargs, view=self.build_view())
-
     def stop(self):
         self._running = False
         for task in self.__tasks:
