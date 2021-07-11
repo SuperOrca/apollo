@@ -6,7 +6,6 @@ from discord.ext import commands, menus
 from discord import ui
 
 from .metrics import isImage
-from .views import ViewMenu
 
 
 async def getpost(bot, channel, subreddit) -> discord.Embed:
