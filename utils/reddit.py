@@ -37,9 +37,9 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
                     f"Could not find a image from `{subreddit}`.")
         return embed
 
-    class RedditMenu(ui.View):
-        def __init__(self, **kwargs):
-            super().__init__(timeout=90)
+    class RedditView(ui.View):
+        def __init__(self):
+            super().__init__()
 
         @ui.button(label='⬅️', style=discord.ButtonStyle.blurple)
         async def previous(self, button: ui.Button, interaction: discord.Interaction):
@@ -81,4 +81,4 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             cls.log.append(embed)
             cls.message = await ctx.reply(embed=embed, view=cls())
 
-    return RedditMenu
+    return RedditView
