@@ -59,7 +59,7 @@ class RootCommand(Feature):
         """
 
         summary = [
-            f"Jishaku `2.1.0`, discord.py `{package_version('discord.py')}`, "
+            f"Jishaku `v2.1.0`, discord.py `{package_version('discord.py')}`, "
             f"`Python {sys.version}` on `{sys.platform}`".replace("\n", ""),
             f"Module was loaded <t:{self.load_time.timestamp():.0f}:R>, "
             f"cog was loaded <t:{self.start_time.timestamp():.0f}:R>.",
@@ -85,7 +85,8 @@ class RootCommand(Feature):
                         pid = proc.pid
                         thread_count = proc.num_threads()
 
-                        summary.append(f"Running on PID {pid} (`{name}`) with {thread_count} thread(s).")
+                        summary.append(
+                            f"Running on PID {pid} (`{name}`) with {thread_count} thread(s).")
                     except psutil.AccessDenied:
                         pass
 
@@ -118,7 +119,8 @@ class RootCommand(Feature):
                 f" and can see {cache_summary}."
             )
         else:
-            summary.append(f"This bot is not sharded and can see {cache_summary}.")
+            summary.append(
+                f"This bot is not sharded and can see {cache_summary}.")
 
         # pylint: disable=protected-access
         if self.bot._connection.max_messages:
@@ -130,7 +132,8 @@ class RootCommand(Feature):
             presence_intent = f"presence intent is {'enabled' if self.bot.intents.presences else 'disabled'}"
             members_intent = f"members intent is {'enabled' if self.bot.intents.members else 'disabled'}"
 
-            summary.append(f"{message_cache}, {presence_intent} and {members_intent}.")
+            summary.append(
+                f"{message_cache}, {presence_intent} and {members_intent}.")
         else:
             guild_subscriptions = f"guild subscriptions are {'enabled' if self.bot._connection.guild_subscriptions else 'disabled'}"
 
@@ -139,7 +142,9 @@ class RootCommand(Feature):
         # pylint: enable=protected-access
 
         # Show websocket latency in milliseconds
-        summary.append(f"Average websocket latency: {round(self.bot.latency * 1000, 2)}ms")
+        summary.append('')
+        summary.append(
+            f"Average websocket latency: `{round(self.bot.latency * 1000, 2)}ms`")
 
         await ctx.reply(embed=discord.Embed(description="\n".join(summary), color=discord.Color.dark_purple()))
 
@@ -222,4 +227,4 @@ class RootCommand(Feature):
 
         task.task.cancel()
         return await ctx.reply(f"Cancelled task {task.index}: `{task.ctx.command.qualified_name}`,"
-                              f" invoked at {task.ctx.message.created_at.strftime('%Y-%m-%d %H:%M:%S')} UTC")
+                               f" invoked at {task.ctx.message.created_at.strftime('%Y-%m-%d %H:%M:%S')} UTC")
