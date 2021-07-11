@@ -215,12 +215,12 @@ class Image(commands.Cog):
     @commands.command(name='flip', descripton="Flip an image.", usage="flip [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _flip(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        image = await imageToPIL(ctx, image)
+        async with ctx.typing():
+            with await imageToPIL(ctx, image) as image:
+                image.rotate(180)
 
-        image = image.rotate(180)
-
-        embed = discord.Embed(color=discord.Color.dark_blue())
-        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+            embed = discord.Embed(color=discord.Color.dark_blue())
+            embed.set_image(url=f"attachment://{ctx.command.name}.png")
         await ctx.reply(file=fileFromBytes(ctx, image), embed=embed)
 
 
