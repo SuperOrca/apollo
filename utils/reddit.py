@@ -84,4 +84,4 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
         def build(self):
             return self()
 
-    return RedditMenu()
+    return RedditMenu
