@@ -7,9 +7,9 @@ from discord.ext import commands, tasks
 from datetime import datetime
 from time import time as count
 from discord.ext import menus
-from discord.ext.menus.views import ViewMenu
 
 from utils.converters import PrefixConverter
+from utils.views import ViewMenu
 
 
 class Meta(commands.Cog):

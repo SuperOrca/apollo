@@ -3,9 +3,9 @@ import random
 import discord
 from discord.ext import commands
 from discord.ext import menus
-from discord.ext.menus.views import ViewMenu
 
 from .metrics import isImage
+from .views import ViewMenu
 
 
 async def getpost(bot, channel, subreddit) -> discord.Embed:
