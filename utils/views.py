@@ -32,7 +32,6 @@ class ViewMenu(menus.Menu):
             return callback
 
         view = discord.ui.View(timeout=self.timeout)
-        print(self.buttons)
         for i, (emoji, button) in enumerate(self.buttons.items()):
             item = discord.ui.Button(style=discord.ButtonStyle.secondary, emoji=emoji, row=i // 5)
             item.callback = make_callback(button)

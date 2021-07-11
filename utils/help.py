@@ -45,7 +45,7 @@ Total Commands: `{len(valid_commands)}`
         await self.context.reply(embed=embed)
 
     async def send_group_help(self, group: commands.Group):
-        print(group, dir(group))
+        self.context.bot.log.error(group, dir(group))
 
     async def send_cog_help(self, cog: commands.Cog):
         prefix = await self.context.bot.get_guild_prefix(self.context.message)

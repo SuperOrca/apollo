@@ -44,7 +44,6 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
 
         @ui.button(label='⬅️', style=discord.ButtonStyle.blurple)
         async def previous(self, button: ui.Button, interaction: discord.Interaction):
-            print(self.message, self.ctx, self.num, self, self.log)
             if self.ctx.author.id == interaction.user.id:
                 if self.num > 0:
                     self.num -= 1
@@ -63,7 +62,6 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
 
         @ui.button(label='➡️', style=discord.ButtonStyle.blurple)
         async def forwards(self, button: ui.Button, interaction: discord.Interaction):
-            print(self.message, self.ctx, self.num, self, self.log)
             if self.ctx.author.id == interaction.user.id:
                 self.num += 1
                 try:
