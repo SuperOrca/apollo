@@ -7,7 +7,7 @@ import twemoji_parser as twemoji
 
 from .metrics import isImage
 
-async def dagpi_process(self, ctx: commands.Context, image, feature, end="png", **kwargs) -> discord.Embed:
+async def dagpi_process(ctx: commands.Context, image, feature, end="png", **kwargs) -> discord.Embed:
     url = await getImage(ctx, image)
     async with ctx.typing():
         img = await ctx.bot.dagpi.image_process(feature, url=str(url), **kwargs)
