@@ -1,4 +1,4 @@
-  
+
 import random
 
 import discord
@@ -48,7 +48,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             if self.ctx.author.id == interaction.user.id:
                 if self.num > 0:
                     self.num -= 1
-                    await self.message.edit(embed=self.log[self.num], view=self())
+                    await self.message.edit(embed=self.log[self.num], view=RedditMenu())
                 else:
                     await interaction.response.send_message("Cannot go to previous.", ephemeral=True)
             else:
@@ -66,21 +66,21 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             if self.ctx.author.id == interaction.user.id:
                 self.num += 1
                 try:
-                    await self.message.edit(embed=self.log[self.num], view=self())
+                    await self.message.edit(embed=self.log[self.num], view=RedditMenu())
                 except IndexError:
                     embed = await post()
                     self.log.append(embed)
-                    await self.message.edit(embed=embed, view=self())
+                    await self.message.edit(embed=embed, view=RedditMenu())
             else:
                 await interaction.response.send_message("This is not your command.", ephemeral=True)
 
         @classmethod
-        async def start(self, ctx: commands.Context):
-            self.ctx = ctx
-            self.log = []
-            self.num = 0
+        async def start(cls, ctx: commands.Context):
+            cls.ctx = ctx
+            cls.log = []
+            cls.num = 0
             embed = await post()
-            self.log.append(embed)
-            self.message = await ctx.reply(embed=embed, view=self())
+            cls.log.append(embed)
+            cls.message = await ctx.reply(embed=embed, view=cls())
 
     return RedditMenu
