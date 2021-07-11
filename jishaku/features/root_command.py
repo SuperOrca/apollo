@@ -141,7 +141,7 @@ class RootCommand(Feature):
         # Show websocket latency in milliseconds
         summary.append(f"Average websocket latency: {round(self.bot.latency * 1000, 2)}ms")
 
-        await ctx.send(embed=discord.Embed(description="\n".join(summary), color=discord.Color.dark_purple()))
+        await ctx.reply(embed=discord.Embed(description="\n".join(summary), color=discord.Color.dark_purple()))
 
     # pylint: disable=no-member
     @Feature.Command(parent="jsk", name="hide")
@@ -151,10 +151,10 @@ class RootCommand(Feature):
         """
 
         if self.jsk.hidden:
-            return await ctx.send("Jishaku is already hidden.")
+            return await ctx.reply("Jishaku is already hidden.")
 
         self.jsk.hidden = True
-        await ctx.send("Jishaku is now hidden.")
+        await ctx.reply("Jishaku is now hidden.")
 
     @Feature.Command(parent="jsk", name="show")
     async def jsk_show(self, ctx: commands.Context):
@@ -163,10 +163,10 @@ class RootCommand(Feature):
         """
 
         if not self.jsk.hidden:
-            return await ctx.send("Jishaku is already visible.")
+            return await ctx.reply("Jishaku is already visible.")
 
         self.jsk.hidden = False
-        await ctx.send("Jishaku is now visible.")
+        await ctx.reply("Jishaku is now visible.")
     # pylint: enable=no-member
 
     @Feature.Command(parent="jsk", name="tasks")
@@ -176,7 +176,7 @@ class RootCommand(Feature):
         """
 
         if not self.tasks:
-            return await ctx.send("No currently running tasks.")
+            return await ctx.reply("No currently running tasks.")
 
         paginator = commands.Paginator(max_size=1985)
 
@@ -196,7 +196,7 @@ class RootCommand(Feature):
         """
 
         if not self.tasks:
-            return await ctx.send("No tasks to cancel.")
+            return await ctx.reply("No tasks to cancel.")
 
         if index == "~":
             task_count = len(self.tasks)
@@ -206,7 +206,7 @@ class RootCommand(Feature):
 
             self.tasks.clear()
 
-            return await ctx.send(f"Cancelled {task_count} tasks.")
+            return await ctx.reply(f"Cancelled {task_count} tasks.")
 
         if isinstance(index, str):
             raise commands.BadArgument('Literal for "index" not recognized.')
@@ -218,8 +218,8 @@ class RootCommand(Feature):
             if task:
                 self.tasks.remove(task)
             else:
-                return await ctx.send("Unknown task.")
+                return await ctx.reply("Unknown task.")
 
         task.task.cancel()
-        return await ctx.send(f"Cancelled task {task.index}: `{task.ctx.command.qualified_name}`,"
+        return await ctx.reply(f"Cancelled task {task.index}: `{task.ctx.command.qualified_name}`,"
                               f" invoked at {task.ctx.message.created_at.strftime('%Y-%m-%d %H:%M:%S')} UTC")

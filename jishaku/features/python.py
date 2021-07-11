@@ -59,23 +59,23 @@ class PythonFeature(Feature):
 
         if toggle is None:
             if self.retain:
-                return await ctx.send("Variable retention is set to ON.")
+                return await ctx.reply("Variable retention is set to ON.")
 
-            return await ctx.send("Variable retention is set to OFF.")
+            return await ctx.reply("Variable retention is set to OFF.")
 
         if toggle:
             if self.retain:
-                return await ctx.send("Variable retention is already set to ON.")
+                return await ctx.reply("Variable retention is already set to ON.")
 
             self.retain = True
             self._scope = Scope()
-            return await ctx.send("Variable retention is ON. Future REPL sessions will retain their scope.")
+            return await ctx.reply("Variable retention is ON. Future REPL sessions will retain their scope.")
 
         if not self.retain:
-            return await ctx.send("Variable retention is already set to OFF.")
+            return await ctx.reply("Variable retention is already set to OFF.")
 
         self.retain = False
-        return await ctx.send("Variable retention is OFF. Future REPL sessions will dispose their scope when done.")
+        return await ctx.reply("Variable retention is OFF. Future REPL sessions will dispose their scope when done.")
 
     @Feature.Command(parent="jsk", name="py", aliases=["python"])
     async def jsk_python(self, ctx: commands.Context, *, argument: codeblock_converter):
@@ -99,9 +99,9 @@ class PythonFeature(Feature):
                         self.last_result = result
 
                         if isinstance(result, discord.File):
-                            send(await ctx.send(file=result))
+                            send(await ctx.reply(file=result))
                         elif isinstance(result, discord.Embed):
-                            send(await ctx.send(embed=result))
+                            send(await ctx.reply(embed=result))
                         elif isinstance(result, PaginatorInterface):
                             send(await result.send_to(ctx))
                         else:
@@ -113,7 +113,7 @@ class PythonFeature(Feature):
                                 if result.strip() == '':
                                     result = "\u200b"
 
-                                send(await ctx.send(result.replace(self.bot.http.token, "[token omitted]")))
+                                send(await ctx.reply(result.replace(self.bot.http.token, "[token omitted]")))
 
                             elif len(result) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
                                 # Discord's desktop and web client now supports an interactive file content
@@ -121,7 +121,7 @@ class PythonFeature(Feature):
                                 # Since this avoids escape issues and is more intuitive than pagination for
                                 #  long results, it will now be prioritized over PaginatorInterface if the
                                 #  resultant content is below the filesize threshold
-                                send(await ctx.send(file=discord.File(
+                                send(await ctx.reply(file=discord.File(
                                     filename="output.py",
                                     fp=io.BytesIO(result.encode('utf-8'))
                                 )))
@@ -170,7 +170,7 @@ class PythonFeature(Feature):
                         text = "\n".join(lines)
 
                         if len(text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
-                            send(await ctx.send(file=discord.File(
+                            send(await ctx.reply(file=discord.File(
                                 filename="inspection.prolog",
                                 fp=io.BytesIO(text.encode('utf-8'))
                             )))
@@ -196,7 +196,7 @@ class PythonFeature(Feature):
             text = "\n".join(disassemble(argument.content, arg_dict=arg_dict))
 
             if len(text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
-                await ctx.send(file=discord.File(
+                await ctx.reply(file=discord.File(
                     filename="dis.py",
                     fp=io.BytesIO(text.encode('utf-8'))
                 ))

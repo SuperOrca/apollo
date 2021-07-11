@@ -55,8 +55,8 @@ class InvocationFeature(Feature):
 
         if alt_ctx.command is None:
             if alt_ctx.invoked_with is None:
-                return await ctx.send('This bot has been hard-configured to ignore this user.')
-            return await ctx.send(f'Command "{alt_ctx.invoked_with}" is not found')
+                return await ctx.reply('This bot has been hard-configured to ignore this user.')
+            return await ctx.reply(f'Command "{alt_ctx.invoked_with}" is not found')
 
         return await alt_ctx.command.invoke(alt_ctx)
 
@@ -69,7 +69,7 @@ class InvocationFeature(Feature):
         alt_ctx = await copy_context_with(ctx, channel=channel, content=ctx.prefix + command_string)
 
         if alt_ctx.command is None:
-            return await ctx.send(f'Command "{alt_ctx.invoked_with}" is not found')
+            return await ctx.reply(f'Command "{alt_ctx.invoked_with}" is not found')
 
         return await alt_ctx.command.invoke(alt_ctx)
 
@@ -84,7 +84,7 @@ class InvocationFeature(Feature):
         alt_ctx = await copy_context_with(ctx, content=ctx.prefix + command_string)
 
         if alt_ctx.command is None:
-            return await ctx.send(f'Command "{alt_ctx.invoked_with}" is not found')
+            return await ctx.reply(f'Command "{alt_ctx.invoked_with}" is not found')
 
         return await alt_ctx.command.reinvoke(alt_ctx)
 
@@ -102,7 +102,7 @@ class InvocationFeature(Feature):
                 alt_ctx = await copy_context_with(ctx, content=ctx.prefix + command_string)
 
                 if alt_ctx.command is None:
-                    return await ctx.send(f'Command "{alt_ctx.invoked_with}" is not found')
+                    return await ctx.reply(f'Command "{alt_ctx.invoked_with}" is not found')
 
                 await alt_ctx.command.reinvoke(alt_ctx)
 
@@ -115,7 +115,7 @@ class InvocationFeature(Feature):
         alt_ctx = await copy_context_with(ctx, content=ctx.prefix + command_string)
 
         if alt_ctx.command is None:
-            return await ctx.send(f'Command "{alt_ctx.invoked_with}" is not found')
+            return await ctx.reply(f'Command "{alt_ctx.invoked_with}" is not found')
 
         start = time.perf_counter()
 
@@ -124,7 +124,7 @@ class InvocationFeature(Feature):
                 await alt_ctx.command.invoke(alt_ctx)
 
         end = time.perf_counter()
-        return await ctx.send(f"Command `{alt_ctx.command.qualified_name}` finished in {end - start:.3f}s.")
+        return await ctx.reply(f"Command `{alt_ctx.command.qualified_name}` finished in {end - start:.3f}s.")
 
     @Feature.Command(parent="jsk", name="source", aliases=["src"])
     async def jsk_source(self, ctx: commands.Context, *, command_name: str):
@@ -134,12 +134,12 @@ class InvocationFeature(Feature):
 
         command = self.bot.get_command(command_name)
         if not command:
-            return await ctx.send(f"Couldn't find command `{command_name}`.")
+            return await ctx.reply(f"Couldn't find command `{command_name}`.")
 
         try:
             source_lines, _ = inspect.getsourcelines(command.callback)
         except (TypeError, OSError):
-            return await ctx.send(f"Was unable to retrieve the source for `{command}` for some reason.")
+            return await ctx.reply(f"Was unable to retrieve the source for `{command}` for some reason.")
 
         filename = "source.py"
 
@@ -152,7 +152,7 @@ class InvocationFeature(Feature):
         source_text = ''.join(source_lines)
 
         if len(source_text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
-            await ctx.send(file=discord.File(
+            await ctx.reply(file=discord.File(
                 filename=filename,
                 fp=io.BytesIO(source_text.encode('utf-8'))
             ))

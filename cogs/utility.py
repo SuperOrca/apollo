@@ -16,7 +16,7 @@ class Utility(commands.Cog):
             description=f"[png]({member.avatar_url_as(static_format='png')}) | [jpg]({member.avatar_url_as(static_format='jpg')}) | [webp]({member.avatar_url_as(static_format='webp')})",
             color=0x2F3136)
         embed.set_image(url=member.avatar_url_as(static_format='png'))
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='pypi', description="Shows details of a python package.", usage="pypi <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -45,7 +45,7 @@ class Utility(commands.Cog):
                     name=title, value=f"[click]({url})", inline=True)
         f = discord.File('assets/python_logo.png', 'pypi.png')
         embed.set_thumbnail(url="attachment://pypi.png")
-        await ctx.send(embed=embed, file=f)
+        await ctx.reply(embed=embed, file=f)
 
     @commands.command(name='npm', description="Shows details of a node package.", usage="npm <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -68,7 +68,7 @@ class Utility(commands.Cog):
                                 value=f"[click]({url})")
         f = discord.File('assets/npm_logo.png', 'npm.png')
         embed.set_thumbnail(url="attachment://npm.png")
-        await ctx.send(embed=embed, file=f)
+        await ctx.reply(embed=embed, file=f)
 
     @commands.command(name='deno', description="Shows details of a deno package.", usage="deno <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -84,7 +84,7 @@ class Utility(commands.Cog):
                 embed.add_field(name="Stars", value=f"{data['star_count']:,}")
                 f = discord.File('assets/deno_logo.png', 'deno.png')
                 embed.set_thumbnail(url="attachment://deno.png")
-                await ctx.send(embed=embed, file=f)
+                await ctx.reply(embed=embed, file=f)
             else:
                 raise commands.BadArgument("Invalid package.")
 
@@ -99,7 +99,7 @@ class Utility(commands.Cog):
                                   url=data['html_url'], color=0x2F3136)
             embed.set_image(
                 url=f"https://opengraph.githubassets.com/c76ba569f3d5fd1be198fd9ac5577b03dc2bd09eed29021adfd94e615aad4315/{data['full_name']}")
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
         else:
             raise commands.BadArgument("Invalid repository.")
 
@@ -109,7 +109,7 @@ class Utility(commands.Cog):
         file = io.StringIO()
         file.write(text)
         file.seek(0)
-        await ctx.send(file=discord.File(file, 'output.txt'))
+        await ctx.reply(file=discord.File(file, 'output.txt'))
 
     @commands.command(name='serverinfo', description="Displays info about the server.", aliases=['guildinfo'])
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -159,7 +159,7 @@ Roles: `{len(ctx.guild.roles)}`
 Region: `{ctx.guild.region}`
 Created at: `{created_at}` ({humanize.naturaltime(ctx.guild.created_at)})""", inline=True)
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='userinfo', description="Displays info about the user.", usage="userinfo [member]")
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -203,7 +203,7 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
                          icon_url=ctx.author.avatar.url)
         embed.set_thumbnail(url=member.avatar.url)
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='tts', description="Text to speech.", usage="tts <text>", aliases=['texttospeech'])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -216,7 +216,7 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
         async with ctx.typing():
             await self.tts.write_to_fp(text, buffer, slow=True, lang="en")
         buffer.seek(0)
-        await ctx.send(file=discord.File(buffer, f"{text}.mp3"))
+        await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
     
     @commands.command(name='youtube')
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -225,12 +225,12 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
             try:
                 source = await YTDLSource.create_source(ctx, query, loop=self.bot.loop)
             except YTDLError as e:
-                await ctx.send('An error occurred while processing this request: {}'.format(str(e)))
+                await ctx.reply('An error occurred while processing this request: {}'.format(str(e)))
             else:
                 song = Song(source)
 
                 await ctx.voice_state.songs.put(song)
-                await ctx.send('Enqueued {}'.format(str(source)))
+                await ctx.reply('Enqueued {}'.format(str(source)))
 
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -258,7 +258,7 @@ Joined at: `{joined_at} ({humanize.naturaltime(member.joined_at)})`""", inline=T
             code = code[1:]
             code = code[:-1]
         output = await self.bot.tio.execute(code, language=language)
-        await ctx.send(embed=discord.Embed(description=f"```\n{output}\n```", color=0x2F3136))
+        await ctx.reply(embed=discord.Embed(description=f"```\n{output}\n```", color=0x2F3136))
 
 
 def setup(bot) -> None:

@@ -178,7 +178,7 @@ class PaginatorInterface:  # pylint: disable=too-many-instance-attributes
         This automatically creates the response task for you.
         """
 
-        self.message = await destination.send(**self.send_kwargs)
+        self.message = await destination.reply(**self.send_kwargs)
 
         # add the close reaction
         await self.message.add_reaction(self.emojis.close)

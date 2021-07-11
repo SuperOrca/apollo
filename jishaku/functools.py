@@ -48,7 +48,7 @@ def executor_function(sync_function: typing.Callable):
             color = color or ctx.author.color
             buff = await color_processing(color=color)
 
-            await ctx.send(file=discord.File(fp=buff, filename='color.png'))
+            await ctx.reply(file=discord.File(fp=buff, filename='color.png'))
     """
 
     @functools.wraps(sync_function)

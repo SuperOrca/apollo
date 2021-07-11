@@ -16,7 +16,7 @@ class Animals(commands.Cog):
         embed.set_image(url=data['link'])
         embed.set_footer(text="Powered by https://some-random-api.ml/")
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='cat', description="Shows a random cat.", aliases=['cats'])
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -29,7 +29,7 @@ class Animals(commands.Cog):
         embed.set_image(url=data['link'])
         embed.set_footer(text="Powered by https://some-random-api.ml/")
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='panda', description="Shows a random panda.", aliases=['pandas'])
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -42,7 +42,7 @@ class Animals(commands.Cog):
         embed.set_image(url=data['link'])
         embed.set_footer(text="Powered by https://some-random-api.ml/")
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='bird', description="Shows a random bird.", aliases=['birds'])
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -55,7 +55,7 @@ class Animals(commands.Cog):
         embed.set_image(url=data['link'])
         embed.set_footer(text="Powered by https://some-random-api.ml/")
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='fox', description="Shows a random fox.", aliases=['foxes'])
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -68,7 +68,7 @@ class Animals(commands.Cog):
         embed.set_image(url=data['link'])
         embed.set_footer(text="Powered by https://some-random-api.ml/")
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='koala', description="Shows a random koala.", aliases=['koalas'])
     @commands.cooldown(1, 2, commands.BucketType.user)
@@ -81,7 +81,7 @@ class Animals(commands.Cog):
         embed.set_image(url=data['link'])
         embed.set_footer(text="Powered by https://some-random-api.ml/")
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
 
 def setup(bot) -> None:

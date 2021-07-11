@@ -33,13 +33,13 @@ class Fun(commands.Cog):
 
     @commands.command(name='8ball', description="Answers a yes/no question.", usage="8ball <question>")
     async def _8ball(self, ctx: commands.Context, *, question: str) -> None:
-        await ctx.send(embed=discord.Embed(description=f"`Q:** {question}\n**A:` {choice(_8ball_responses)}",
+        await ctx.reply(embed=discord.Embed(description=f"`Q:** {question}\n**A:` {choice(_8ball_responses)}",
                                             color=discord.Color.purple()))
 
     @commands.command(name='pp', description="Shows pp size of member.", usage="pp [member]")
     async def _pp(self, ctx: commands.Context, member: commands.MemberConverter = None):
         member = member or ctx.author
-        await ctx.send(embed=discord.Embed(title=f"{member.name}'s pp size",
+        await ctx.reply(embed=discord.Embed(title=f"{member.name}'s pp size",
                                             description=f"8{'=' * randint(1, 10)}D", color=discord.Color.purple()))
 
 

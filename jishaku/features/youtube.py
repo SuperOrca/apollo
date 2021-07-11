@@ -51,7 +51,7 @@ class YouTubeFeature(Feature):
             return
 
         if not youtube_dl:
-            return await ctx.send("youtube_dl is not installed.")
+            return await ctx.reply("youtube_dl is not installed.")
 
         voice = ctx.guild.voice_client
 
@@ -62,4 +62,4 @@ class YouTubeFeature(Feature):
         url = url.lstrip("<").rstrip(">")
 
         voice.play(discord.PCMVolumeTransformer(BasicYouTubeDLSource(url)))
-        await ctx.send(f"Playing in {voice.channel.name}.")
+        await ctx.reply(f"Playing in {voice.channel.name}.")

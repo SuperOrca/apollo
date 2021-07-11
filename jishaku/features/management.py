@@ -63,7 +63,7 @@ class ManagementFeature(Feature):
                 paginator.add_line(f"{icon} `{extension}`", empty=True)
 
         for page in paginator.pages:
-            await ctx.send(page)
+            await ctx.reply(page)
 
     @Feature.Command(parent="jsk", name="unload")
     async def jsk_unload(self, ctx: commands.Context, *extensions: ExtensionConverter):
@@ -90,7 +90,7 @@ class ManagementFeature(Feature):
                 paginator.add_line(f"{icon} `{extension}`", empty=True)
 
         for page in paginator.pages:
-            await ctx.send(page)
+            await ctx.reply(page)
 
     @Feature.Command(parent="jsk", name="shutdown", aliases=["logout"])
     async def jsk_shutdown(self, ctx: commands.Context):
@@ -100,7 +100,7 @@ class ManagementFeature(Feature):
 
         ellipse_character = "\N{BRAILLE PATTERN DOTS-356}" if JISHAKU_USE_BRAILLE_J else "\N{HORIZONTAL ELLIPSIS}"
 
-        await ctx.send(f"Logging out now{ellipse_character}")
+        await ctx.reply(f"Logging out now{ellipse_character}")
         await ctx.bot.close()
 
     @Feature.Command(parent="jsk", name="rtt", aliases=["ping"])
@@ -151,7 +151,7 @@ class ManagementFeature(Feature):
                 api_readings.append(after - before)
             else:
                 before = time.perf_counter()
-                message = await ctx.send(content=text)
+                message = await ctx.reply(content=text)
                 after = time.perf_counter()
 
                 api_readings.append(after - before)

@@ -15,7 +15,7 @@ async def dagpi_process(self, ctx: commands.Context, image, feature, end="png", 
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.{end}")
         embed.set_footer(text="Powered by https://dagpi.xyz/")
-    await ctx.send(file=file, embed=embed)
+    await ctx.reply(file=file, embed=embed)
 
 
 async def getImage(ctx: commands.Context, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):

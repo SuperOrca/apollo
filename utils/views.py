@@ -148,7 +148,7 @@ class ViewMenu(menus.Menu):
                 await self._event.wait()
 
     def send_with_view(self, messageable, *args, **kwargs):
-        return messageable.send(*args, **kwargs, view=self.build_view())
+        return messageable.reply(*args, **kwargs, view=self.build_view())
 
     def stop(self):
         self._running = False

@@ -124,7 +124,7 @@ class Apollo(commands.Bot):
             error = f"You are missing the required `{str(error).split()[0].upper()}` argument."
 
         self.log.error(f"{ctx.command} -> {error}")
-        await ctx.send(embed=discord.Embed(description=error, color=discord.Color.red()))
+        await ctx.reply(embed=discord.Embed(description=error, color=discord.Color.red()))
 
     async def on_command(self, ctx: commands.Context) -> None:
         self.statcord.command_run(ctx)
