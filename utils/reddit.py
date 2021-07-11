@@ -49,7 +49,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             if self.ctx.author.id == interaction.user.id:
                 if self.num > 0:
                     self.num -= 1
-                    await self.message.edit(embed=self.log[self.num], view=RedditMenu())
+                    await self.message.edit(embed=self.log[self.num])
                 else:
                     await interaction.response.send_message("Cannot go to previous.", ephemeral=True)
             else:
@@ -68,11 +68,11 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             if self.ctx.author.id == interaction.user.id:
                 self.num += 1
                 try:
-                    await self.message.edit(embed=self.log[self.num], view=RedditMenu())
+                    await self.message.edit(embed=self.log[self.num])
                 except IndexError:
                     embed = await post()
                     self.log.append(embed)
-                    await self.message.edit(embed=embed, view=RedditMenu())
+                    await self.message.edit(embed=embed)
             else:
                 await interaction.response.send_message("This is not your command.", ephemeral=True)
 
