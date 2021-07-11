@@ -217,11 +217,11 @@ class Image(commands.Cog):
     async def _flip(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
-                image.rotate(180)
+                new_image = image.rotate(180)
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-        await ctx.reply(file=fileFromBytes(ctx, image), embed=embed)
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
 
 
 def setup(bot) -> None:
