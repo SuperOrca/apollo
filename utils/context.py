@@ -34,12 +34,11 @@ class Context(commands.Context):
     async def send(self, content: str = None, **kwargs):
         can_delete = kwargs.pop('can_delete', False)
         if can_delete:
-            return await self.message.send(
+            return await self.channel.send(
                 content,
                 **kwargs,
-                mention_author=False,
                 view=TrashView(self.author)
             )
 
         else:
-            return await self.message.send(content, **kwargs)
+            return await self.channel.send(content, **kwargs)
