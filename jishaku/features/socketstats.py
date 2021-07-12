@@ -23,7 +23,7 @@ from collections import Counter
 from datetime import datetime
 
 
-class ShellFeature(Feature):
+class SocketStats(Feature):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not hasattr(self, 'socket_stats'):
