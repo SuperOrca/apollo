@@ -18,6 +18,7 @@ from databases import Database
 from utils.help import ApolloHelp
 from utils.context import Context
 from discord.ext import commands
+import psutil
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,6 +30,7 @@ class Apollo(commands.Bot):
         return commands.when_mentioned_or(await bot.get_guild_prefix(message))(bot, message)
 
     def __init__(self) -> None:
+        self.connector = aiohttp.TCPConnector(limit=200)
         allowed_mentions = discord.AllowedMentions.none()
         intents = discord.Intents.default()
         intents.members = True
@@ -37,9 +39,10 @@ class Apollo(commands.Bot):
         """
         super().__init__(command_prefix=self._get_prefix, help_command=ApolloHelp(), case_insensitive=True,
                          allowed_mentions=allowed_mentions, description=description, intents=intents,
-                         activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, chunk_guilds_at_startup=False, max_messages=1000)
+                         activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, chunk_guilds_at_startup=False, max_messages=1000, connector=self.connector)
         self.__version__ = "v1.0.0"
         self.owner_id = int(getenv('OWNER_ID'))
+        self.init_logging()
 
 
     async def init(self) -> None:
@@ -47,13 +50,17 @@ class Apollo(commands.Bot):
         await self.db.connect()
         await self.db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
         self.tio = await Tio()
-        self.session = aiohttp.ClientSession()
-        self.mystbin = mystbin.Client()
+        self.session = aiohttp.ClientSession(
+            headers={'User-Agent': "Apollo Discord Bot (discord.py) (python)"},
+            connector=self.connector,
+            timeout=aiohttp.ClientTimeout(total=30)
+        )
+        self.mystbin = mystbin.Client(session=self.sessio)
         self.statcord = statcord.Client(self, environ["STATCORD"])
         self.statcord.start_loop()
-        self.dagpi = asyncdagpi.Client(getenv('DAGPI'))
+        self.dagpi = asyncdagpi.Client(getenv('DAGPI'), session=self.session, loop=self.loop)
         self.tts = aiogTTS()
-        self.init_logging()
+        self.psutil_process = psutil.Process()
 
     def init_logging(self):
         coloredlogs.install()

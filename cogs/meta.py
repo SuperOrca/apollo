@@ -64,7 +64,7 @@ class Meta(commands.Cog):
     @commands.command(name='info', description="Shows information about the bot.")
     async def _info(self, ctx: commands.Context) -> None:
         embed = discord.Embed(
-            title=self.bot.user.name, description=self.bot.description, color=discord.Color.blurple())
+            title="Apollo", description=self.bot.description, color=discord.Color.blurple())
         embed.set_thumbnail(url=self.bot.user.avatar.with_static_format('png'))
         embed.add_field(
             name="Version", value=self.bot.__version__, inline=True)
