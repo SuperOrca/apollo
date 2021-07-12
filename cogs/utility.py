@@ -10,15 +10,6 @@ class Utility(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
-    @commands.command(name='avatar', description="Shows a user's avatar.", usage="avatar [member]")
-    async def _avatar(self, ctx: commands.Context, member: commands.MemberConverter = None) -> None:
-        member = member or ctx.author
-        embed = discord.Embed(
-            description=f"[png]({member.avatar_url_as(static_format='png')}) | [jpg]({member.avatar_url_as(static_format='jpg')}) | [webp]({member.avatar_url_as(static_format='webp')})",
-            color=0x2F3136)
-        embed.set_image(url=member.avatar_url_as(static_format='png'))
-        await ctx.reply(embed=embed)
-
     @commands.command(name='pypi', description="Shows details of a python package.", usage="pypi <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _pypi(self, ctx: commands.Context, package: str) -> None:
