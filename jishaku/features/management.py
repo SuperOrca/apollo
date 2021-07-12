@@ -112,7 +112,7 @@ class ManagementFeature(Feature):
         await ctx.send(''.join(char.upper() if index % 2 == 0 else char.lower() for index, char in enumerate(text, start=1)))
 
     @Feature.Command(parent="jsk", name="socketstats")
-    async def jsk_socketstats(self, ctx: commands.Context, *, text: str):
+    async def jsk_socketstats(self, ctx: commands.Context):
         await ctx.reply(f"```\n{json.dumps(dict(ctx.bot.socket_stats), indent=4)}\n```")
 
     @Feature.Command(parent="jsk", name="rtt", aliases=["ping"])
