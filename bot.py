@@ -127,6 +127,9 @@ class Apollo(commands.Bot):
     async def get_context(self, message: discord.Message, *, cls=None):
         return await super().get_context(message, cls=cls or Context)
 
+    def get_message(self, message_id):
+        return self._connection._get_message(message_id)
+
     def run(self) -> None:
         self.log.info("Logging in...")
         super().run(getenv('TOKEN'), reconnect=True)
