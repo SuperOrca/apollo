@@ -7,7 +7,7 @@ import discord
 from discord.ext import commands
 from PIL import Image as Im
 
-from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage, create_minecraft_blocks
+from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage, create_minecraft_blocks, process_minecraft
 
 
 class Image(commands.Cog):
@@ -294,7 +294,7 @@ class Image(commands.Cog):
         async with ctx.typing():
             url = await getImage(ctx, image)
             b = BytesIO(await (await self.bot.session.get(url)).read())
-            await ctx.send(file=discord.File(await self.process_minecraft(b), "minecraft.png"))
+            await ctx.send(file=discord.File(await process_minecraft(self.bot, b), "minecraft.png"))
 
 
 def setup(bot) -> None:

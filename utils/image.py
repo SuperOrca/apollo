@@ -88,12 +88,12 @@ async def getImage(ctx: commands.Context, url: Union[discord.Member, discord.Emo
         return str(ctx.author.avatar.url)
 
 
-async def process_minecraft(self, b: BytesIO) -> BytesIO:
-    minecraft_array = np.array(list(self.bot.minecraft_blocks.keys()))
+async def process_minecraft(bot, b: BytesIO) -> BytesIO:
+    minecraft_array = np.array(list(bot.minecraft_blocks.keys()))
     np.expand_dims(minecraft_array, axis=-1)
-    image = Im.open(b)
+    image = Image.open(b)
     image = image.convert("RGBA").resize((64, 64))
-    with Im.new("RGBA", (image.width * 16, image.height * 16)) as final_image:
+    with Image.new("RGBA", (image.width * 16, image.height * 16)) as final_image:
         arr = np.asarray(image)
         np.expand_dims(arr, axis=-1)
         for y, r in enumerate(arr):
@@ -101,7 +101,7 @@ async def process_minecraft(self, b: BytesIO) -> BytesIO:
                 difference = np.sqrt(
                     np.sum((minecraft_array - c) ** 2, axis=1))
                 where = np.where(difference == np.amin(difference))
-                to_paste = self.bot.minecraft_blocks[tuple(
+                to_paste = bot.minecraft_blocks[tuple(
                     minecraft_array[where][0])]
                 final_image.paste(to_paste, (x * 16, y * 16), to_paste)
     buffer = BytesIO()
@@ -109,13 +109,13 @@ async def process_minecraft(self, b: BytesIO) -> BytesIO:
     buffer.seek(0)
     return buffer
 
-async def create_minecraft_blocks(self):
+async def create_minecraft_blocks():
     for _file in os.listdir("assets/minecraft_blocks"):
         async with aiofile.async_open("assets/minecraft_blocks/" + _file, "rb") as afp:
             b = await afp.read()
-            await self.resize_and_save_minecraft_blocks(BytesIO(b))
+            await resize_and_save_minecraft_blocks(BytesIO(b))
 
-async def resize_and_save_minecraft_blocks(self, b):
+async def resize_and_save_minecraft_blocks(b):
     try:
         with Image.open(b) as image:
             image = image.convert("RGBA")
