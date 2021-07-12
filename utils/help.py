@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+from .git import get_last_commits
+
 
 class ApolloHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping: dict):
@@ -25,8 +27,8 @@ Total Commands: `{len(valid_commands)}`
                 f"- `{module.__class__.__name__}`" for module in modules),
             inline=True,
         )
-        embed.add_field(name=":newspaper: News - July 9, 2021",
-                        value="Invite my bot to ur server pls :)")
+        embed.add_field(name=":newspaper: Latest Changes",
+                        value=(await get_last_commits()))
         await self.context.reply(embed=embed)
 
     async def send_command_help(self, command: commands.Command):

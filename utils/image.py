@@ -27,7 +27,7 @@ async def imageToPIL(ctx, image) -> Image:
     response = await ctx.bot.session.get(url)
     return Image.open(BytesIO(await response.read()))
 
-@asyncexe
+@asyncexe()
 def fileFromBytes(ctx, image) -> discord.File:
     buffer = BytesIO()
     image.save(buffer, "png")

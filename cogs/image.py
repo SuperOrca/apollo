@@ -297,7 +297,7 @@ class Image(commands.Cog):
             embed.set_thumbnail(url=url)
             await ctx.reply(embed=embed)
 
-    @asyncexe
+    @asyncexe()
     def process_minecraft(self, b: BytesIO) -> BytesIO:
         minecraft_array = np.array(list(self.bot.minecraft_blocks.keys()))
         np.expand_dims(minecraft_array, axis=-1)
