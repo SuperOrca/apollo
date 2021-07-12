@@ -30,7 +30,7 @@ class Image(commands.Cog):
 
     async def resize_and_save_minecraft_blocks(self, b):
         try:
-            with Image.open(b) as image:
+            with Im.open(b) as image:
                 image = image.convert("RGBA")
                 self.bot.minecraft_blocks[image.resize(
                     (1, 1)).getdata()[0]] = image
@@ -300,7 +300,7 @@ class Image(commands.Cog):
     async def process_minecraft(self, b: BytesIO) -> BytesIO:
         minecraft_array = np.array(list(self.bot.minecraft_blocks.keys()))
         np.expand_dims(minecraft_array, axis=-1)
-        image = Image.open(b)
+        image = Im.open(b)
         image = image.convert("RGBA").resize((64, 64))
         with Image.new("RGBA", (image.width * 16, image.height * 16)) as final_image:
             arr = np.asarray(image)
