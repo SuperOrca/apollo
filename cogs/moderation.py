@@ -21,8 +21,8 @@ class Moderation(commands.Cog):
         channel = channel or ctx.channel
         msgs = await channel.purge(limit=limit)
         await asyncio.sleep(1)
-        m = await ctx.trash(
-            embed=discord.Embed(description=f"Cleared `{len(msgs)}` messages.", color=discord.Color.dark_red()))
+        await ctx.send(can_delete=True,
+                       embed=discord.Embed(description=f"Cleared `{len(msgs)}` messages.", color=discord.Color.dark_red()))
 
     @commands.command(name='ban', description="Ban a member.", usage="ban <member> [reason]")
     @commands.has_guild_permissions(ban_members=True)
