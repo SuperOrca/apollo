@@ -228,7 +228,7 @@ class Image(commands.Cog):
     async def _wide(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
-                new_image = image.resize((image.height, image.width*2))
+                new_image = image.resize((image.height*2, image.width))
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
