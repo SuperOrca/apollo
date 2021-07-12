@@ -248,7 +248,7 @@ class Image(commands.Cog):
 
     @commands.command(name='commoncolor', description="Get the most common color in an image.", usage="commoncolor [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _commoncolor(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _commoncolor(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji]):
         async with ctx.typing():
             def frequency(my_list):
                 freq = {}
