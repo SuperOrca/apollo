@@ -46,7 +46,7 @@ class Apollo(commands.AutoShardedBot):
         """
         super().__init__(command_prefix=self._get_prefix, help_command=ApolloHelp(), case_insensitive=True,
                          allowed_mentions=allowed_mentions, description=description, intents=intents,
-                         activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, chunk_guilds_at_startup=False, max_messages=1000, connector=self.connector)
+                         activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, max_messages=1000, connector=self.connector)
         self.__version__ = "v1.0.0"
         self.owner_id = int(getenv('OWNER_ID'))
         self.init_logging()
