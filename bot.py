@@ -32,9 +32,15 @@ class Apollo(commands.AutoShardedBot):
     def __init__(self) -> None:
         self.connector = aiohttp.TCPConnector(limit=200)
         allowed_mentions = discord.AllowedMentions.none()
-        intents = discord.Intents.default()
-        intents.members = True
-        intents.guilds = True
+        intents = discord.Intents(
+            guilds=True,
+            members=True,
+            bans=True,
+            emojis=True,
+            voice_states=True,
+            messages=True,
+            reactions=True
+        )
         description = """
         The all-in-one discord bot.
         """
