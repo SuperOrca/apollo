@@ -1,6 +1,5 @@
 import itertools
 import datetime
-import pygit2
 import humanize
 
 from .decorators import asyncexe
