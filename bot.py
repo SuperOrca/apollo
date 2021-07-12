@@ -24,7 +24,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-class Apollo(commands.Bot):
+class Apollo(commands.AutoShardedBot):
     @staticmethod
     async def _get_prefix(bot, message: discord.Message):
         return commands.when_mentioned_or(await bot.get_guild_prefix(message))(bot, message)
@@ -44,7 +44,6 @@ class Apollo(commands.Bot):
         self.owner_id = int(getenv('OWNER_ID'))
         self.init_logging()
 
-
     async def init(self) -> None:
         self.db = Database('sqlite:///bot.db')
         await self.db.connect()
@@ -58,7 +57,8 @@ class Apollo(commands.Bot):
         self.mystbin = mystbin.Client(session=self.sessio)
         self.statcord = statcord.Client(self, environ["STATCORD"])
         self.statcord.start_loop()
-        self.dagpi = asyncdagpi.Client(getenv('DAGPI'), session=self.session, loop=self.loop)
+        self.dagpi = asyncdagpi.Client(
+            getenv('DAGPI'), session=self.session, loop=self.loop)
         self.tts = aiogTTS()
         self.psutil_process = psutil.Process()
 
@@ -95,7 +95,9 @@ class Apollo(commands.Bot):
             self.uptime = datetime.utcnow()
         self.log.info("Bot connected. DWSP latency: " +
                       str(round((self.latency * 1000))) + "ms")
-        self.load()
+        self.loop.run_until_complete(
+            self.load()
+        )
         self.load_extension('jishaku')
         self.log.info(f"Extensions loaded ({len(self.extensions)} loaded)")
         self.log.info("Bot ready!")
