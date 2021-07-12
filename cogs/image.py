@@ -224,7 +224,7 @@ class Image(commands.Cog):
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -235,7 +235,7 @@ class Image(commands.Cog):
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -246,7 +246,7 @@ class Image(commands.Cog):
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -257,7 +257,7 @@ class Image(commands.Cog):
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     # @commands.command(name='commoncolor', description="Get the most common color in an image.", usage="commoncolor [image]")
     # @commands.cooldown(1, 10, commands.BucketType.user)
@@ -294,7 +294,9 @@ class Image(commands.Cog):
         async with ctx.typing():
             url = await getImage(ctx, image)
             b = BytesIO(await (await self.bot.session.get(url)).read())
-            await ctx.send(file=discord.File(await process_minecraft(self.bot, b), "minecraft.png"))
+            embed = discord.Embed(color=discord.Color.dark_blue())
+            embed.set_image(url=f"attachment://{ctx.command.name}.png")
+            await ctx.send(file=discord.File(await process_minecraft(self.bot, b), f"{ctx.command.name}.png"), embed=embed, can_delete=True)
 
 
 def setup(bot) -> None:

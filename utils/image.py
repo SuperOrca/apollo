@@ -22,7 +22,7 @@ async def dagpi_process(ctx: Context, image, feature, end="png", **kwargs) -> di
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.{end}")
         embed.set_footer(text="Powered by https://dagpi.xyz/")
-    await ctx.reply(file=file, embed=embed)
+    await ctx.reply(file=file, embed=embed, can_delete=True)
 
 
 async def imageToPIL(ctx, image) -> Image:
