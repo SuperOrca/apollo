@@ -7,7 +7,7 @@ from .decorators import asyncexe
 
 def format_commit(commit):
     commit = commit["commit"]
-    return f"`[click]({commit['url']}) {commit['message']}"
+    return f"`[click]({commit['url']})` {commit['message']}"
 
 
 async def get_last_commits(bot, count=3):
