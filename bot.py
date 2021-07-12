@@ -34,6 +34,7 @@ class Apollo(commands.AutoShardedBot):
         allowed_mentions = discord.AllowedMentions.none()
         intents = discord.Intents.default()
         intents.members = True
+        intents.guilds = True
         description = """
         The all-in-one discord bot.
         """
