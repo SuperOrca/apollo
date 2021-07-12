@@ -15,7 +15,7 @@ class Image(commands.Cog):
         self.bot = bot
         if not hasattr(bot, "minecraft_blocks"):
             self.bot.minecraft_blocks = {}
-            self.bot.loop.create_task(self.bot, create_minecraft_blocks())
+            self.bot.loop.create_task(create_minecraft_blocks(self.bot))
 
     @commands.command(name='pixelate', description="Shows the image as pixelated.", usage="pixelate [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
