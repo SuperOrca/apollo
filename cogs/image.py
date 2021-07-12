@@ -234,6 +234,17 @@ class Image(commands.Cog):
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
 
+    @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def _squish(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+        async with ctx.typing():
+            with await imageToPIL(ctx, image) as image:
+                new_image = image.resize((image.height, image.width*2))
+
+            embed = discord.Embed(color=discord.Color.dark_blue())
+            embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
+
 
 def setup(bot) -> None:
     bot.add_cog(Image(bot))
