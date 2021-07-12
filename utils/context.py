@@ -20,18 +20,6 @@ class TrashView(ui.View):
 class Context(commands.Context):
     async def reply(self, content: str = None, **kwargs):
         can_delete = kwargs.pop('can_delete', False)
-        delete_after = kwargs.pop('delete_after', 0)
-        if can_delete:
-            msg = await self.message.reply(content, **kwargs, mention_author=False, view=TrashView(self.author))
-        else:
-            msg = await self.message.reply(content, **kwargs, mention_author=False)
-        if delete_after > 0:
-            await asyncio.sleep(delete_after)
-            await msg.delete()
-        return msg
-
-    async def send(self, content: str = None, **kwargs):
-        can_delete = kwargs.pop('can_delete', False)
         if can_delete:
             return await self.message.reply(
                 content,
@@ -42,3 +30,16 @@ class Context(commands.Context):
 
         else:
             return await self.message.reply(content, **kwargs, mention_author=False)
+
+    async def send(self, content: str = None, **kwargs):
+        can_delete = kwargs.pop('can_delete', False)
+        if can_delete:
+            return await self.message.send(
+                content,
+                **kwargs,
+                mention_author=False,
+                view=TrashView(self.author)
+            )
+
+        else:
+            return await self.message.send(content, **kwargs)
