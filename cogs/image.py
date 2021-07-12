@@ -12,7 +12,7 @@ from PIL import Image as Im
 from PIL import UnidentifiedImageError
 
 from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage
-from utils.wrappers import typing
+from utils.decorators import typing
 
 
 class Image(commands.Cog):
@@ -318,7 +318,7 @@ class Image(commands.Cog):
         buffer.seek(0)
         return buffer
 
-    @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]")
+    @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]", aliases=['mc'])
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _minecraft(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         async with ctx.typing():
