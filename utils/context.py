@@ -23,18 +23,22 @@ class Context(commands.Context):
         delete_after = kwargs.pop('delete_after', 0)
         if can_delete:
             msg = await self.message.reply(content, **kwargs, mention_author=False, view=TrashView(self.author))
-        elif delete_after > 0:
-            yield msg
-            await asyncio.sleep(delete_after)
-            await msg.delete()
         else:
             msg = await self.message.reply(content, **kwargs, mention_author=False)
-            return msg
+        if delete_after > 0:
+            await asyncio.sleep(delete_after)
+            await msg.delete()
+        return msg
 
     async def send(self, content: str = None, **kwargs):
         can_delete = kwargs.pop('can_delete', False)
         if can_delete:
-            msg = await self.message.reply(content, **kwargs, mention_author=False, view=TrashView(self.author))
+            return await self.message.reply(
+                content,
+                **kwargs,
+                mention_author=False,
+                view=TrashView(self.author)
+            )
+
         else:
-            msg = await self.message.reply(content, **kwargs, mention_author=False)
-            return msg
+            return await self.message.reply(content, **kwargs, mention_author=False)
