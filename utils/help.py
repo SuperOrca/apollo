@@ -28,7 +28,7 @@ Total Commands: `{len(valid_commands)}`
             inline=True,
         )
         embed.add_field(name=":newspaper: Latest Changes",
-                        value=(await get_last_commits()))
+                        value=(await get_last_commits(self.context.bot)))
         await self.context.reply(embed=embed)
 
     async def send_command_help(self, command: commands.Command):
