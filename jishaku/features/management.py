@@ -107,7 +107,7 @@ class ManagementFeature(Feature):
         await ctx.bot.close()
 
     @Feature.Command(parent="jsk", name="grammar")
-    async def jsk_grammar(self, ctx: commands.Context):
+    async def jsk_grammar(self, ctx: commands.Context, *, text: str):
         await ctx.send(''.join(char.upper() if index % 2 == 0 else char.lower() for index, char in enumerate(text, start=1)))
 
     @Feature.Command(parent="jsk", name="rtt", aliases=["ping"])
