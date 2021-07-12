@@ -8,6 +8,7 @@ from PIL import Image
 import twemoji_parser as twemoji
 
 from .metrics import isImage
+from .decorators import asyncexe
 
 
 async def dagpi_process(ctx: commands.Context, image, feature, end="png", **kwargs) -> discord.Embed:
@@ -26,7 +27,7 @@ async def imageToPIL(ctx, image) -> Image:
     response = await ctx.bot.session.get(url)
     return Image.open(BytesIO(await response.read()))
 
-
+@asyncexe
 def fileFromBytes(ctx, image) -> discord.File:
     buffer = BytesIO()
     image.save(buffer, "png")

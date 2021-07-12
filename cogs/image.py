@@ -12,7 +12,7 @@ from PIL import Image as Im
 from PIL import UnidentifiedImageError
 
 from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage
-from utils.decorators import typing
+from utils.decorators import asyncexe
 
 
 class Image(commands.Cog):
@@ -297,7 +297,8 @@ class Image(commands.Cog):
             embed.set_thumbnail(url=url)
             await ctx.reply(embed=embed)
 
-    async def process_minecraft(self, b: BytesIO) -> BytesIO:
+    @asyncexe
+    def process_minecraft(self, b: BytesIO) -> BytesIO:
         minecraft_array = np.array(list(self.bot.minecraft_blocks.keys()))
         np.expand_dims(minecraft_array, axis=-1)
         image = Im.open(b)
@@ -319,7 +320,7 @@ class Image(commands.Cog):
         return buffer
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]", aliases=['mc'])
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 20, commands.BucketType.guild)
     async def _minecraft(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         async with ctx.typing():
             url = await getImage(ctx, image)

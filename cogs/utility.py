@@ -116,19 +116,19 @@ class Utility(commands.Cog):
         buffer.seek(0)
         await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
 
-    @commands.command(name='youtube')
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _youtube(self, ctx: commands.Context, query: str) -> None:
-        async with ctx.typing():
-            try:
-                source = await YTDLSource.create_source(ctx, query, loop=self.bot.loop)
-            except YTDLError as e:
-                await ctx.reply('An error occurred while processing this request: {}'.format(str(e)))
-            else:
-                song = Song(source)
+    # @commands.command(name='youtube')
+    # @commands.cooldown(1, 5, commands.BucketType.user)
+    # async def _youtube(self, ctx: commands.Context, query: str) -> None:
+    #     async with ctx.typing():
+    #         try:
+    #             source = await YTDLSource.create_source(ctx, query, loop=self.bot.loop)
+    #         except YTDLError as e:
+    #             await ctx.reply('An error occurred while processing this request: {}'.format(str(e)))
+    #         else:
+    #             song = Song(source)
 
-                await ctx.voice_state.songs.put(song)
-                await ctx.reply('Enqueued {}'.format(str(source)))
+    #             await ctx.voice_state.songs.put(song)
+    #             await ctx.reply('Enqueued {}'.format(str(source)))
 
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
     @commands.cooldown(1, 5, commands.BucketType.user)
