@@ -40,6 +40,22 @@ class Apollo(commands.Bot):
                          activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, chunk_guilds_at_startup=False, max_messages=1000)
         self.__version__ = "v1.0.0"
         self.owner_id = int(getenv('OWNER_ID'))
+
+
+    async def init(self) -> None:
+        self.db = Database('sqlite:///bot.db')
+        await self.db.connect()
+        await self.db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
+        self.tio = await Tio()
+        self.session = aiohttp.ClientSession()
+        self.mystbin = mystbin.Client()
+        self.statcord = statcord.Client(self, environ["STATCORD"])
+        self.statcord.start_loop()
+        self.dagpi = asyncdagpi.Client(getenv('DAGPI'))
+        self.tts = aiogTTS()
+        self.init_logging()
+
+    def init_logging(self):
         coloredlogs.install()
         self.log = logging.getLogger('discord')
         self.log.setLevel(logging.INFO)
@@ -48,20 +64,6 @@ class Apollo(commands.Bot):
         handler.setFormatter(logging.Formatter(
             '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
         self.log.addHandler(handler)
-        self.session = aiohttp.ClientSession()
-        self.mystbin = mystbin.Client()
-        self.statcord = statcord.Client(self, environ["STATCORD"])
-        self.statcord.start_loop()
-        self.db = None
-        self.dagpi = asyncdagpi.Client(getenv('DAGPI'))
-        self.tts = aiogTTS()
-        self.tio = None
-
-    async def create(self) -> None:
-        self.db = Database('sqlite:///bot.db')
-        await self.db.connect()
-        await self.db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
-        self.tio = await Tio()
 
     async def get_guild_prefix(self, message: discord.Message):
         try:
@@ -81,7 +83,7 @@ class Apollo(commands.Bot):
 
     async def on_ready(self) -> None:
         self.log.info("Running setup...")
-        await self.create()
+        await self.init()
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.utcnow()
         self.log.info("Bot connected. DWSP latency: " +
