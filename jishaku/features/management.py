@@ -121,13 +121,15 @@ class ManagementFeature(Feature):
         for _ in range(6):
             # First generate the text
             text = "Calculating round-trip time...\n\n"
-            text += "\n".join(f"Reading {index + 1}: {reading * 1000:.2f}ms" for index, reading in enumerate(api_readings))
+            text += "\n".join(
+                f"Reading {index + 1}: {reading * 1000:.2f}ms" for index, reading in enumerate(api_readings))
 
             if api_readings:
                 average = sum(api_readings) / len(api_readings)
 
                 if len(api_readings) > 1:
-                    stddev = math.sqrt(sum(math.pow(reading - average, 2) for reading in api_readings) / (len(api_readings) - 1))
+                    stddev = math.sqrt(
+                        sum(math.pow(reading - average, 2) for reading in api_readings) / (len(api_readings) - 1))
                 else:
                     stddev = 0.0
 

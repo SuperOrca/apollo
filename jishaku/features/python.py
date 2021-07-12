@@ -115,7 +115,8 @@ class PythonFeature(Feature):
 
                                 send(await ctx.reply(result.replace(self.bot.http.token, "[token omitted]")))
 
-                            elif len(result) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
+                            elif len(
+                                    result) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
                                 # Discord's desktop and web client now supports an interactive file content
                                 #  display for files encoded in UTF-8.
                                 # Since this avoids escape issues and is more intuitive than pagination for
@@ -140,7 +141,8 @@ class PythonFeature(Feature):
             scope.clear_intersection(arg_dict)
 
     @Feature.Command(parent="jsk", name="py_inspect", aliases=["pyi", "python_inspect", "pythoninspect"])
-    async def jsk_python_inspect(self, ctx: commands.Context, *, argument: codeblock_converter):  # pylint: disable=too-many-locals
+    async def jsk_python_inspect(self, ctx: commands.Context, *,
+                                 argument: codeblock_converter):  # pylint: disable=too-many-locals
         """
         Evaluation of Python code with inspect information.
         """
@@ -169,7 +171,8 @@ class PythonFeature(Feature):
 
                         text = "\n".join(lines)
 
-                        if len(text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
+                        if len(
+                                text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
                             send(await ctx.reply(file=discord.File(
                                 filename="inspection.prolog",
                                 fp=io.BytesIO(text.encode('utf-8'))
@@ -195,7 +198,8 @@ class PythonFeature(Feature):
         async with ReplResponseReactor(ctx.message):
             text = "\n".join(disassemble(argument.content, arg_dict=arg_dict))
 
-            if len(text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
+            if len(
+                    text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
                 await ctx.reply(file=discord.File(
                     filename="dis.py",
                     fp=io.BytesIO(text.encode('utf-8'))

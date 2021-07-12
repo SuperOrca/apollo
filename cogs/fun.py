@@ -3,7 +3,6 @@ from random import choice, randint
 import discord
 from discord.ext import commands
 
-
 from utils.context import Context
 
 _8ball_responses = [

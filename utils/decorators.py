@@ -1,7 +1,6 @@
-from functools import wraps, partial
-
-from discord.ext import commands
 import asyncio
+from functools import wraps
+
 
 def asyncexe():
     def decorator(func):

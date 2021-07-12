@@ -1,15 +1,13 @@
-from os import getenv
-
-import discord
-import pkg_resources
-import humanize
-from discord.ext import commands, tasks
 from datetime import datetime
 from time import time as count
-from discord.ext import menus
 
-from utils.converters import PrefixConverter
+import discord
+import humanize
+import pkg_resources
+from discord.ext import commands, tasks
+
 from utils.context import Context
+from utils.converters import PrefixConverter
 
 
 class Meta(commands.Cog):
@@ -89,7 +87,8 @@ class Meta(commands.Cog):
     @commands.command(name='prefix', description="Change the bot prefix.", usage="prefix [prefix]")
     async def _prefix(self, ctx: Context, prefix: PrefixConverter = None) -> None:
         if ctx.author.guild_permissions.administrator and prefix:
-            await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)", values={"id": ctx.guild.id, "prefix": prefix})
+            await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)",
+                                      values={"id": ctx.guild.id, "prefix": prefix})
             await ctx.reply(embed=discord.Embed(description=f"Set the server prefix to `{prefix}`.",
                                                 color=discord.Color.blurple()))
         else:

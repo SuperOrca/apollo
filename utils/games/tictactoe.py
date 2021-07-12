@@ -1,4 +1,3 @@
-from discord.ext import commands
 import discord
 
 
@@ -77,7 +76,7 @@ class TicTacToe(discord.ui.View):
         # Check vertical
         for line in range(3):
             value = self.board[0][line] + \
-                self.board[1][line] + self.board[2][line]
+                    self.board[1][line] + self.board[2][line]
             if value == -3:
                 return self.X
 

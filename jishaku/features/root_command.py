@@ -172,6 +172,7 @@ class RootCommand(Feature):
 
         self.jsk.hidden = False
         await ctx.reply("Jishaku is now visible.")
+
     # pylint: enable=no-member
 
     @Feature.Command(parent="jsk", name="tasks")

@@ -1,17 +1,16 @@
-import re
-from typing import Union
-from io import BytesIO
-
-import discord
-from discord.ext import commands
-from PIL import Image, UnidentifiedImageError
-import twemoji_parser as twemoji
-import numpy as np
 import os
-import aiofile
+import re
+from io import BytesIO
+from typing import Union
 
-from .metrics import isImage
+import aiofile
+import discord
+import numpy as np
+import twemoji_parser as twemoji
+from PIL import Image, UnidentifiedImageError
+
 from .context import Context
+from .metrics import isImage
 
 
 async def dagpi_process(ctx: Context, image, feature, end="png", **kwargs) -> discord.Embed:
@@ -39,7 +38,6 @@ def fileFromBytes(ctx, image) -> discord.File:
 
 
 async def getImage(ctx: Context, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):
-
     if isinstance(url, str):
         url = await twemoji.emoji_to_url(url)
 
@@ -47,12 +45,12 @@ async def getImage(ctx: Context, url: Union[discord.Member, discord.Emoji, disco
         ref = ctx.message.reference.resolved
         if ref.embeds:
             if ref.embeds[0].image.url != discord.Embed.Empty and isImage(
-                ref.embeds[0].image.url
+                    ref.embeds[0].image.url
             ):
                 return ref.embeds[0].image.url
 
             if ref.embeds[0].thumbnail.url != discord.Embed.Empty and isImage(
-                ref.embeds[0].thumbnail.url
+                    ref.embeds[0].thumbnail.url
             ):
                 return ref.embeds[0].thumbnail.url
 
@@ -65,8 +63,8 @@ async def getImage(ctx: Context, url: Union[discord.Member, discord.Emoji, disco
         return str(url.avatar.url)
     elif isinstance(url, str):
         if re.search(
-            r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
-            url,
+                r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
+                url,
         ) and isImage(url):
             return url
 

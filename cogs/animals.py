@@ -3,6 +3,7 @@ from discord.ext import commands
 
 from utils.context import Context
 
+
 class Animals(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot

@@ -1,12 +1,12 @@
-
 import random
 
 import discord
-from discord.ext import commands, menus
 from discord import ui
+from discord.ext import commands
 
-from .metrics import isImage
 from .context import Context
+from .metrics import isImage
+
 
 async def getpost(bot, channel, subreddit) -> discord.Embed:
     async def post():

@@ -20,7 +20,6 @@ __all__ = (
     'LANGUAGES'
 )
 
-
 LANGUAGES = sorted([
     'as',
     '1c',

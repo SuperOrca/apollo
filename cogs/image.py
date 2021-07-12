@@ -1,14 +1,13 @@
-from os import getenv
-from typing import Union
 from io import BytesIO
+from typing import Union
 
 import asyncdagpi
 import discord
 from discord.ext import commands
-from PIL import Image as Im
 
-from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage, create_minecraft_blocks, process_minecraft
 from utils.context import Context
+from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage, create_minecraft_blocks, process_minecraft
+
 
 class Image(commands.Cog):
     def __init__(self, bot) -> None:
@@ -20,7 +19,8 @@ class Image(commands.Cog):
     @commands.command(name='pixelate', description="Shows the image as pixelated.", usage="pixelate [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _pixelate(self, ctx: Context,
-                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                        image: Union[
+                            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.pixel())
 
     @commands.command(name='colors', description="Shows the image's colors.", usage="colors [image]")
@@ -38,13 +38,15 @@ class Image(commands.Cog):
     @commands.command(name='communism', description="Shows the image as communism.", usage="communism [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _communism(self, ctx: Context,
-                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                         image: Union[
+                             discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.communism(), end="gif")
 
     @commands.command(name='triggered', description="Shows the image as triggered.", usage="triggered [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _triggered(self, ctx: Context,
-                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                         image: Union[
+                             discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.triggered(), end="gif")
 
     @commands.command(name='wasted', description="Shows the image as wasted.", usage="wasted [image]")
@@ -74,7 +76,8 @@ class Image(commands.Cog):
     @commands.command(name='triangle', description="Shows the image as a triangle.", usage="triangle [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _triangle(self, ctx: Context,
-                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                        image: Union[
+                            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.triangle())
 
     @commands.command(name='blur', description="Shows the image as a blur.", usage="blur [image]")
@@ -86,7 +89,8 @@ class Image(commands.Cog):
     @commands.command(name='rgb-graph', description="Shows the image with rgb graph.", usage="rgb-graph [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _rgb_graph(self, ctx: Context,
-                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                         image: Union[
+                             discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.rgb())
 
     @commands.command(name='angel', description="Shows the image as a angel.", usage="angel [image]")
@@ -122,7 +126,8 @@ class Image(commands.Cog):
     @commands.command(name='stringify', description="Shows the image as stringifyed.", usage="stringify [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _stringify(self, ctx: Context,
-                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                         image: Union[
+                             discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.stringify())
 
     @commands.command(name='mosiac', description="Shows the image as a mosiac.", usage="mosiac [image]")
@@ -134,7 +139,8 @@ class Image(commands.Cog):
     @commands.command(name='sithlord', description="Shows the image as sithlord.", usage="sithlord [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _sithlord(self, ctx: Context,
-                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                        image: Union[
+                            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.sith())
 
     @commands.command(name='jail', description="Shows the image in jail.", usage="jail [image]")
@@ -170,13 +176,15 @@ class Image(commands.Cog):
     @commands.command(name='charcoal', description="Shows the image as charcoal.", usage="charcoal [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _charcoal(self, ctx: Context,
-                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                        image: Union[
+                            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.charcoal())
 
     @commands.command(name='posterize', description="Shows the image as posterized.", usage="posterize [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _posterize(self, ctx: Context,
-                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                         image: Union[
+                             discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.poster())
 
     @commands.command(name='sepia', description="Shows the image as sepia.", usage="sepia [image]")
@@ -217,7 +225,8 @@ class Image(commands.Cog):
 
     @commands.command(name='flip', descripton="Flip an image.", usage="flip [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _flip(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _flip(self, ctx: Context,
+                    image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
                 new_image = image.rotate(180)
@@ -229,10 +238,11 @@ class Image(commands.Cog):
 
     @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _wide(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _wide(self, ctx: Context,
+                    image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
-                new_image = image.resize((image.height*2, image.width))
+                new_image = image.resize((image.height * 2, image.width))
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
@@ -241,10 +251,11 @@ class Image(commands.Cog):
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _ultrawide(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _ultrawide(self, ctx: Context,
+                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
-                new_image = image.resize((image.height*4, image.width))
+                new_image = image.resize((image.height * 4, image.width))
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
@@ -253,10 +264,11 @@ class Image(commands.Cog):
 
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _squish(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _squish(self, ctx: Context,
+                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
-                new_image = image.resize((image.height, image.width*2))
+                new_image = image.resize((image.height, image.width * 2))
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
@@ -292,16 +304,19 @@ class Image(commands.Cog):
     #         embed.set_thumbnail(url=url)
     #         await ctx.reply(embed=embed)
 
-    @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]", aliases=['mc'])
+    @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
+                      aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
-    async def _minecraft(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+    async def _minecraft(self, ctx: Context, image: Union[
+        discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         async with ctx.typing():
             url = await getImage(ctx, image)
             b = BytesIO(await (await self.bot.session.get(url)).read())
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
             embed.set_footer(text="Powered by pillow | Credits to `The Anime Bot`.")
-            await ctx.send(file=discord.File(await process_minecraft(self.bot, b), f"{ctx.command.name}.png"), embed=embed, can_delete=True)
+            await ctx.send(file=discord.File(await process_minecraft(self.bot, b), f"{ctx.command.name}.png"),
+                           embed=embed, can_delete=True)
 
 
 def setup(bot) -> None:

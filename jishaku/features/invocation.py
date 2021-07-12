@@ -151,7 +151,8 @@ class InvocationFeature(Feature):
         # getsourcelines for some reason returns WITH line endings
         source_text = ''.join(source_lines)
 
-        if len(source_text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
+        if len(
+                source_text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
             await ctx.reply(file=discord.File(
                 filename=filename,
                 fp=io.BytesIO(source_text.encode('utf-8'))

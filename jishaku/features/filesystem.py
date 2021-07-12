@@ -62,7 +62,7 @@ class FilesystemFeature(Feature):
 
         if size <= 0:
             return await ctx.reply(f"`{path}`: Cowardly refusing to read a file with no size stat"
-                                  f" (it may be empty, endless or inaccessible).")
+                                   f" (it may be empty, endless or inaccessible).")
 
         if size > 128 * (1024 ** 2):
             return await ctx.reply(f"`{path}`: Cowardly refusing to read a file >128MB.")
@@ -117,7 +117,8 @@ class FilesystemFeature(Feature):
             if not data:
                 return await ctx.reply(f"HTTP response was empty (status code {code}).")
 
-            if len(data) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
+            if len(
+                    data) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
                 # Shallow language detection
                 language = None
 

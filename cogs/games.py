@@ -1,6 +1,6 @@
-import discord
 from Discord_Games import typeracer
 from discord.ext import commands
+
 from utils.context import Context
 
 
@@ -12,7 +12,8 @@ class Games(commands.Cog):
     @commands.cooldown(1, 90, commands.BucketType.user)
     async def _typeracer(self, ctx: Context) -> None:
         await typeracer.TypeRacer().start(ctx, embed_color=0x2F3136, show_author=False,
-                                          path_to_text_font='/usr/share/fonts/truetype/freefont/FreeSans.ttf', timeout=60.)
+                                          path_to_text_font='/usr/share/fonts/truetype/freefont/FreeSans.ttf',
+                                          timeout=60.)
 
 
 def setup(bot) -> None:

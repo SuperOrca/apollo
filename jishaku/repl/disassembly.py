@@ -93,9 +93,9 @@ def disassemble(code: str, scope: Scope = None, arg_dict: dict = None):
     co = func_def.__code__
 
     for instruction in dis._get_instructions_bytes(
-        co.co_code, co.co_varnames, co.co_names, co.co_consts,
-        co.co_cellvars + co.co_freevars, dict(dis.findlinestarts(co)),
-        line_offset=0
+            co.co_code, co.co_varnames, co.co_names, co.co_consts,
+            co.co_cellvars + co.co_freevars, dict(dis.findlinestarts(co)),
+            line_offset=0
     ):
         if instruction.starts_line is not None and instruction.offset > 0:
             yield ''

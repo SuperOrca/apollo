@@ -1,11 +1,11 @@
+import io
+
 import discord
 from discord.ext import commands
-from utils.music import YTDLError, Song, YTDLSource
-from jishaku.codeblocks import codeblock_converter
-import io
-import humanize
 
+from jishaku.codeblocks import codeblock_converter
 from utils.context import Context
+
 
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
@@ -70,7 +70,8 @@ class Utility(commands.Cog):
             data = await (await self.bot.session.get(f"https://api.deno.land/modules/{package}")).json()
             if data["success"]:
                 data = data['data']
-                version = await (await self.bot.session.get(f"https://cdn.deno.land/{data['name']}/meta/versions.json")).json()
+                version = await (
+                    await self.bot.session.get(f"https://cdn.deno.land/{data['name']}/meta/versions.json")).json()
                 embed = discord.Embed(title=data['name'], description=data['description'],
                                       url=f"https://deno.land/x/{data['name']}", color=0x2F3136)
                 embed.add_field(name="Version", value=version['latest'])

@@ -1,8 +1,3 @@
-import itertools
-import datetime
-import humanize
-
-
 def format_commit(commit):
     return f"[click]({commit['html_url']}) `{commit['commit']['message']}`"
 

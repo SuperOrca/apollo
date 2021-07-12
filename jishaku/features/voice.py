@@ -89,7 +89,7 @@ class VoiceFeature(Feature):
             return await ctx.reply("Not connected.")
 
         await ctx.reply(f"Connected to {voice.channel.name}, "
-                       f"{'paused' if voice.is_paused() else 'playing' if voice.is_playing() else 'idle'}.")
+                        f"{'paused' if voice.is_paused() else 'playing' if voice.is_playing() else 'idle'}.")
 
     @Feature.Command(parent="jsk_voice", name="join", aliases=["connect"])
     async def jsk_vc_join(self, ctx: commands.Context, *,
@@ -199,7 +199,7 @@ class VoiceFeature(Feature):
 
         if not isinstance(source, discord.PCMVolumeTransformer):
             return await ctx.reply("This source doesn't support adjusting volume or "
-                                  "the interface to do so is not exposed.")
+                                   "the interface to do so is not exposed.")
 
         source.volume = volume
 

@@ -24,7 +24,6 @@ __all__ = (
     'CommandTask'
 )
 
-
 CommandTask = collections.namedtuple("CommandTask", "index ctx task")
 
 

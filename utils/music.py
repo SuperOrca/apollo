@@ -1,8 +1,9 @@
-import youtube_dl
-import functools
 import asyncio
+import functools
+
 import discord
-from discord.ext import commands
+import youtube_dl
+
 from utils.context import Context
 
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -140,14 +141,14 @@ class Song:
                 description='```css\n{0.source.title}\n```'.format(self),
                 color=discord.Color.blurple(),
             )
-            .add_field(name='Duration', value=self.source.duration)
-            .add_field(name='Requested by', value=self.requester.mention)
-            .add_field(
+                .add_field(name='Duration', value=self.source.duration)
+                .add_field(name='Requested by', value=self.requester.mention)
+                .add_field(
                 name='Uploader',
                 value='[{0.source.uploader}]({0.source.uploader_url})'.format(
                     self
                 ),
             )
-            .add_field(name='URL', value='[Click]({0.source.url})'.format(self))
-            .set_thumbnail(url=self.source.thumbnail)
+                .add_field(name='URL', value='[Click]({0.source.url})'.format(self))
+                .set_thumbnail(url=self.source.thumbnail)
         )

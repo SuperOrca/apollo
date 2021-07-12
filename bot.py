@@ -1,25 +1,26 @@
 import logging
 import sys
 import traceback
+from collections import Counter
 from datetime import datetime
 from os import getenv, environ
 from pathlib import Path
-import re
 
+import aiohttp
+import asyncdagpi
 import coloredlogs
 import discord
 import mystbin
-import asyncdagpi
-import aiohttp
+import psutil
 import statcord
 from aiogtts import aiogTTS
 from async_tio import Tio
 from databases import Database
-from utils.help import ApolloHelp
-from utils.context import Context
 from discord.ext import commands
-import psutil
 from dotenv import load_dotenv
+
+from utils.context import Context
+from utils.help import ApolloHelp
 
 load_dotenv()
 
@@ -46,7 +47,8 @@ class Apollo(commands.AutoShardedBot):
         """
         super().__init__(command_prefix=self._get_prefix, help_command=ApolloHelp(), case_insensitive=True,
                          allowed_mentions=allowed_mentions, description=description, intents=intents,
-                         activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, max_messages=1000, connector=self.connector)
+                         activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, max_messages=1000,
+                         connector=self.connector)
         self.__version__ = "v1.0.0"
         self.owner_id = int(getenv('OWNER_ID'))
         self.init_logging()
@@ -67,6 +69,7 @@ class Apollo(commands.AutoShardedBot):
             getenv('DAGPI'), session=self.session, loop=self.loop)
         self.tts = aiogTTS()
         self.psutil_process = psutil.Process()
+        self.socket_stats = Counter()
 
     def init_logging(self):
         coloredlogs.install()
@@ -131,6 +134,9 @@ class Apollo(commands.AutoShardedBot):
 
     async def on_command(self, ctx: Context) -> None:
         self.statcord.command_run(ctx)
+
+    async def on_socket_response(self, msg):
+        self.socket_stats[msg.get('t')] += 1
 
     async def get_context(self, message: discord.Message, *, cls=None):
         return await super().get_context(message, cls=cls or Context)

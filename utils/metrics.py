@@ -1,6 +1,3 @@
-from typing import Union
-import discord
-
 def isImage(url):
     url = url.lower()
     return bool(
