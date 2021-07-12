@@ -1,4 +1,4 @@
-from os import getenv, UnidentifiedImageError
+from os import getenv
 from typing import Union
 from io import BytesIO
 
@@ -9,6 +9,7 @@ import numpy as np
 import os
 import aiofile
 from PIL import Image as Im
+from PIL import UnidentifiedImageError
 
 from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage
 from utils.wrappers import typing
