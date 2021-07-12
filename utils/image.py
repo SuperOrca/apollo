@@ -109,17 +109,19 @@ async def process_minecraft(bot, b: BytesIO) -> BytesIO:
     buffer.seek(0)
     return buffer
 
-async def create_minecraft_blocks():
+
+async def create_minecraft_blocks(bot):
     for _file in os.listdir("assets/minecraft_blocks"):
         async with aiofile.async_open("assets/minecraft_blocks/" + _file, "rb") as afp:
             b = await afp.read()
-            await resize_and_save_minecraft_blocks(BytesIO(b))
+            await resize_and_save_minecraft_blocks(bot, BytesIO(b))
 
-async def resize_and_save_minecraft_blocks(b):
+
+async def resize_and_save_minecraft_blocks(bot, b):
     try:
         with Image.open(b) as image:
             image = image.convert("RGBA")
-            self.bot.minecraft_blocks[image.resize(
+            bot.minecraft_blocks[image.resize(
                 (1, 1)).getdata()[0]] = image
     except UnidentifiedImageError:
         pass
