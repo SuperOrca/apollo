@@ -95,9 +95,7 @@ class Apollo(commands.AutoShardedBot):
             self.uptime = datetime.utcnow()
         self.log.info("Bot connected. DWSP latency: " +
                       str(round((self.latency * 1000))) + "ms")
-        self.loop.run_until_complete(
-            self.load()
-        )
+        self.load()
         self.load_extension('jishaku')
         self.log.info(f"Extensions loaded ({len(self.extensions)} loaded)")
         self.log.info("Bot ready!")
