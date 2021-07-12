@@ -237,6 +237,17 @@ class Image(commands.Cog):
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
 
+    @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def _ultrawide(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+        async with ctx.typing():
+            with await imageToPIL(ctx, image) as image:
+                new_image = image.resize((image.height*4, image.width))
+
+            embed = discord.Embed(color=discord.Color.dark_blue())
+            embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
+
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _squish(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
@@ -248,34 +259,34 @@ class Image(commands.Cog):
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed)
 
-    @commands.command(name='commoncolor', description="Get the most common color in an image.", usage="commoncolor [image]")
-    @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _commoncolor(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        async with ctx.typing():
-            def frequency(my_list):
-                freq = {}
-                for item in my_list:
-                    if item in freq:
-                        freq[item] += 1
-                    else:
-                        freq[item] = 1
-                return sorted(freq, key=lambda k: freq[k], reverse=True)
+    # @commands.command(name='commoncolor', description="Get the most common color in an image.", usage="commoncolor [image]")
+    # @commands.cooldown(1, 10, commands.BucketType.user)
+    # async def _commoncolor(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    #     async with ctx.typing():
+    #         def frequency(my_list):
+    #             freq = {}
+    #             for item in my_list:
+    #                 if item in freq:
+    #                     freq[item] += 1
+    #                 else:
+    #                     freq[item] = 1
+    #             return sorted(freq, key=lambda k: freq[k], reverse=True)
 
-            url = await getImage(ctx, image)
-            response = await self.bot.session.get(url)
+    #         url = await getImage(ctx, image)
+    #         response = await self.bot.session.get(url)
 
-            with Im.open(BytesIO(await response.read())) as image:
-                palette = image.getpalette()
+    #         with Im.open(BytesIO(await response.read())) as image:
+    #             palette = image.getpalette()
 
-            frequent = frequency([f"#{r:02x}{g:02x}{b:02x}" for r, g, b in [
-                                 tuple(palette[i:i+3]) for i in range(0, len(palette), 3)]])
+    #         frequent = frequency([f"#{r:02x}{g:02x}{b:02x}" for r, g, b in [
+    #                              tuple(palette[i:i+3]) for i in range(0, len(palette), 3)]])
 
-            embed = discord.Embed(
-                title="Common Color: " + frequent[0], color=int(f"0x{frequent[0].strip('#')}", 16))
-            embed.set_image(
-                url=f"https://some-random-api.ml/canvas/colorviewer?hex={frequent[0].strip('#')}")
-            embed.set_thumbnail(url=url)
-            await ctx.reply(embed=embed)
+    #         embed = discord.Embed(
+    #             title="Common Color: " + frequent[0], color=int(f"0x{frequent[0].strip('#')}", 16))
+    #         embed.set_image(
+    #             url=f"https://some-random-api.ml/canvas/colorviewer?hex={frequent[0].strip('#')}")
+    #         embed.set_thumbnail(url=url)
+    #         await ctx.reply(embed=embed)
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]", aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
