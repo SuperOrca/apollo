@@ -30,15 +30,8 @@ class Apollo(commands.Bot):
 
     def __init__(self) -> None:
         allowed_mentions = discord.AllowedMentions.none()
-        intents = discord.Intents(
-            guilds=True,
-            members=True,
-            bans=True,
-            emojis=True,
-            voice_states=True,
-            messages=True,
-            reactions=True
-        )
+        intents = discord.Intents.default()
+        intents.members = True
         description = """
         The all-in-one discord bot.
         """
