@@ -224,6 +224,7 @@ class Image(commands.Cog):
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
+            embed.set_footer(text="Powered by pillow")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
@@ -235,6 +236,7 @@ class Image(commands.Cog):
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
+            embed.set_footer(text="Powered by pillow")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
@@ -246,6 +248,7 @@ class Image(commands.Cog):
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
+            embed.set_footer(text="Powered by pillow")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
@@ -257,6 +260,7 @@ class Image(commands.Cog):
 
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
+            embed.set_footer(text="Powered by pillow")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     # @commands.command(name='commoncolor', description="Get the most common color in an image.", usage="commoncolor [image]")
@@ -296,6 +300,7 @@ class Image(commands.Cog):
             b = BytesIO(await (await self.bot.session.get(url)).read())
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
+            embed.set_footer(text="Powered by pillow | Credits to `The Anime Bot`.")
             await ctx.send(file=discord.File(await process_minecraft(self.bot, b), f"{ctx.command.name}.png"), embed=embed, can_delete=True)
 
 
