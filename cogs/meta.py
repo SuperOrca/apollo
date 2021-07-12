@@ -11,6 +11,7 @@ from discord.ext import menus
 from utils.converters import PrefixConverter
 from utils.context import Context
 
+
 class Meta(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
@@ -70,7 +71,7 @@ class Meta(commands.Cog):
         owner = self.bot.get_user(331179093447933963)
         embed.add_field(name="Owner", value=owner)
         embed.add_field(
-            name="Members", value=f"{len(self.bot.users):,}", inline=True)
+            name="Members", value=f"{sum([guild.member_count for guild in self.bot.guilds]):,}", inline=True)
         embed.add_field(
             name="Guilds", value=f"{len(self.bot.guilds):,}", inline=True)
         embed.add_field(
