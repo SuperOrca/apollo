@@ -54,7 +54,7 @@ class Apollo(commands.AutoShardedBot):
             connector=self.connector,
             timeout=aiohttp.ClientTimeout(total=30)
         )
-        self.mystbin = mystbin.Client(session=self.sessio)
+        self.mystbin = mystbin.Client(session=self.session)
         self.statcord = statcord.Client(self, environ["STATCORD"])
         self.statcord.start_loop()
         self.dagpi = asyncdagpi.Client(
