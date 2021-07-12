@@ -1,10 +1,13 @@
-from os import getenv
+from os import getenv, UnidentifiedImageError
 from typing import Union
 from io import BytesIO
 
 import asyncdagpi
 import discord
 from discord.ext import commands
+import numpy as np
+import os
+import aiofile
 from PIL import Image as Im
 
 from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage
@@ -14,6 +17,24 @@ from utils.wrappers import typing
 class Image(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
+        if not hasattr(bot, "minecraft_blocks"):
+            self.bot.minecraft_blocks = {}
+            self.bot.loop.create_task(self.create_minecraft_blocks())
+
+    async def create_minecraft_blocks(self):
+        for _file in os.listdir("assets/minecraft_blocks"):
+            async with aiofile.async_open("assets/minecraft_blocks/" + _file, "rb") as afp:
+                b = await afp.read()
+                await self.resize_and_save_minecraft_blocks(BytesIO(b))
+
+    async def resize_and_save_minecraft_blocks(self, b):
+        try:
+            with Image.open(b) as image:
+                image = image.convert("RGBA")
+                self.bot.minecraft_blocks[image.resize(
+                    (1, 1)).getdata()[0]] = image
+        except UnidentifiedImageError:
+            pass
 
     @commands.command(name='pixelate', description="Shows the image as pixelated.", usage="pixelate [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -264,7 +285,6 @@ class Image(commands.Cog):
 
             with Im.open(BytesIO(await response.read())) as image:
                 palette = image.getpalette()
-                print(image.getcolors())
 
             frequent = frequency([f"#{r:02x}{g:02x}{b:02x}" for r, g, b in [
                                  tuple(palette[i:i+3]) for i in range(0, len(palette), 3)]])
@@ -275,6 +295,35 @@ class Image(commands.Cog):
                 url=f"https://some-random-api.ml/canvas/colorviewer?hex={frequent[0].strip('#')}")
             embed.set_thumbnail(url=url)
             await ctx.reply(embed=embed)
+
+    async def process_minecraft(self, b: BytesIO) -> BytesIO:
+        minecraft_array = np.array(list(self.bot.minecraft_blocks.keys()))
+        np.expand_dims(minecraft_array, axis=-1)
+        image = Image.open(b)
+        image = image.convert("RGBA").resize((64, 64))
+        with Image.new("RGBA", (image.width * 16, image.height * 16)) as final_image:
+            arr = np.asarray(image)
+            np.expand_dims(arr, axis=-1)
+            for y, r in enumerate(arr):
+                for x, c in enumerate(r):
+                    difference = np.sqrt(
+                        np.sum((minecraft_array - c) ** 2, axis=1))
+                    where = np.where(difference == np.amin(difference))
+                    to_paste = self.bot.minecraft_blocks[tuple(
+                        minecraft_array[where][0])]
+                    final_image.paste(to_paste, (x * 16, y * 16), to_paste)
+        buffer = BytesIO()
+        final_image.save(buffer, "PNG")
+        buffer.seek(0)
+        return buffer
+
+    @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]")
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def _minecraft(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+        async with ctx.typing():
+            url = await getImage(ctx, image)
+            b = BytesIO(await (await self.bot.session.get(url)).read())
+            await ctx.send(file=discord.File(await self.process_minecraft(b), "minecraft.png"))
 
 
 def setup(bot) -> None:
