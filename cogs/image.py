@@ -302,7 +302,7 @@ class Image(commands.Cog):
         np.expand_dims(minecraft_array, axis=-1)
         image = Im.open(b)
         image = image.convert("RGBA").resize((64, 64))
-        with Image.new("RGBA", (image.width * 16, image.height * 16)) as final_image:
+        with Im.new("RGBA", (image.width * 16, image.height * 16)) as final_image:
             arr = np.asarray(image)
             np.expand_dims(arr, axis=-1)
             for y, r in enumerate(arr):
