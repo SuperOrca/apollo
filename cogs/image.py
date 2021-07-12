@@ -8,7 +8,7 @@ from discord.ext import commands
 from PIL import Image as Im
 
 from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage, create_minecraft_blocks, process_minecraft
-
+from utils.context import Context
 
 class Image(commands.Cog):
     def __init__(self, bot) -> None:
@@ -19,205 +19,205 @@ class Image(commands.Cog):
 
     @commands.command(name='pixelate', description="Shows the image as pixelated.", usage="pixelate [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _pixelate(self, ctx: commands.Context,
+    async def _pixelate(self, ctx: Context,
                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.pixel())
 
     @commands.command(name='colors', description="Shows the image's colors.", usage="colors [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _colors(self, ctx: commands.Context,
+    async def _colors(self, ctx: Context,
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.colors())
 
     @commands.command(name='america', description="Shows the image as america.", usage="america [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _america(self, ctx: commands.Context,
+    async def _america(self, ctx: Context,
                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.america(), end="gif")
 
     @commands.command(name='communism', description="Shows the image as communism.", usage="communism [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _communism(self, ctx: commands.Context,
+    async def _communism(self, ctx: Context,
                          image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.communism(), end="gif")
 
     @commands.command(name='triggered', description="Shows the image as triggered.", usage="triggered [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _triggered(self, ctx: commands.Context,
+    async def _triggered(self, ctx: Context,
                          image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.triggered(), end="gif")
 
     @commands.command(name='wasted', description="Shows the image as wasted.", usage="wasted [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _wasted(self, ctx: commands.Context,
+    async def _wasted(self, ctx: Context,
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.wasted())
 
     @commands.command(name='invert', description="Shows the image as inverted.", usage="invert [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _invert(self, ctx: commands.Context,
+    async def _invert(self, ctx: Context,
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.invert())
 
     @commands.command(name='sobel', description="Shows the image as sobel.", usage="sobel [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _sobel(self, ctx: commands.Context,
+    async def _sobel(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.sobel())
 
     @commands.command(name='hog', description="Shows the image as a hog.", usage="hog [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _hog(self, ctx: commands.Context,
+    async def _hog(self, ctx: Context,
                    image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.hog())
 
     @commands.command(name='triangle', description="Shows the image as a triangle.", usage="triangle [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _triangle(self, ctx: commands.Context,
+    async def _triangle(self, ctx: Context,
                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.triangle())
 
     @commands.command(name='blur', description="Shows the image as a blur.", usage="blur [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _blur(self, ctx: commands.Context,
+    async def _blur(self, ctx: Context,
                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.blur())
 
     @commands.command(name='rgb-graph', description="Shows the image with rgb graph.", usage="rgb-graph [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _rgb_graph(self, ctx: commands.Context,
+    async def _rgb_graph(self, ctx: Context,
                          image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.rgb())
 
     @commands.command(name='angel', description="Shows the image as a angel.", usage="angel [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _angel(self, ctx: commands.Context,
+    async def _angel(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.angel())
 
     @commands.command(name='satan', description="Shows the image as satan.", usage="satan [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _satan(self, ctx: commands.Context,
+    async def _satan(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.satan())
 
     @commands.command(name='delete', description="Shows the image as deleted.", usage="delete [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _delete(self, ctx: commands.Context,
+    async def _delete(self, ctx: Context,
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.delete())
 
     @commands.command(name='fedora', description="Shows the image as tipped fedora.", usage="fedora [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _fedora(self, ctx: commands.Context,
+    async def _fedora(self, ctx: Context,
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.fedora())
 
     @commands.command(name='wanted', description="Shows the image as wanted.", usage="wanted [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _wanted(self, ctx: commands.Context,
+    async def _wanted(self, ctx: Context,
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.wanted())
 
     @commands.command(name='stringify', description="Shows the image as stringifyed.", usage="stringify [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _stringify(self, ctx: commands.Context,
+    async def _stringify(self, ctx: Context,
                          image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.stringify())
 
     @commands.command(name='mosiac', description="Shows the image as a mosiac.", usage="mosiac [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _mosiac(self, ctx: commands.Context,
+    async def _mosiac(self, ctx: Context,
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.mosiac())
 
     @commands.command(name='sithlord', description="Shows the image as sithlord.", usage="sithlord [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _sithlord(self, ctx: commands.Context,
+    async def _sithlord(self, ctx: Context,
                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.sith())
 
     @commands.command(name='jail', description="Shows the image in jail.", usage="jail [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _jail(self, ctx: commands.Context,
+    async def _jail(self, ctx: Context,
                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.jail())
 
     @commands.command(name='gay', description="Shows the image as gay.", usage="gay [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _gay(self, ctx: commands.Context,
+    async def _gay(self, ctx: Context,
                    image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.gay())
 
     @commands.command(name='trash', description="Shows the image as trash.", usage="trash [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _trash(self, ctx: commands.Context,
+    async def _trash(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.trash())
 
     @commands.command(name='deepfry', description="Shows the image as deepfry.", usage="deepfry [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _deepfry(self, ctx: commands.Context,
+    async def _deepfry(self, ctx: Context,
                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.deepfry())
 
     @commands.command(name='ascii', description="Shows the image as ascii.", usage="ascii [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _ascii(self, ctx: commands.Context,
+    async def _ascii(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.ascii())
 
     @commands.command(name='charcoal', description="Shows the image as charcoal.", usage="charcoal [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _charcoal(self, ctx: commands.Context,
+    async def _charcoal(self, ctx: Context,
                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.charcoal())
 
     @commands.command(name='posterize', description="Shows the image as posterized.", usage="posterize [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _posterize(self, ctx: commands.Context,
+    async def _posterize(self, ctx: Context,
                          image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.poster())
 
     @commands.command(name='sepia', description="Shows the image as sepia.", usage="sepia [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _sepia(self, ctx: commands.Context,
+    async def _sepia(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.sepia())
 
     @commands.command(name='swirl', description="Shows the image as swirl.", usage="swirl [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _swirl(self, ctx: commands.Context,
+    async def _swirl(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.swirl())
 
     @commands.command(name='paint', description="Shows the image as painted.", usage="paint [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _paint(self, ctx: commands.Context,
+    async def _paint(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.paint())
 
     @commands.command(name='night', description="Shows the image as night.", usage="night [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _night(self, ctx: commands.Context,
+    async def _night(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.night())
 
     @commands.command(name='rainbow', description="Shows the image as rainbow.", usage="rainbow [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _rainbow(self, ctx: commands.Context,
+    async def _rainbow(self, ctx: Context,
                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.rainbow())
 
     @commands.command(name='magik', description="Shows the image with magik.", usage="magik [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _magik(self, ctx: commands.Context,
+    async def _magik(self, ctx: Context,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, asyncdagpi.ImageFeatures.magik())
 
     @commands.command(name='flip', descripton="Flip an image.", usage="flip [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _flip(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _flip(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
                 new_image = image.rotate(180)
@@ -228,7 +228,7 @@ class Image(commands.Cog):
 
     @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _wide(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _wide(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
                 new_image = image.resize((image.height*2, image.width))
@@ -239,7 +239,7 @@ class Image(commands.Cog):
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _ultrawide(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _ultrawide(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
                 new_image = image.resize((image.height*4, image.width))
@@ -250,7 +250,7 @@ class Image(commands.Cog):
 
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def _squish(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _squish(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         async with ctx.typing():
             with await imageToPIL(ctx, image) as image:
                 new_image = image.resize((image.height, image.width*2))
@@ -261,7 +261,7 @@ class Image(commands.Cog):
 
     # @commands.command(name='commoncolor', description="Get the most common color in an image.", usage="commoncolor [image]")
     # @commands.cooldown(1, 10, commands.BucketType.user)
-    # async def _commoncolor(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    # async def _commoncolor(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
     #     async with ctx.typing():
     #         def frequency(my_list):
     #             freq = {}
@@ -290,7 +290,7 @@ class Image(commands.Cog):
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]", aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
-    async def _minecraft(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+    async def _minecraft(self, ctx: Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         async with ctx.typing():
             url = await getImage(ctx, image)
             b = BytesIO(await (await self.bot.session.get(url)).read())

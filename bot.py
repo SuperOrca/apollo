@@ -106,7 +106,7 @@ class Apollo(commands.AutoShardedBot):
             message.content = self.user.mention + " " + message.content
         await self.process_commands(message)
 
-    async def on_command_error(self, ctx: commands.Context, error) -> None:
+    async def on_command_error(self, ctx: Context, error) -> None:
         if hasattr(ctx.command, 'on_error'):
             return
 
@@ -122,7 +122,7 @@ class Apollo(commands.AutoShardedBot):
         self.log.error(f"{ctx.command} -> {error}")
         await ctx.reply(embed=discord.Embed(description=error, color=discord.Color.red()))
 
-    async def on_command(self, ctx: commands.Context) -> None:
+    async def on_command(self, ctx: Context) -> None:
         self.statcord.command_run(ctx)
 
     async def get_context(self, message: discord.Message, *, cls=None):

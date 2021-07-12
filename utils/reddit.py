@@ -6,7 +6,7 @@ from discord.ext import commands, menus
 from discord import ui
 
 from .metrics import isImage
-
+from .context import Context
 
 async def getpost(bot, channel, subreddit) -> discord.Embed:
     async def post():
@@ -73,7 +73,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
                 await interaction.response.send_message("This is not your command.", ephemeral=True)
 
         @classmethod
-        async def start(cls, ctx: commands.Context):
+        async def start(cls, ctx: Context):
             cls.ctx = ctx
             cls.log = []
             cls.num = 0

@@ -11,9 +11,10 @@ import os
 import aiofile
 
 from .metrics import isImage
+from .context import Context
 
 
-async def dagpi_process(ctx: commands.Context, image, feature, end="png", **kwargs) -> discord.Embed:
+async def dagpi_process(ctx: Context, image, feature, end="png", **kwargs) -> discord.Embed:
     url = await getImage(ctx, image)
     async with ctx.typing():
         img = await ctx.bot.dagpi.image_process(feature, url=str(url), **kwargs)
@@ -37,7 +38,7 @@ def fileFromBytes(ctx, image) -> discord.File:
     return discord.File(buffer, f"{ctx.command.name}.png")
 
 
-async def getImage(ctx: commands.Context, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):
+async def getImage(ctx: Context, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):
 
     if isinstance(url, str):
         url = await twemoji.emoji_to_url(url)

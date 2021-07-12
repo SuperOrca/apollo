@@ -1,8 +1,10 @@
 from discord.ext import commands
 
+from .context import Context
+
 
 class PrefixConverter(commands.clean_content):
-    async def convert(self, ctx: commands.Context, argument: str) -> str:
+    async def convert(self, ctx: Context, argument: str) -> str:
         self.escape_markdown = True
 
         if not (argument := (await super().convert(ctx=ctx, argument=argument)).strip()):
