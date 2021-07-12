@@ -31,7 +31,7 @@ JISHAKU_HIDE = enabled("JISHAKU_HIDE")
 JISHAKU_RETAIN = enabled("JISHAKU_RETAIN")
 
 # Flag to indicate that meta variables in REPL should not be prefixed with an underscore
-JISHAKU_NO_UNDERSCORE = enabled("JISHAKU_NO_UNDERSCORE")
+JISHAKU_NO_UNDERSCORE = True # enabled("JISHAKU_NO_UNDERSCORE")
 SCOPE_PREFIX = '' if JISHAKU_NO_UNDERSCORE else '_'
 
 # Flag to indicate whether or not to always use paginators in commands that now use files
@@ -39,7 +39,7 @@ SCOPE_PREFIX = '' if JISHAKU_NO_UNDERSCORE else '_'
 JISHAKU_FORCE_PAGINATOR = enabled("JISHAKU_FORCE_PAGINATOR")
 
 # Flag to indicate verbose error tracebacks should be sent to the invoking channel as opposed to via direct message.
-JISHAKU_NO_DM_TRACEBACK = enabled("JISHAKU_NO_DM_TRACEBACK")
+JISHAKU_NO_DM_TRACEBACK = True # enabled("JISHAKU_NO_DM_TRACEBACK")
 
 # Flag to indicate usage of braille J in shutdown command
 JISHAKU_USE_BRAILLE_J = enabled("JISHAKU_USE_BRAILLE_J")

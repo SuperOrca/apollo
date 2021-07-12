@@ -113,13 +113,15 @@ class Feature(commands.Cog):
             else:
                 command_type = commands.group if cmd.has_children else commands.command
 
-            association_map[cmd] = target_cmd = command_type(**cmd.kwargs)(cmd.callback)
+            association_map[cmd] = target_cmd = command_type(
+                **cmd.kwargs)(cmd.callback)
             target_cmd.cog = self
             self.feature_commands[key] = target_cmd
             setattr(self, key, target_cmd)
 
         # pylint: disable=protected-access, access-member-before-definition
-        self.__cog_commands__ = (*self.__cog_commands__, *self.feature_commands.values())
+        self.__cog_commands__ = (
+            *self.__cog_commands__, *self.feature_commands.values())
         # pylint: enable=protected-access, access-member-before-definition
 
         # Don't really think this does much, but init Cog anyway.
