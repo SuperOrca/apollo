@@ -5,6 +5,7 @@ from io import BytesIO
 import asyncdagpi
 import discord
 from discord.ext import commands
+from PIL import Image as Im
 
 from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage
 from utils.wrappers import typing
@@ -261,7 +262,7 @@ class Image(commands.Cog):
             url = await getImage(ctx, image)
             response = await self.bot.session.get(url)
 
-            with Image.open(BytesIO(await response.read())) as image:
+            with Im.open(BytesIO(await response.read())) as image:
                 palette = image.getpalette()
 
             frequent = frequency([f"#{r:02x}{g:02x}{b:02x}" for r, g, b in [
