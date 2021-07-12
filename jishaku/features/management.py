@@ -45,7 +45,8 @@ class ManagementFeature(Feature):
 
         for extension in itertools.chain(*extensions):
             method, icon = (
-                (self.bot.reload_extension, "\N{CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS}")
+                (self.bot.reload_extension,
+                 "\N{CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS}")
                 if extension in self.bot.extensions else
                 (self.bot.load_extension, "\N{INBOX TRAY}")
             )
@@ -53,7 +54,8 @@ class ManagementFeature(Feature):
             try:
                 method(extension)
             except Exception as exc:  # pylint: disable=broad-except
-                traceback_data = ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__, 1))
+                traceback_data = ''.join(traceback.format_exception(
+                    type(exc), exc, exc.__traceback__, 1))
 
                 paginator.add_line(
                     f"{icon}\N{WARNING SIGN} `{extension}`\n```py\n{traceback_data}\n```",
@@ -80,7 +82,8 @@ class ManagementFeature(Feature):
             try:
                 self.bot.unload_extension(extension)
             except Exception as exc:  # pylint: disable=broad-except
-                traceback_data = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__, 1))
+                traceback_data = "".join(traceback.format_exception(
+                    type(exc), exc, exc.__traceback__, 1))
 
                 paginator.add_line(
                     f"{icon}\N{WARNING SIGN} `{extension}`\n```py\n{traceback_data}\n```",
@@ -102,6 +105,10 @@ class ManagementFeature(Feature):
 
         await ctx.reply(f"Logging out now{ellipse_character}")
         await ctx.bot.close()
+
+    @Feature.Command(parent="jsk", name="grammar")
+    async def jsk_grammar(self, ctx: commands.Context):
+        await ctx.send(''.join(char.upper() if index % 2 == 0 else char.lower() for index, char in enumerate(text, start=1)))
 
     @Feature.Command(parent="jsk", name="rtt", aliases=["ping"])
     async def jsk_rtt(self, ctx: commands.Context):
