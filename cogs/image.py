@@ -5,13 +5,9 @@ from io import BytesIO
 import asyncdagpi
 import discord
 from discord.ext import commands
-import numpy as np
-import os
-import aiofile
 from PIL import Image as Im
-from PIL import UnidentifiedImageError
 
-from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage
+from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage, create_minecraft_blocks
 
 
 class Image(commands.Cog):
@@ -19,22 +15,7 @@ class Image(commands.Cog):
         self.bot = bot
         if not hasattr(bot, "minecraft_blocks"):
             self.bot.minecraft_blocks = {}
-            self.bot.loop.create_task(self.create_minecraft_blocks())
-
-    async def create_minecraft_blocks(self):
-        for _file in os.listdir("assets/minecraft_blocks"):
-            async with aiofile.async_open("assets/minecraft_blocks/" + _file, "rb") as afp:
-                b = await afp.read()
-                await self.resize_and_save_minecraft_blocks(BytesIO(b))
-
-    async def resize_and_save_minecraft_blocks(self, b):
-        try:
-            with Im.open(b) as image:
-                image = image.convert("RGBA")
-                self.bot.minecraft_blocks[image.resize(
-                    (1, 1)).getdata()[0]] = image
-        except UnidentifiedImageError:
-            pass
+            self.bot.loop.create_task(create_minecraft_blocks())
 
     @commands.command(name='pixelate', description="Shows the image as pixelated.", usage="pixelate [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -295,27 +276,6 @@ class Image(commands.Cog):
                 url=f"https://some-random-api.ml/canvas/colorviewer?hex={frequent[0].strip('#')}")
             embed.set_thumbnail(url=url)
             await ctx.reply(embed=embed)
-
-    async def process_minecraft(self, b: BytesIO) -> BytesIO:
-        minecraft_array = np.array(list(self.bot.minecraft_blocks.keys()))
-        np.expand_dims(minecraft_array, axis=-1)
-        image = Im.open(b)
-        image = image.convert("RGBA").resize((64, 64))
-        with Im.new("RGBA", (image.width * 16, image.height * 16)) as final_image:
-            arr = np.asarray(image)
-            np.expand_dims(arr, axis=-1)
-            for y, r in enumerate(arr):
-                for x, c in enumerate(r):
-                    difference = np.sqrt(
-                        np.sum((minecraft_array - c) ** 2, axis=1))
-                    where = np.where(difference == np.amin(difference))
-                    to_paste = self.bot.minecraft_blocks[tuple(
-                        minecraft_array[where][0])]
-                    final_image.paste(to_paste, (x * 16, y * 16), to_paste)
-        buffer = BytesIO()
-        final_image.save(buffer, "PNG")
-        buffer.seek(0)
-        return buffer
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]", aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
