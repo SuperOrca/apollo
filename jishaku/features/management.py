@@ -15,6 +15,7 @@ import itertools
 import math
 import time
 import traceback
+import json
 
 from discord.ext import commands
 
@@ -109,6 +110,10 @@ class ManagementFeature(Feature):
     @Feature.Command(parent="jsk", name="grammar")
     async def jsk_grammar(self, ctx: commands.Context, *, text: str):
         await ctx.send(''.join(char.upper() if index % 2 == 0 else char.lower() for index, char in enumerate(text, start=1)))
+
+    @Feature.Command(parent="jsk", name="socketstats")
+    async def jsk_socketstats(self, ctx: commands.Context, *, text: str):
+        await ctx.reply(f"```\n{json.dumps(dict(ctx.bot.socket_stats), indent=4)}\n```")
 
     @Feature.Command(parent="jsk", name="rtt", aliases=["ping"])
     async def jsk_rtt(self, ctx: commands.Context):
