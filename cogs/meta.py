@@ -9,7 +9,6 @@ from time import time as count
 from discord.ext import menus
 
 from utils.converters import PrefixConverter
-from utils.decorators import asyncexe
 
 
 class Meta(commands.Cog):

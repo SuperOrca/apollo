@@ -2,8 +2,6 @@ import itertools
 import datetime
 import humanize
 
-from .decorators import asyncexe
-
 
 def format_commit(commit):
     return f"[click]({commit['html_url']}) `{commit['commit']['message']}`"

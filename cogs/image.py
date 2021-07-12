@@ -12,7 +12,6 @@ from PIL import Image as Im
 from PIL import UnidentifiedImageError
 
 from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage
-from utils.decorators import asyncexe
 
 
 class Image(commands.Cog):
@@ -297,8 +296,7 @@ class Image(commands.Cog):
             embed.set_thumbnail(url=url)
             await ctx.reply(embed=embed)
 
-    @asyncexe()
-    def process_minecraft(self, b: BytesIO) -> BytesIO:
+    async def process_minecraft(self, b: BytesIO) -> BytesIO:
         minecraft_array = np.array(list(self.bot.minecraft_blocks.keys()))
         np.expand_dims(minecraft_array, axis=-1)
         image = Im.open(b)
