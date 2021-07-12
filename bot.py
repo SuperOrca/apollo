@@ -52,6 +52,7 @@ class Apollo(commands.AutoShardedBot):
         self.__version__ = "v1.0.0"
         self.owner_id = int(getenv('OWNER_ID'))
         self.init_logging()
+        self.init_constants()
 
     async def init(self) -> None:
         self.db = Database('sqlite:///bot.db')
@@ -69,7 +70,6 @@ class Apollo(commands.AutoShardedBot):
             getenv('DAGPI'), session=self.session, loop=self.loop)
         self.tts = aiogTTS()
         self.psutil_process = psutil.Process()
-        self.socket_stats = Counter()
 
     def init_logging(self):
         coloredlogs.install()
@@ -80,6 +80,9 @@ class Apollo(commands.AutoShardedBot):
         handler.setFormatter(logging.Formatter(
             '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
         self.log.addHandler(handler)
+
+    def init_constants(self):
+        self.socket_stats = Counter()
 
     async def get_guild_prefix(self, message: discord.Message):
         try:
