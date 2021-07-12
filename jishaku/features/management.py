@@ -113,7 +113,7 @@ class ManagementFeature(Feature):
 
     @Feature.Command(parent="jsk", name="socketstats")
     async def jsk_socketstats(self, ctx: commands.Context):
-        await ctx.reply(f"```\n{json.dumps(sorted(dict(ctx.bot.socket_stats), reverse=True, key=lambda k: dict(ctx.bot.socket_stats)[k]), indent=4)}\n```")
+        await ctx.reply(f"```\n{json.dumps({key: value for key, value in sorted(dict(ctx.bot.socket_stats).items(), key=lambda item: item[1])}, indent=4)}\n```")
 
     @Feature.Command(parent="jsk", name="rtt", aliases=["ping"])
     async def jsk_rtt(self, ctx: commands.Context):
