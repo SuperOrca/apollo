@@ -51,7 +51,6 @@ class Apollo(commands.AutoShardedBot):
         self.tio = await Tio()
         self.session = aiohttp.ClientSession(
             headers={'User-Agent': "Apollo Discord Bot (discord.py) (python)"},
-            connector=self.connector,
             timeout=aiohttp.ClientTimeout(total=30)
         )
         self.mystbin = mystbin.Client(session=self.session)
