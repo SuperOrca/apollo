@@ -264,7 +264,7 @@ class Image(commands.Cog):
 
             with Im.open(BytesIO(await response.read())) as image:
                 palette = image.getpalette()
-                print(palette)
+                print(image.getcolors())
 
             frequent = frequency([f"#{r:02x}{g:02x}{b:02x}" for r, g, b in [
                                  tuple(palette[i:i+3]) for i in range(0, len(palette), 3)]])
