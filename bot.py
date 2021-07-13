@@ -143,13 +143,13 @@ class Apollo(commands.AutoShardedBot):
             return
 
         if isinstance(error, commands.MissingRequiredArgument):
-            return send_error_embed(ctx, f"You are missing the required **{error.param.upper()}** argument.")
+            return self.send_error_embed(ctx, f"You are missing the required **{error.param.upper()}** argument.")
         if isinstance(error, commands.CheckFailure):
-            return send_error_embed(ctx, f"You are not able to use this command.")
+            return self.send_error_embed(ctx, f"You are not able to use this command.")
         if isinstance(error, commands.CommandOnCooldown):
-            return send_error_embed(ctx, f"{error.cooldown} {error.retry_after} {error.type}")
+            return self.send_error_embed(ctx, f"{error.cooldown} {error.retry_after} {error.type}")
         if isinstance(error, commands.MaxConcurrencyReached):
-            return send_error_embed(ctx, f"{error.number} {error.per}")
+            return self.send_error_embed(ctx, f"{error.number} {error.per}")
 
         _ignored = (commands.CommandNotFound, commands.NoPrivateMessage,
                     commands.DisabledCommand, commands.CommandInvokeError)
@@ -158,9 +158,9 @@ class Apollo(commands.AutoShardedBot):
         if isinstance(error, _ignored):
             return
         if isinstance(error, _input):
-            return send_error_embed(ctx, "There was an error with your arguments.")
+            return self.send_error_embed(ctx, "There was an error with your arguments.")
 
-        await send_error_embed(ctx, "An unknown error has occured. I have contacted the developers.")
+        await self.send_error_embed(ctx, "An unknown error has occured. I have contacted the developers.")
         self.send_owner('```py\n' + '\n'.join(traceback.format_exception(
             type(error), error, error.__traceback__, file=sys.stderr)) + '\n```')
 
