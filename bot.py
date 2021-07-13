@@ -160,7 +160,7 @@ class Apollo(commands.AutoShardedBot):
         if isinstance(error, _input):
             return await self.send_error_embed(ctx, "There was an error with your arguments.")
 
-        await await self.send_error_embed(ctx, "An unknown error has occured. I have contacted the developers.")
+        await self.send_error_embed(ctx, "An unknown error has occured. I have contacted the developers.")
         self.send_owner('```py\n' + '\n'.join(traceback.format_exception(
             type(error), error, error.__traceback__, file=sys.stderr)) + '\n```')
 
