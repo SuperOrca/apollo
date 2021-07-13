@@ -21,7 +21,7 @@ async def dagpi_process(ctx: Context, image, feature, end="png", **kwargs) -> di
         file = discord.File(img.image, f"{ctx.command.name}.{end}")
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.{end}")
-        embed.set_footer(text=f"Processed in {img.process_time:.2f} seconds.")
+        embed.set_footer(text=f"Processed in {float(img.process_time):.2f} seconds.")
     await ctx.reply(file=file, embed=embed, can_delete=True)
 
 
