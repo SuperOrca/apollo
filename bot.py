@@ -1,5 +1,6 @@
 import logging
 import sys
+import json
 import traceback
 from collections import Counter
 from datetime import datetime
@@ -49,7 +50,7 @@ class Apollo(commands.AutoShardedBot):
                          allowed_mentions=allowed_mentions, description=description, intents=intents,
                          activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, max_messages=1000,
                          connector=self.connector)
-        self.__version__ = "v1.0.0"
+        self.__version__ = "1.0.0"
         self.owner_id = int(getenv('OWNER_ID'))
         self.init_logging()
         self.init_constants()
@@ -60,8 +61,10 @@ class Apollo(commands.AutoShardedBot):
         await self.db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
         self.tio = await Tio()
         self.session = aiohttp.ClientSession(
-            headers={'User-Agent': "Apollo Discord Bot (discord.py) (python)"},
-            timeout=aiohttp.ClientTimeout(total=30)
+            headers={'User-Agent': "Apollo Bot v{} Python/{}.{} aiohttp/{}".format(
+                self.__version__, sys.version_info[0], sys.version_info[1], aiohttp.__version__)},
+            timeout=aiohttp.ClientTimeout(total=30),
+            loop=self.loop
         )
         self.mystbin = mystbin.Client(session=self.session)
         self.statcord = statcord.Client(self, environ["STATCORD"])
@@ -83,8 +86,14 @@ class Apollo(commands.AutoShardedBot):
 
     def init_constants(self):
         self.socket_stats = Counter()
+        with open("blacklist.json") as f:
+            self.blacklist = json.load(f)
 
-    async def get_guild_prefix(self, message: discord.Message):
+    @self.check
+    async def is_blacklisted(self, ctx: commands.Context) -> bool:
+        return ctx.author.id in self.blacklist
+
+    async def get_guild_prefix(self, message: discord.Message) -> list:
         try:
             prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id=:id", values={"id": message.guild.id})
         except AttributeError:
