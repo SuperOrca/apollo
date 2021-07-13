@@ -134,6 +134,7 @@ class Apollo(commands.AutoShardedBot):
 
     @staticmethod
     async def send_error_embed(ctx: Context, content: str, **kwargs):
+        content = content.replace('"', '`')
         embed = discord.Embed(
             description=f'⚠ {content}', color=discord.Color.red())
         await ctx.reply(embed=embed)
@@ -148,6 +149,8 @@ class Apollo(commands.AutoShardedBot):
             return await self.send_error_embed(ctx, f"You are not able to use `{ctx.command}`.")
         if isinstance(error, commands.CommandOnCooldown):
             return await self.send_error_embed(ctx, f"`{ctx.command}` is on cooldown for another `{error.retry_after:.1f} seconds`.")
+        if isinstance(error, commands.CommandInvokeError):
+            return await self.send_error_embed(ctx, f"{error.original}")
 
         _ignored = (commands.CommandNotFound, commands.NoPrivateMessage,
                     commands.DisabledCommand)
@@ -159,7 +162,7 @@ class Apollo(commands.AutoShardedBot):
             return await self.send_error_embed(ctx, "There was an error with your arguments.")
 
         await self.send_error_embed(ctx, "An unknown error has occured. I have contacted the developers.")
-        await self.send_owner('An exception in a user\' command:\n```py\n' + '\n'.join(traceback.format_exception(
+        await self.send_owner('An exception in a user\'s command:\n```py\n' + '\n'.join(traceback.format_exception(
             type(error), error, error.__traceback__)) + '\n```')
 
     async def on_command(self, ctx: Context) -> None:
