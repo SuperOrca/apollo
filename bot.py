@@ -51,7 +51,7 @@ class Apollo(commands.AutoShardedBot):
                          activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, max_messages=1000,
                          connector=self.connector)
         self.__version__ = "1.0.0"
-        self.owner_id = int(getenv('OWNER_ID'))
+        self.owner_ids = {int(getenv('OWNER_ID')),}
         self.init_logging()
         self.init_constants()
 
@@ -90,6 +90,8 @@ class Apollo(commands.AutoShardedBot):
         with open("blacklist.json") as f:
             self.blacklist = json.load(f)
         self.add_check(self.is_blacklisted)
+
+        self.owner = self.get_user(self.owner_ids[0])
 
     async def is_blacklisted(self, ctx: commands.Context) -> bool:
         return ctx.author.id not in self.blacklist

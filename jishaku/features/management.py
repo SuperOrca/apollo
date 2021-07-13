@@ -120,7 +120,7 @@ class ManagementFeature(Feature):
     @Feature.Command(parent="jsk", name="blacklist")
     async def jsk_blacklist(self, ctx: commands.Context, mode: str, user: Optional[commands.UserConverter] = None):
         if mode == "list":
-            await ctx.reply('Blacklist:' + ', '.join(f"`{self.bot.get_user(u)}`" for u in self.bot.blacklist))
+            await ctx.reply('Blacklist: ' + ', '.join(f"`{self.bot.get_user(u)}`" for u in self.bot.blacklist))
         elif mode == "add":
             self.bot.blacklist.append(user.id)
             await ctx.reply(f'Added `{user}` to the blacklist.')
