@@ -143,7 +143,7 @@ class Apollo(commands.AutoShardedBot):
             return
 
         if isinstance(error, commands.MissingRequiredArgument):
-            return await self.send_error_embed(ctx, f"You are missing the required `{error.param.name}`` argument in `{ctx.command}`.")
+            return await self.send_error_embed(ctx, f"You are missing the required `{error.param.name}` argument in `{ctx.command}`.")
         if isinstance(error, commands.CheckFailure):
             return await self.send_error_embed(ctx, f"You are not able to use `{ctx.command}`.")
         if isinstance(error, commands.CommandOnCooldown):
