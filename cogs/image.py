@@ -304,17 +304,21 @@ class Image(commands.Cog):
     #         embed.set_thumbnail(url=url)
     #         await ctx.reply(embed=embed)
 
+    """
+    Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
+    """
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
     async def _minecraft(self, ctx: Context, image: Union[
-        discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         async with ctx.typing():
             url = await getImage(ctx, image)
             b = BytesIO(await (await self.bot.session.get(url)).read())
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text="Powered by pillow | Credits to `The Anime Bot`.")
+            embed.set_footer(
+                text="Powered by pillow | Credits to `The Anime Bot`.")
             await ctx.send(file=discord.File(await process_minecraft(self.bot, b), f"{ctx.command.name}.png"),
                            embed=embed, can_delete=True)
 
