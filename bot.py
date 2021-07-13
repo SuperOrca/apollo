@@ -159,8 +159,8 @@ class Apollo(commands.AutoShardedBot):
             return await self.send_error_embed(ctx, "There was an error with your arguments.")
 
         await self.send_error_embed(ctx, "An unknown error has occured. I have contacted the developers.")
-        self.send_owner('```py\n' + '\n'.join(traceback.format_exception(
-            type(error), error, error.__traceback__, file=sys.stderr)) + '\n```')
+        self.send_owner('An exception in a user\' command:\n```py\n' + '\n'.join(traceback.format_exception(
+            type(error), error, error.__traceback__)) + '\n```')
 
     async def on_command(self, ctx: Context) -> None:
         self.statcord.command_run(ctx)
