@@ -92,7 +92,7 @@ class Apollo(commands.AutoShardedBot):
         self.add_check(self.is_blacklisted)
 
     async def is_blacklisted(self, ctx: commands.Context) -> bool:
-        return ctx.author.id in self.blacklist
+        return not ctx.author.id in self.blacklist
 
     async def get_guild_prefix(self, message: discord.Message) -> list:
         try:
