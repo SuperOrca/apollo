@@ -32,6 +32,7 @@ _8ball_responses = [
 class Fun(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
+        self._cd = commands.CooldownMapping.from_cooldown(1., 2., commands.BucketType.user)
 
     @commands.command(name='8ball', description="Answers a yes/no question.", usage="8ball <question>")
     async def _8ball(self, ctx: Context, *, question: str) -> None:
@@ -43,6 +44,12 @@ class Fun(commands.Cog):
         member = member or ctx.author
         await ctx.reply(embed=discord.Embed(title=f"{member.name}'s pp size",
                                             description=f"8{'=' * randint(1, 10)}D", color=discord.Color.purple()))
+
+    @commands.command(name='gayrate', description="Shows gay of member.", usage="gayrate [member]")
+    async def _gayrate(self, ctx: Context, member: commands.MemberConverter = None):
+        member = member or ctx.author
+        await ctx.reply(embed=discord.Embed(title=f"{member.name}",
+                                            description=f":rainbow: is {randint(1, 100)}% gay", color=discord.Color.purple()))
 
 
 def setup(bot) -> None:
