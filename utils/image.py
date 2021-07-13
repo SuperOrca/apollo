@@ -14,14 +14,15 @@ from .context import Context
 from .metrics import isImage
 
 
-async def dagpi_process(ctx: Context, image, feature, end="png", **kwargs) -> discord.Embed:
+async def dagpi_process(ctx: Context, image, feature, **kwargs) -> discord.Embed:
     url = await getImage(ctx, image)
     async with ctx.typing():
         img = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=str(url), **kwargs)
-        file = discord.File(img.image, f"{ctx.command.name}.{end}")
+        file = discord.File(img.image, f"{ctx.command.name}.{img.format}")
         embed = discord.Embed(color=discord.Color.dark_blue())
-        embed.set_image(url=f"attachment://{ctx.command.name}.{end}")
-        embed.set_footer(text=f"Processed in {float(img.process_time):.2f} seconds")
+        embed.set_image(url=f"attachment://{ctx.command.name}.{img.format}")
+        embed.set_footer(
+            text=f"Processed in {float(img.process_time):.2f} seconds")
     await ctx.reply(file=file, embed=embed, can_delete=True)
 
 
