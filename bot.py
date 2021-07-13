@@ -162,6 +162,9 @@ class Apollo(commands.AutoShardedBot):
         super().run(getenv('TOKEN'), reconnect=True)
 
     async def close(self) -> None:
+        with open("blacklist.json") as f:
+            json.dump(self.blacklist, f, indent=4)
+
         await self.session.close()
         await self.db.disconnect()
         await self.dagpi.close()
