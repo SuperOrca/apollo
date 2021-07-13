@@ -307,7 +307,7 @@ class Image(commands.Cog):
             end = time()
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text=f"Processed in {start-end:.2f} seconds.")
+            embed.set_footer(text=f"Processed in {start-end:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
@@ -321,7 +321,7 @@ class Image(commands.Cog):
             end = time()
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text=f"Processed in {start-end:.2f} seconds.")
+            embed.set_footer(text=f"Processed in {start-end:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
@@ -335,7 +335,7 @@ class Image(commands.Cog):
             end = time()
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text=f"Processed in {start-end:.2f} seconds.")
+            embed.set_footer(text=f"Processed in {start-end:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
@@ -349,7 +349,7 @@ class Image(commands.Cog):
             end = time()
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text=f"Processed in {start-end:.2f} seconds.")
+            embed.set_footer(text=f"Processed in {start-end:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     """
@@ -369,7 +369,7 @@ class Image(commands.Cog):
             embed = discord.Embed(color=discord.Color.dark_blue())
             embed.set_image(url=f"attachment://{ctx.command.name}.png")
             embed.set_footer(
-                text=f"Processed in {start-end:.2f} seconds. | Credits to The Anime Bot")
+                text=f"Processed in {start-end:.2f} seconds | Credits to The Anime Bot")
             await ctx.send(file=file,
                            embed=embed, can_delete=True)
 
