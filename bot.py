@@ -86,10 +86,11 @@ class Apollo(commands.AutoShardedBot):
 
     def init_constants(self):
         self.socket_stats = Counter()
+
         with open("blacklist.json") as f:
             self.blacklist = json.load(f)
+        self.add_check(self.is_blacklisted)
 
-    @self.check
     async def is_blacklisted(self, ctx: commands.Context) -> bool:
         return ctx.author.id in self.blacklist
 
