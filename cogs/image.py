@@ -352,6 +352,20 @@ class Image(commands.Cog):
             embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
+    @commands.command(name='ultrasquish', descripton="Ultrasquish an image.", usage="ultrasquish [image]")
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def _ultrasquish(self, ctx: Context,
+                           image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+        async with ctx.typing():
+            start = time()
+            with await imageToPIL(ctx, image) as image:
+                new_image = image.resize((image.height, image.width * 4))
+            end = time()
+            embed = discord.Embed(color=discord.Color.dark_blue())
+            embed.set_image(url=f"attachment://{ctx.command.name}.png")
+            embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
+
     """
     Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
     """
