@@ -51,7 +51,7 @@ class Apollo(commands.AutoShardedBot):
                          activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, max_messages=1000,
                          connector=self.connector)
         self.__version__ = "1.0.0"
-        self.owner_ids = {int(getenv('OWNER_ID')),}
+        self.owner_ids = (int(getenv('OWNER_ID')),)
         self.init_logging()
         self.init_constants()
 
