@@ -8,6 +8,7 @@ import discord
 import numpy as np
 import twemoji_parser as twemoji
 from PIL import Image, UnidentifiedImageError
+from asyncdagpi import ImageFeatures
 
 from .context import Context
 from .metrics import isImage
@@ -16,11 +17,11 @@ from .metrics import isImage
 async def dagpi_process(ctx: Context, image, feature, end="png", **kwargs) -> discord.Embed:
     url = await getImage(ctx, image)
     async with ctx.typing():
-        img = await ctx.bot.dagpi.image_process(feature, url=str(url), **kwargs)
+        img = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=str(url), **kwargs)
         file = discord.File(img.image, f"{ctx.command.name}.{end}")
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.{end}")
-        embed.set_footer(text="Powered by https://dagpi.xyz/")
+        embed.set_footer(text=f"Processed in {img.process_time:.2f} seconds.")
     await ctx.reply(file=file, embed=embed, can_delete=True)
 
 
