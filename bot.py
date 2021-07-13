@@ -91,8 +91,6 @@ class Apollo(commands.AutoShardedBot):
             self.blacklist = json.load(f)
         self.add_check(self.is_blacklisted)
 
-        self.owner = self.get_user(self.owner_ids[0])
-
     async def is_blacklisted(self, ctx: commands.Context) -> bool:
         return ctx.author.id not in self.blacklist
 
@@ -102,6 +100,9 @@ class Apollo(commands.AutoShardedBot):
         except AttributeError:
             prefix = None
         return getenv('DEFAULT_PREFIX') if prefix is None else prefix[1]
+
+    async def send_owner(self, content: str = None, **kwargs):
+        await self.get_user(self.owner_ids[0]).send(content, **kwargs)
 
     def load(self):
         for file in Path('cogs').glob('**/*.py'):
@@ -131,21 +132,37 @@ class Apollo(commands.AutoShardedBot):
             message.content = self.user.mention + " " + message.content
         await self.process_commands(message)
 
+    @staticmethod
+    async def send_error_embed(ctx: Context, content: str, **kwargs):
+        embed = discord.Embed(
+            description=f'⚠ {content}', color=discord.Color.red())
+        await ctx.reply(embed=embed, can_delete=True)
+
     async def on_command_error(self, ctx: Context, error) -> None:
         if hasattr(ctx.command, 'on_error'):
             return
 
-        ignored = (commands.CommandNotFound,
-                   commands.DisabledCommand, commands.NoPrivateMessage)
-
-        if isinstance(error, ignored):
-            return
-
         if isinstance(error, commands.MissingRequiredArgument):
-            error = f"You are missing the required `{str(error).split()[0].upper()}` argument."
+            return send_error_embed(ctx, f"You are missing the required **{error.param.upper()}** argument.")
+        if isinstance(error, commands.CheckFailure):
+            return send_error_embed(ctx, f"You are not able to use this command.")
+        if isinstance(error, commands.CommandOnCooldown):
+            return send_error_embed(ctx, f"{error.cooldown} {error.retry_after} {error.type}")
+        if isinstance(error, commands.MaxConcurrencyReached):
+            return send_error_embed(ctx, f"{error.number} {error.per}")
 
-        self.log.error(f"{ctx.command} -> {error}")
-        await ctx.reply(embed=discord.Embed(description=error, color=discord.Color.red()))
+        _ignored = (commands.CommandNotFound, commands.NoPrivateMessage,
+                    commands.DisabledCommand, commands.CommandInvokeError)
+        _input = (commands.UserInputError, commands.ConversionError)
+
+        if isinstance(error, _ignored):
+            return
+        if isinstance(error, _input):
+            return send_error_embed(ctx, "There was an error with your arguments.")
+
+        await send_error_embed(ctx, "An unknown error has occured. I have contacted the developers.")
+        self.send_owner('```py\n' + '\n'.join(traceback.format_exception(
+            type(error), error, error.__traceback__, file=sys.stderr)) + '\n```')
 
     async def on_command(self, ctx: Context) -> None:
         self.statcord.command_run(ctx)
