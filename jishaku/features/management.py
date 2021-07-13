@@ -120,17 +120,17 @@ class ManagementFeature(Feature):
     @Feature.Command(parent="jsk", name="blacklist")
     async def jsk_blacklist(self, ctx: commands.Context, mode: str, user: Optional[commands.UserConverter] = None):
         if mode == "list":
-            async with aiofile.async_open("blacklist.json") as afp:
+            async with aiofile.async_open("blacklist.json", 'r') as afp:
                 data = json.loads(await afp.readlines())
             data = [f"`{self.bot.get_user(line.strip())}`" for line in data]
             await ctx.reply(', '.join(data))
         elif mode == "add":
-            async with aiofile.async_open("blacklist.json") as afp:
+            async with aiofile.async_open("blacklist.json", 'r') as afp:
                 data = json.loads(await afp.readlines())
             async with aiofile.async_open("blacklist.json", 'w') as afp:
                 await afp.write(data.append(user.id))
         elif mode == "remove":
-            async with aiofile.async_open("blacklist.json") as afp:
+            async with aiofile.async_open("blacklist.json", 'r') as afp:
                 data = json.loads(await afp.readlines())
             async with aiofile.async_open("blacklist.json", 'w') as afp:
                 await afp.write(data.remove(user.id))
