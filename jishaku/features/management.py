@@ -120,13 +120,13 @@ class ManagementFeature(Feature):
     @Feature.Command(parent="jsk", name="blacklist")
     async def jsk_blacklist(self, ctx: commands.Context, mode: str, user: Optional[commands.UserConverter] = None):
         if mode == "list":
-            await ctx.reply(', '.join(str(self.bot.get_user(u)) for u in self.bot.blacklist))
+            await ctx.reply('Blacklist:' + ', '.join(f"`{self.bot.get_user(u)}`" for u in self.bot.blacklist))
         elif mode == "add":
             self.bot.blacklist.append(user.id)
-            await ctx.reply(f'Added `{self.bot.get_user(user)}` to the blacklist.')
+            await ctx.reply(f'Added `{user}` to the blacklist.')
         elif mode == "remove":
             self.bot.blacklist.remove(user.id)
-            await ctx.reply(f'Removed `{self.bot.get_user(user)}` from the blacklist.')
+            await ctx.reply(f'Removed `{user}` from the blacklist.')
 
     @Feature.Command(parent="jsk", name="rtt", aliases=["ping"])
     async def jsk_rtt(self, ctx: commands.Context):
