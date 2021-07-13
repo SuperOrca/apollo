@@ -136,24 +136,22 @@ class Apollo(commands.AutoShardedBot):
     async def send_error_embed(ctx: Context, content: str, **kwargs):
         embed = discord.Embed(
             description=f'⚠ {content}', color=discord.Color.red())
-        await ctx.reply(embed=embed, can_delete=True)
+        await ctx.reply(embed=embed)
 
     async def on_command_error(self, ctx: Context, error) -> None:
         if hasattr(ctx.command, 'on_error'):
             return
 
         if isinstance(error, commands.MissingRequiredArgument):
-            return await self.send_error_embed(ctx, f"You are missing the required **{error.param.upper()}** argument.")
+            return await self.send_error_embed(ctx, f"You are missing the required `{error.param.name}`` argument in `{ctx.command}`.")
         if isinstance(error, commands.CheckFailure):
-            return await self.send_error_embed(ctx, f"You are not able to use this command.")
+            return await self.send_error_embed(ctx, f"You are not able to use `{ctx.command}`.")
         if isinstance(error, commands.CommandOnCooldown):
-            return await self.send_error_embed(ctx, f"{error.cooldown} {error.retry_after} {error.type}")
-        if isinstance(error, commands.MaxConcurrencyReached):
-            return await self.send_error_embed(ctx, f"{error.number} {error.per}")
+            return await self.send_error_embed(ctx, f"`{ctx.command}` is on cooldown for `{error.retry_after:.2f} seconds`.")
 
         _ignored = (commands.CommandNotFound, commands.NoPrivateMessage,
-                    commands.DisabledCommand, commands.CommandInvokeError)
-        _input = (commands.UserInputError, commands.ConversionError)
+                    commands.DisabledCommand)
+        _input = commands.UserInputError
 
         if isinstance(error, _ignored):
             return
