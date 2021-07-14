@@ -54,7 +54,7 @@ class Fun(commands.Cog):
     @commands.command(name='roast', description="what u think it does", usage="roast [member]")
     async def _roast(self, ctx: ApolloContext, member: commands.MemberConverter = None):
         member = member or ctx.author
-        await ctx.reply(f"**{ctx.author.name},** " + await self.bot.dagpi.roast())
+        await ctx.reply(f"**{member.name},** " + await self.bot.dagpi.roast())
 
 
 def setup(bot) -> None:
