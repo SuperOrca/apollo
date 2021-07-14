@@ -44,7 +44,7 @@ class Apollo(commands.AutoShardedBot):
             reactions=True
         )
         description = """
-        The all-in-one discord bot.
+        An open-source general-use discord.py bot.
         """
         super().__init__(command_prefix=self._get_prefix, help_command=ApolloHelp(), case_insensitive=True,
                          allowed_mentions=allowed_mentions, description=description, intents=intents,
