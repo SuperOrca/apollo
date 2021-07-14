@@ -27,15 +27,6 @@ class Meta(commands.Cog):
     def get_uptime(self) -> str:
         return humanize.naturaldelta(datetime.utcnow() - self.bot.uptime)
 
-    @commands.command(name="stats", description="Shows the bot stats.")
-    async def _stats(self, ctx: ApolloContext) -> None:
-        await ctx.reply(
-            embed=discord.Embed(
-                description="View the bot stats [here](https://statcord.com/bot/847566539607769089).",
-                color=discord.Color.blurple(),
-            )
-        )
-
     @commands.command(name="invite", description="Shows the bot invite.")
     async def _invite(self, ctx: ApolloContext) -> None:
         await ctx.reply(

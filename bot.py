@@ -13,7 +13,6 @@ import coloredlogs
 import discord
 import mystbin
 import psutil
-import statcord
 from aiogtts import aiogTTS
 from async_tio import Tio
 from databases import Database
@@ -60,6 +59,7 @@ class Apollo(commands.AutoShardedBot):
             max_messages=1000,
             connector=self.connector,
         )
+
         self.__version__ = "1.0.0"
         self.owner_ids = (int(getenv("OWNER_ID")),)
         self.init_logging()
@@ -71,7 +71,6 @@ class Apollo(commands.AutoShardedBot):
         await self.db.execute(
             "CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)"
         )
-        self.tio = await Tio()
         self.session = aiohttp.ClientSession(
             headers={
                 "User-Agent": "Apollo Bot v{} Python/{}.{} aiohttp/{}".format(
@@ -84,9 +83,8 @@ class Apollo(commands.AutoShardedBot):
             timeout=aiohttp.ClientTimeout(total=30),
             loop=self.loop,
         )
+        self.tio = await Tio(session=self.session, loop=self.loop)
         self.mystbin = mystbin.Client(session=self.session)
-        self.statcord = statcord.Client(self, environ["STATCORD"])
-        self.statcord.start_loop()
         self.dagpi = asyncdagpi.Client(
             getenv("DAGPI"), session=self.session, loop=self.loop
         )
@@ -101,7 +99,8 @@ class Apollo(commands.AutoShardedBot):
             filename="logs/discord.log", encoding="utf-8", mode="w"
         )
         handler.setFormatter(
-            logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+            logging.Formatter(
+                "%(asctime)s:%(levelname)s:%(name)s: %(message)s")
         )
         self.log.addHandler(handler)
 
@@ -133,7 +132,8 @@ class Apollo(commands.AutoShardedBot):
             try:
                 self.load_extension(f"{'.'.join(tree)}.{file.stem}")
             except Exception as e:
-                traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
+                traceback.print_exception(
+                    type(e), e, e.__traceback__, file=sys.stderr)
 
     async def on_ready(self) -> None:
         self.log.info("Running setup...")
@@ -141,7 +141,8 @@ class Apollo(commands.AutoShardedBot):
         if not hasattr(self, "uptime"):
             self.uptime = datetime.utcnow()
         self.log.info(
-            "Bot connected. DWSP latency: " + str(round((self.latency * 1000))) + "ms"
+            "Bot connected. DWSP latency: " +
+            str(round((self.latency * 1000))) + "ms"
         )
         self.load()
         self.load_extension("jishaku")
@@ -162,7 +163,8 @@ class Apollo(commands.AutoShardedBot):
     @staticmethod
     async def send_error_embed(ctx: ApolloContext, content: str, **kwargs):
         content = content.replace('"', "`")
-        embed = discord.Embed(description=f"⚠ {content}", color=discord.Color.red())
+        embed = discord.Embed(
+            description=f"⚠ {content}", color=discord.Color.red())
         await ctx.reply(embed=embed)
 
     async def on_command_error(self, ctx: ApolloContext, error) -> None:
@@ -206,13 +208,11 @@ class Apollo(commands.AutoShardedBot):
         await self.send_owner(
             "An exception in a user's command:\n```py\n"
             + "\n".join(
-                traceback.format_exception(type(error), error, error.__traceback__)
+                traceback.format_exception(
+                    type(error), error, error.__traceback__)
             )
             + "\n```"
         )
-
-    async def on_command(self, ctx: ApolloContext) -> None:
-        self.statcord.command_run(ctx)
 
     async def on_socket_response(self, msg):
         self.socket_stats[msg.get("t")] += 1
