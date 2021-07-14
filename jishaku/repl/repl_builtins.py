@@ -76,7 +76,7 @@ async def http_post_json(*args, **kwargs) -> dict:
 
 def get_var_dict_from_ctx(ctx: commands.Context, prefix: str = '_'):
     """
-    Returns the dict to be used in REPL for a given Context.
+    Returns the dict to be used in REPL for a given ApolloContext.
     """
 
     raw_var_dict = {

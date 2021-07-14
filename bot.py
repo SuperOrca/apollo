@@ -20,7 +20,7 @@ from databases import Database
 from discord.ext import commands
 from dotenv import load_dotenv
 
-from utils.context import Context
+from utils.context import ApolloContext
 from utils.help import ApolloHelp
 
 load_dotenv()
@@ -91,7 +91,7 @@ class Apollo(commands.AutoShardedBot):
             self.blacklist = json.load(f)
         self.add_check(self.is_blacklisted)
 
-    async def is_blacklisted(self, ctx: commands.Context) -> bool:
+    async def is_blacklisted(self, ctx: ApolloContext) -> bool:
         return ctx.author.id not in self.blacklist
 
     async def get_guild_prefix(self, message: discord.Message) -> list:
@@ -133,13 +133,13 @@ class Apollo(commands.AutoShardedBot):
         await self.process_commands(message)
 
     @staticmethod
-    async def send_error_embed(ctx: Context, content: str, **kwargs):
+    async def send_error_embed(ctx: ApolloContext, content: str, **kwargs):
         content = content.replace('"', '`')
         embed = discord.Embed(
             description=f'⚠ {content}', color=discord.Color.red())
         await ctx.reply(embed=embed)
 
-    async def on_command_error(self, ctx: Context, error) -> None:
+    async def on_command_error(self, ctx: ApolloContext, error) -> None:
         if hasattr(ctx.command, 'on_error'):
             return
 
@@ -165,14 +165,14 @@ class Apollo(commands.AutoShardedBot):
         await self.send_owner('An exception in a user\'s command:\n```py\n' + '\n'.join(traceback.format_exception(
             type(error), error, error.__traceback__)) + '\n```')
 
-    async def on_command(self, ctx: Context) -> None:
+    async def on_command(self, ctx: ApolloContext) -> None:
         self.statcord.command_run(ctx)
 
     async def on_socket_response(self, msg):
         self.socket_stats[msg.get('t')] += 1
 
     async def get_context(self, message: discord.Message, *, cls=None):
-        return await super().get_context(message, cls=cls or Context)
+        return await super().get_context(message, cls=cls or ApolloContext)
 
     def get_message(self, message_id):
         return self._connection._get_message(message_id)

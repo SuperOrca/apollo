@@ -10,11 +10,11 @@ import twemoji_parser as twemoji
 from PIL import Image, UnidentifiedImageError
 from asyncdagpi import ImageFeatures
 
-from .context import Context
+from .context import ApolloContext
 from .metrics import isImage
 
 
-async def dagpi_process(ctx: Context, image, feature, **kwargs) -> discord.Embed:
+async def dagpi_process(ctx: ApolloContext, image, feature, **kwargs) -> discord.Embed:
     url = await getImage(ctx, image)
     async with ctx.typing():
         img = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=str(url), **kwargs)
@@ -39,7 +39,7 @@ def fileFromBytes(ctx, image) -> discord.File:
     return discord.File(buffer, f"{ctx.command.name}.png")
 
 
-async def getImage(ctx: Context, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):
+async def getImage(ctx: ApolloContext, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):
     if isinstance(url, str):
         url = await twemoji.emoji_to_url(url)
 

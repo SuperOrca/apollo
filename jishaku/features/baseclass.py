@@ -144,7 +144,7 @@ class Feature(commands.Cog):
         Parameters
         -----------
         ctx: commands.Context
-            A Context object used to derive information about this command task.
+            A ApolloContext object used to derive information about this command task.
         """
 
         self.task_count += 1

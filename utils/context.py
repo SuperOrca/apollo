@@ -16,7 +16,7 @@ class TrashView(ui.View):
             await interaction.response.send_message("This is not your command.", ephemeral=True)
 
 
-class Context(commands.Context):
+class ApolloContext(commands.Context):
     async def reply(self, content: str = None, **kwargs):
         can_delete = kwargs.pop('can_delete', False)
         if can_delete:

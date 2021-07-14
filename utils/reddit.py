@@ -4,7 +4,7 @@ import discord
 from discord import ui
 from discord.ext import commands
 
-from .context import Context
+from .context import ApolloContext
 from .metrics import isImage
 
 
@@ -73,7 +73,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
                 await interaction.response.send_message("This is not your command.", ephemeral=True)
 
         @classmethod
-        async def start(cls, ctx: Context):
+        async def start(cls, ctx: ApolloContext):
             cls.ctx = ctx
             cls.log = []
             cls.num = 0

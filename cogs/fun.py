@@ -3,7 +3,7 @@ from random import choice, randint
 import discord
 from discord.ext import commands
 
-from utils.context import Context
+from utils.context import ApolloContext
 
 _8ball_responses = [
     "It is certain",
@@ -36,18 +36,18 @@ class Fun(commands.Cog):
             1., 2., commands.BucketType.user)
 
     @commands.command(name='8ball', description="Answers a yes/no question.", usage="8ball <question>")
-    async def _8ball(self, ctx: Context, *, question: str) -> None:
+    async def _8ball(self, ctx: ApolloContext, *, question: str) -> None:
         await ctx.reply(embed=discord.Embed(description=f"`Q:` {question}\n`A:` {choice(_8ball_responses)}",
                                             color=discord.Color.purple()))
 
     @commands.command(name='pp', description="Shows pp size of member.", usage="pp [member]")
-    async def _pp(self, ctx: Context, member: commands.MemberConverter = None):
+    async def _pp(self, ctx: ApolloContext, member: commands.MemberConverter = None):
         member = member or ctx.author
         await ctx.reply(embed=discord.Embed(title=f"{member.name}'s pp size",
                                             description=f"8{'=' * randint(1, 10)}D", color=discord.Color.purple()))
 
     @commands.command(name='gayrate', description="Shows gay of member.", usage="gayrate [member]")
-    async def _gayrate(self, ctx: Context, member: commands.MemberConverter = None):
+    async def _gayrate(self, ctx: ApolloContext, member: commands.MemberConverter = None):
         member = member or ctx.author
         await ctx.reply(embed=discord.Embed(description=f":rainbow: **{member.name}** is {randint(1, 100)}% gay", color=discord.Color.purple()))
 

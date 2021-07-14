@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 from jishaku.codeblocks import codeblock_converter
-from utils.context import Context
+from utils.context import ApolloContext
 
 
 class Utility(commands.Cog):
@@ -13,7 +13,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='pypi', description="Shows details of a python package.", usage="pypi <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _pypi(self, ctx: Context, package: str) -> None:
+    async def _pypi(self, ctx: ApolloContext, package: str) -> None:
         async with ctx.typing():
             data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
 
@@ -42,7 +42,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='npm', description="Shows details of a node package.", usage="npm <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _npm(self, ctx: Context, package: str):
+    async def _npm(self, ctx: ApolloContext, package: str):
         async with ctx.typing():
             data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
         if 'CODE' in data or 'collected' not in data:
@@ -65,7 +65,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='deno', description="Shows details of a deno package.", usage="deno <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _deno(self, ctx: Context, package: str) -> None:
+    async def _deno(self, ctx: ApolloContext, package: str) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get(f"https://api.deno.land/modules/{package}")).json()
             if data["success"]:
@@ -85,7 +85,7 @@ class Utility(commands.Cog):
     @commands.command(name='github', description="Shows details of a deno repository.", usage="github <repository>",
                       aliases=['gh'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _github(self, ctx: Context, repository: str) -> None:
+    async def _github(self, ctx: ApolloContext, repository: str) -> None:
         async with ctx.typing():
             data = await (await self.bot.session.get(f"https://api.github.com/repos/{repository}")).json()
         if 'message' not in data:
@@ -99,7 +99,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='txt', description="Text to file.", usage="txt <text>")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def _txt(self, ctx: Context, *, text: str) -> None:
+    async def _txt(self, ctx: ApolloContext, *, text: str) -> None:
         file = io.StringIO()
         file.write(text)
         file.seek(0)
@@ -107,7 +107,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='tts', description="Text to speech.", usage="tts <text>", aliases=['texttospeech'])
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _tts(self, ctx: Context, *, text: str) -> None:
+    async def _tts(self, ctx: ApolloContext, *, text: str) -> None:
         if len(text) > 200:
             raise commands.BadArgument(
                 "The text for text to speech can not be over 200 characters.")
@@ -120,14 +120,14 @@ class Utility(commands.Cog):
 
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _execute(self, ctx: Context, language: str, *, code: codeblock_converter) -> None:
+    async def _execute(self, ctx: ApolloContext, language: str, *, code: codeblock_converter) -> None:
         async with ctx.typing():
             output = await self.bot.tio.execute(code.content, language=language)
         await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
 
     @commands.command(name='avatar', description="View the avatar of a member.", usage="avatar [member]")
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _avatar(self, ctx: Context, member: commands.MemberConverter = None):
+    async def _avatar(self, ctx: ApolloContext, member: commands.MemberConverter = None):
         formats = [f"[`PNG`]({ctx.author.avatar.replace(format='png').url})"]
         formats.append(
             f"[`JPG`]({ctx.author.avatar.replace(format='jpg').url})")

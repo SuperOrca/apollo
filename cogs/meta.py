@@ -6,7 +6,7 @@ import humanize
 import pkg_resources
 from discord.ext import commands, tasks
 
-from utils.context import Context
+from utils.context import ApolloContext
 from utils.converters import PrefixConverter
 
 
@@ -26,24 +26,24 @@ class Meta(commands.Cog):
         return humanize.naturaldelta(datetime.utcnow() - self.bot.uptime)
 
     @commands.command(name='stats', description="Shows the bot stats.")
-    async def _stats(self, ctx: Context) -> None:
+    async def _stats(self, ctx: ApolloContext) -> None:
         await ctx.reply(
             embed=discord.Embed(description="View the bot stats [here](https://statcord.com/bot/847566539607769089).",
                                 color=discord.Color.blurple()))
 
     @commands.command(name='invite', description="Shows the bot invite.")
-    async def _invite(self, ctx: Context) -> None:
+    async def _invite(self, ctx: ApolloContext) -> None:
         await ctx.reply(embed=discord.Embed(
             description="Invite the bot [here](https://discord.com/api/oauth2/authorize?client_id=847566539607769089&permissions=8&scope=bot).",
             color=discord.Color.blurple()))
 
     @commands.command(name='uptime', description="Shows the bot uptime.")
-    async def _uptime(self, ctx: Context) -> None:
+    async def _uptime(self, ctx: ApolloContext) -> None:
         await ctx.reply(embed=discord.Embed(description=f"The bot has been online for `{self.get_uptime()}`.",
                                             color=discord.Color.blurple()))
 
     @commands.command(name='ping', description="Shows the bot ping.")
-    async def _ping(self, ctx: Context) -> None:
+    async def _ping(self, ctx: ApolloContext) -> None:
         typing = count()
         async with ctx.typing():
             typing = (count() - typing) * 1000
@@ -60,7 +60,7 @@ class Meta(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command(name='info', description="Shows information about the bot.")
-    async def _info(self, ctx: Context) -> None:
+    async def _info(self, ctx: ApolloContext) -> None:
         embed = discord.Embed(
             title="Apollo", description=self.bot.description, color=discord.Color.blurple())
         embed.set_thumbnail(url=self.bot.user.avatar.with_static_format('png'))
@@ -79,13 +79,13 @@ class Meta(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command(name='source', description="Shows source of the bot.", aliases=['src', 'contribute', 'contrib'])
-    async def _source(self, ctx: Context) -> None:
+    async def _source(self, ctx: ApolloContext) -> None:
         await ctx.reply(
             embed=discord.Embed(description="View the bot source [here](https://github.com/SuperOrca/apollo).",
                                 color=discord.Color.blurple()))
 
     @commands.command(name='prefix', description="Change the bot prefix.", usage="prefix [prefix]")
-    async def _prefix(self, ctx: Context, prefix: PrefixConverter = None) -> None:
+    async def _prefix(self, ctx: ApolloContext, prefix: PrefixConverter = None) -> None:
         if ctx.author.guild_permissions.administrator and prefix:
             await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)",
                                       values={"id": ctx.guild.id, "prefix": prefix})
