@@ -33,7 +33,7 @@ class Moderation(commands.Cog):
         try:
             await member.reply(embed=discord.Embed(
                 description=f"You have been banned from `{ctx.guild.name}** for **{reason}` by {ctx.author.mention}.",
-                color=member.color))
+                color=discord.Color.dark_red()))
         except discord.HTTPException:
             ...
         await member.ban(reason=reason)
@@ -49,7 +49,7 @@ class Moderation(commands.Cog):
         try:
             await member.reply(embed=discord.Embed(
                 description=f"You have been kicked from `{ctx.guild.name}** for **{reason}` by {ctx.author.mention}.",
-                color=member.color))
+                color=discord.Color.dark_red()))
         except discord.HTTPException:
             ...
         await member.kick(reason=reason)

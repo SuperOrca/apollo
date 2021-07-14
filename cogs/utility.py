@@ -118,26 +118,25 @@ class Utility(commands.Cog):
         buffer.seek(0)
         await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
 
-    # @commands.command(name='youtube')
-    # @commands.cooldown(1, 5, commands.BucketType.user)
-    # async def _youtube(self, ctx: Context, query: str) -> None:
-    #     async with ctx.typing():
-    #         try:
-    #             source = await YTDLSource.create_source(ctx, query, loop=self.bot.loop)
-    #         except YTDLError as e:
-    #             await ctx.reply('An error occurred while processing this request: {}'.format(str(e)))
-    #         else:
-    #             song = Song(source)
-
-    #             await ctx.voice_state.songs.put(song)
-    #             await ctx.reply('Enqueued {}'.format(str(source)))
-
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def _execute(self, ctx: Context, language: str, *, code: codeblock_converter) -> None:
         async with ctx.typing():
             output = await self.bot.tio.execute(code.content, language=language)
         await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
+
+    @commands.command(name='avatar', description="View the avatar of a member.", usage="avatar [member]")
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def _avatar(self, ctx: Context, member: discord.MemberConverter = None):
+        formats = [f"[`PNG`]({ctx.author.avatar.replace(format='png').url})"]
+        formats.append(f"[`JPG`]({ctx.author.avatar.replace(format='jpg').url})")
+        formats.append(f"[`JPEG`]({ctx.author.avatar.replace(format='jpeg').url})")
+        formats.append(f"[`WEBP`]({ctx.author.avatar.replace(format='webp').url})")
+        if ctx.author.avatar.is_animated():
+            formats.append(f"[`GIF`]({ctx.author.avatar.replace(format='gif').url})")
+        embed = discord.Embed(title=f"{ctx.author.name}'s avatar", description=' | '.join(formats), color=0x2F3136)
+        embed.set_image(url=ctx.author.avatar.url)
+        await ctx.reply(embed=embed)
 
 
 def setup(bot) -> None:
