@@ -36,7 +36,7 @@ def natural_size(size_in_bytes: int):
         1024 -> 1.00 KiB
         12345678 -> 11.77 MiB
     """
-    units = ("B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB")
+    units = ('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB')
 
     power = int(math.log(size_in_bytes, 1024))
 
@@ -48,13 +48,8 @@ class RootCommand(Feature):
     Feature containing the root jsk command
     """
 
-    @Feature.Command(
-        name="jishaku",
-        aliases=["jsk"],
-        hidden=JISHAKU_HIDE,
-        invoke_without_command=True,
-        ignore_extra=False,
-    )
+    @Feature.Command(name="jishaku", aliases=["jsk"], hidden=JISHAKU_HIDE,
+                     invoke_without_command=True, ignore_extra=False)
     async def jsk(self, ctx: commands.Context):  # pylint: disable=too-many-branches
         """
         The Jishaku debug and diagnostic commands.
@@ -68,7 +63,7 @@ class RootCommand(Feature):
             f"`Python {sys.version}` on `{sys.platform}`".replace("\n", ""),
             f"Module was loaded <t:{self.load_time.timestamp():.0f}:R>, "
             f"cog was loaded <t:{self.start_time.timestamp():.0f}:R>.",
-            "",
+            ""
         ]
 
         # detect if [procinfo] feature is installed
@@ -79,11 +74,9 @@ class RootCommand(Feature):
                 with proc.oneshot():
                     try:
                         mem = proc.memory_full_info()
-                        summary.append(
-                            f"Using {natural_size(mem.rss)} physical memory and "
-                            f"{natural_size(mem.vms)} virtual memory, "
-                            f"{natural_size(mem.uss)} of which unique to this process."
-                        )
+                        summary.append(f"Using {natural_size(mem.rss)} physical memory and "
+                                       f"{natural_size(mem.vms)} virtual memory, "
+                                       f"{natural_size(mem.uss)} of which unique to this process.")
                     except psutil.AccessDenied:
                         pass
 
@@ -93,8 +86,7 @@ class RootCommand(Feature):
                         thread_count = proc.num_threads()
 
                         summary.append(
-                            f"Running on PID {pid} (`{name}`) with {thread_count} thread(s)."
-                        )
+                            f"Running on PID {pid} (`{name}`) with {thread_count} thread(s).")
                     except psutil.AccessDenied:
                         pass
 
@@ -106,9 +98,7 @@ class RootCommand(Feature):
                 )
                 summary.append("")  # blank line
 
-        cache_summary = (
-            f"{len(self.bot.guilds)} guild(s) and {len(self.bot.users)} user(s)"
-        )
+        cache_summary = f"{len(self.bot.guilds)} guild(s) and {len(self.bot.users)} user(s)"
 
         # Show shard settings to summary
         if isinstance(self.bot, discord.AutoShardedClient):
@@ -118,7 +108,7 @@ class RootCommand(Feature):
                     f" and can see {cache_summary}."
                 )
             else:
-                shard_ids = ", ".join(str(i) for i in self.bot.shards.keys())
+                shard_ids = ', '.join(str(i) for i in self.bot.shards.keys())
                 summary.append(
                     f"This bot is automatically sharded (Shards {shard_ids} of {self.bot.shard_count})"
                     f" and can see {cache_summary}."
@@ -129,13 +119,12 @@ class RootCommand(Feature):
                 f" and can see {cache_summary}."
             )
         else:
-            summary.append(f"This bot is not sharded and can see {cache_summary}.")
+            summary.append(
+                f"This bot is not sharded and can see {cache_summary}.")
 
         # pylint: disable=protected-access
         if self.bot._connection.max_messages:
-            message_cache = (
-                f"Message cache capped at {self.bot._connection.max_messages}"
-            )
+            message_cache = f"Message cache capped at {self.bot._connection.max_messages}"
         else:
             message_cache = "Message cache is disabled"
 
@@ -143,7 +132,8 @@ class RootCommand(Feature):
             presence_intent = f"presence intent is {'enabled' if self.bot.intents.presences else 'disabled'}"
             members_intent = f"members intent is {'enabled' if self.bot.intents.members else 'disabled'}"
 
-            summary.append(f"{message_cache}, {presence_intent} and {members_intent}.")
+            summary.append(
+                f"{message_cache}, {presence_intent} and {members_intent}.")
         else:
             guild_subscriptions = f"guild subscriptions are {'enabled' if self.bot._connection.guild_subscriptions else 'disabled'}"
 
@@ -152,16 +142,11 @@ class RootCommand(Feature):
         # pylint: enable=protected-access
 
         # Show websocket latency in milliseconds
-        summary.append("")
+        summary.append('')
         summary.append(
-            f"Average websocket latency: `{round(self.bot.latency * 1000, 2)}ms`"
-        )
+            f"Average websocket latency: `{round(self.bot.latency * 1000, 2)}ms`")
 
-        await ctx.reply(
-            embed=discord.Embed(
-                description="\n".join(summary), color=discord.Color.dark_purple()
-            )
-        )
+        await ctx.reply(embed=discord.Embed(description="\n".join(summary), color=discord.Color.dark_purple()))
 
     # pylint: disable=no-member
     @Feature.Command(parent="jsk", name="hide")
@@ -202,10 +187,8 @@ class RootCommand(Feature):
         paginator = commands.Paginator(max_size=1985)
 
         for task in self.tasks:
-            paginator.add_line(
-                f"{task.index}: `{task.ctx.command.qualified_name}`, invoked at "
-                f"{task.ctx.message.created_at.strftime('%Y-%m-%d %H:%M:%S')} UTC"
-            )
+            paginator.add_line(f"{task.index}: `{task.ctx.command.qualified_name}`, invoked at "
+                               f"{task.ctx.message.created_at.strftime('%Y-%m-%d %H:%M:%S')} UTC")
 
         interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
         return await interface.send_to(ctx)
@@ -244,7 +227,5 @@ class RootCommand(Feature):
                 return await ctx.reply("Unknown task.")
 
         task.task.cancel()
-        return await ctx.reply(
-            f"Cancelled task {task.index}: `{task.ctx.command.qualified_name}`,"
-            f" invoked at {task.ctx.message.created_at.strftime('%Y-%m-%d %H:%M:%S')} UTC"
-        )
+        return await ctx.reply(f"Cancelled task {task.index}: `{task.ctx.command.qualified_name}`,"
+                               f" invoked at {task.ctx.message.created_at.strftime('%Y-%m-%d %H:%M:%S')} UTC")

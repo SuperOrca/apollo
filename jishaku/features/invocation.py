@@ -33,9 +33,7 @@ class InvocationFeature(Feature):
     """
 
     @Feature.Command(parent="jsk", name="su")
-    async def jsk_su(
-        self, ctx: commands.Context, target: discord.User, *, command_string: str
-    ):
+    async def jsk_su(self, ctx: commands.Context, target: discord.User, *, command_string: str):
         """
         Run a command as someone else.
 
@@ -49,40 +47,26 @@ class InvocationFeature(Feature):
             target_member = None
 
             with contextlib.suppress(discord.HTTPException):
-                target_member = ctx.guild.get_member(
-                    target.id
-                ) or await ctx.guild.fetch_member(target.id)
+                target_member = ctx.guild.get_member(target.id) or await ctx.guild.fetch_member(target.id)
 
             target = target_member or target
 
-        alt_ctx = await copy_context_with(
-            ctx, author=target, content=ctx.prefix + command_string
-        )
+        alt_ctx = await copy_context_with(ctx, author=target, content=ctx.prefix + command_string)
 
         if alt_ctx.command is None:
             if alt_ctx.invoked_with is None:
-                return await ctx.reply(
-                    "This bot has been hard-configured to ignore this user."
-                )
+                return await ctx.reply('This bot has been hard-configured to ignore this user.')
             return await ctx.reply(f'Command "{alt_ctx.invoked_with}" is not found')
 
         return await alt_ctx.command.invoke(alt_ctx)
 
     @Feature.Command(parent="jsk", name="in")
-    async def jsk_in(
-        self,
-        ctx: commands.Context,
-        channel: discord.TextChannel,
-        *,
-        command_string: str,
-    ):
+    async def jsk_in(self, ctx: commands.Context, channel: discord.TextChannel, *, command_string: str):
         """
         Run a command as if it were run in a different channel.
         """
 
-        alt_ctx = await copy_context_with(
-            ctx, channel=channel, content=ctx.prefix + command_string
-        )
+        alt_ctx = await copy_context_with(ctx, channel=channel, content=ctx.prefix + command_string)
 
         if alt_ctx.command is None:
             return await ctx.reply(f'Command "{alt_ctx.invoked_with}" is not found')
@@ -105,9 +89,7 @@ class InvocationFeature(Feature):
         return await alt_ctx.command.reinvoke(alt_ctx)
 
     @Feature.Command(parent="jsk", name="repeat")
-    async def jsk_repeat(
-        self, ctx: commands.Context, times: int, *, command_string: str
-    ):
+    async def jsk_repeat(self, ctx: commands.Context, times: int, *, command_string: str):
         """
         Runs a command multiple times in a row.
 
@@ -117,14 +99,10 @@ class InvocationFeature(Feature):
 
         with self.submit(ctx):  # allow repeats to be cancelled
             for _ in range(times):
-                alt_ctx = await copy_context_with(
-                    ctx, content=ctx.prefix + command_string
-                )
+                alt_ctx = await copy_context_with(ctx, content=ctx.prefix + command_string)
 
                 if alt_ctx.command is None:
-                    return await ctx.reply(
-                        f'Command "{alt_ctx.invoked_with}" is not found'
-                    )
+                    return await ctx.reply(f'Command "{alt_ctx.invoked_with}" is not found')
 
                 await alt_ctx.command.reinvoke(alt_ctx)
 
@@ -146,9 +124,7 @@ class InvocationFeature(Feature):
                 await alt_ctx.command.invoke(alt_ctx)
 
         end = time.perf_counter()
-        return await ctx.reply(
-            f"Command `{alt_ctx.command.qualified_name}` finished in {end - start:.3f}s."
-        )
+        return await ctx.reply(f"Command `{alt_ctx.command.qualified_name}` finished in {end - start:.3f}s.")
 
     @Feature.Command(parent="jsk", name="source", aliases=["src"])
     async def jsk_source(self, ctx: commands.Context, *, command_name: str):
@@ -163,9 +139,7 @@ class InvocationFeature(Feature):
         try:
             source_lines, _ = inspect.getsourcelines(command.callback)
         except (TypeError, OSError):
-            return await ctx.reply(
-                f"Was unable to retrieve the source for `{command}` for some reason."
-            )
+            return await ctx.reply(f"Was unable to retrieve the source for `{command}` for some reason.")
 
         filename = "source.py"
 
@@ -175,22 +149,18 @@ class InvocationFeature(Feature):
             pass
 
         # getsourcelines for some reason returns WITH line endings
-        source_text = "".join(source_lines)
+        source_text = ''.join(source_lines)
 
-        if (
-            len(source_text) < 50_000
-            and not ctx.author.is_on_mobile()
-            and not JISHAKU_FORCE_PAGINATOR
-        ):  # File "full content" preview limit
-            await ctx.reply(
-                file=discord.File(
-                    filename=filename, fp=io.BytesIO(source_text.encode("utf-8"))
-                )
-            )
+        if len(
+                source_text) < 50_000 and not ctx.author.is_on_mobile() and not JISHAKU_FORCE_PAGINATOR:  # File "full content" preview limit
+            await ctx.reply(file=discord.File(
+                filename=filename,
+                fp=io.BytesIO(source_text.encode('utf-8'))
+            ))
         else:
-            paginator = WrappedPaginator(prefix="```py", suffix="```", max_size=1985)
+            paginator = WrappedPaginator(prefix='```py', suffix='```', max_size=1985)
 
-            paginator.add_line(source_text.replace("```", "``\N{zero width space}`"))
+            paginator.add_line(source_text.replace('```', '``\N{zero width space}`'))
 
             interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
             await interface.send_to(ctx)

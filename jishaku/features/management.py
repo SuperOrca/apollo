@@ -40,32 +40,29 @@ class ManagementFeature(Feature):
         Reports any extensions that failed to load.
         """
 
-        paginator = WrappedPaginator(prefix="", suffix="")
+        paginator = WrappedPaginator(prefix='', suffix='')
 
         # 'jsk reload' on its own just reloads jishaku
-        if ctx.invoked_with == "reload" and not extensions:
-            extensions = [["jishaku"]]
+        if ctx.invoked_with == 'reload' and not extensions:
+            extensions = [['jishaku']]
 
         for extension in itertools.chain(*extensions):
             method, icon = (
-                (
-                    self.bot.reload_extension,
-                    "\N{CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS}",
-                )
-                if extension in self.bot.extensions
-                else (self.bot.load_extension, "\N{INBOX TRAY}")
+                (self.bot.reload_extension,
+                 "\N{CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS}")
+                if extension in self.bot.extensions else
+                (self.bot.load_extension, "\N{INBOX TRAY}")
             )
 
             try:
                 method(extension)
             except Exception as exc:  # pylint: disable=broad-except
-                traceback_data = "".join(
-                    traceback.format_exception(type(exc), exc, exc.__traceback__, 1)
-                )
+                traceback_data = ''.join(traceback.format_exception(
+                    type(exc), exc, exc.__traceback__, 1))
 
                 paginator.add_line(
                     f"{icon}\N{WARNING SIGN} `{extension}`\n```py\n{traceback_data}\n```",
-                    empty=True,
+                    empty=True
                 )
             else:
                 paginator.add_line(f"{icon} `{extension}`", empty=True)
@@ -81,20 +78,19 @@ class ManagementFeature(Feature):
         Reports any extensions that failed to unload.
         """
 
-        paginator = WrappedPaginator(prefix="", suffix="")
+        paginator = WrappedPaginator(prefix='', suffix='')
         icon = "\N{OUTBOX TRAY}"
 
         for extension in itertools.chain(*extensions):
             try:
                 self.bot.unload_extension(extension)
             except Exception as exc:  # pylint: disable=broad-except
-                traceback_data = "".join(
-                    traceback.format_exception(type(exc), exc, exc.__traceback__, 1)
-                )
+                traceback_data = "".join(traceback.format_exception(
+                    type(exc), exc, exc.__traceback__, 1))
 
                 paginator.add_line(
                     f"{icon}\N{WARNING SIGN} `{extension}`\n```py\n{traceback_data}\n```",
-                    empty=True,
+                    empty=True
                 )
             else:
                 paginator.add_line(f"{icon} `{extension}`", empty=True)
@@ -108,48 +104,29 @@ class ManagementFeature(Feature):
         Logs this bot out.
         """
 
-        ellipse_character = (
-            "\N{BRAILLE PATTERN DOTS-356}"
-            if JISHAKU_USE_BRAILLE_J
-            else "\N{HORIZONTAL ELLIPSIS}"
-        )
+        ellipse_character = "\N{BRAILLE PATTERN DOTS-356}" if JISHAKU_USE_BRAILLE_J else "\N{HORIZONTAL ELLIPSIS}"
 
         await ctx.reply(f"Logging out now{ellipse_character}")
         await ctx.bot.close()
 
     @Feature.Command(parent="jsk", name="grammar")
     async def jsk_grammar(self, ctx: commands.Context, *, text: str):
-        await ctx.send(
-            "".join(
-                char.upper() if index % 2 == 0 else char.lower()
-                for index, char in enumerate(text, start=1)
-            )
-        )
+        await ctx.send(''.join(char.upper() if index % 2 == 0 else char.lower() for index, char in enumerate(text, start=1)))
 
     @Feature.Command(parent="jsk", name="socketstats")
     async def jsk_socketstats(self, ctx: commands.Context):
-        await ctx.reply(
-            f"```\n{json.dumps({key: value for key, value in sorted(dict(ctx.bot.socket_stats).items(), reverse=True, key=lambda item: item[1])}, indent=4)}\n```"
-        )
+        await ctx.reply(f"```\n{json.dumps({key: value for key, value in sorted(dict(ctx.bot.socket_stats).items(), reverse=True, key=lambda item: item[1])}, indent=4)}\n```")
 
     @Feature.Command(parent="jsk", name="blacklist")
-    async def jsk_blacklist(
-        self,
-        ctx: commands.Context,
-        mode: str,
-        user: Optional[commands.UserConverter] = None,
-    ):
+    async def jsk_blacklist(self, ctx: commands.Context, mode: str, user: Optional[commands.UserConverter] = None):
         if mode == "list":
-            await ctx.reply(
-                "Blacklist: "
-                + ", ".join(f"`{self.bot.get_user(u)}`" for u in self.bot.blacklist)
-            )
+            await ctx.reply('Blacklist: ' + ', '.join(f"`{self.bot.get_user(u)}`" for u in self.bot.blacklist))
         elif mode == "add":
             self.bot.blacklist.append(user.id)
-            await ctx.reply(f"Added `{user}` to the blacklist.")
+            await ctx.reply(f'Added `{user}` to the blacklist.')
         elif mode == "remove":
             self.bot.blacklist.remove(user.id)
-            await ctx.reply(f"Removed `{user}` from the blacklist.")
+            await ctx.reply(f'Removed `{user}` from the blacklist.')
 
     @Feature.Command(parent="jsk", name="rtt", aliases=["ping"])
     async def jsk_rtt(self, ctx: commands.Context):
@@ -170,18 +147,14 @@ class ManagementFeature(Feature):
             # First generate the text
             text = "Calculating round-trip time...\n\n"
             text += "\n".join(
-                f"Reading {index + 1}: {reading * 1000:.2f}ms"
-                for index, reading in enumerate(api_readings)
-            )
+                f"Reading {index + 1}: {reading * 1000:.2f}ms" for index, reading in enumerate(api_readings))
 
             if api_readings:
                 average = sum(api_readings) / len(api_readings)
 
                 if len(api_readings) > 1:
                     stddev = math.sqrt(
-                        sum(math.pow(reading - average, 2) for reading in api_readings)
-                        / (len(api_readings) - 1)
-                    )
+                        sum(math.pow(reading - average, 2) for reading in api_readings) / (len(api_readings) - 1))
                 else:
                     stddev = 0.0
 

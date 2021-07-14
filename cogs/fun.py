@@ -25,7 +25,7 @@ _8ball_responses = [
     "My reply is no",
     "My sources say no",
     "Outlook not so good",
-    "Very doubtful",
+    "Very doubtful"
 ]
 
 
@@ -33,46 +33,23 @@ class Fun(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
         self._cd = commands.CooldownMapping.from_cooldown(
-            1.0, 2.0, commands.BucketType.user
-        )
+            1., 2., commands.BucketType.user)
 
-    @commands.command(
-        name="8ball", description="Answers a yes/no question.", usage="8ball <question>"
-    )
+    @commands.command(name='8ball', description="Answers a yes/no question.", usage="8ball <question>")
     async def _8ball(self, ctx: ApolloContext, *, question: str) -> None:
-        await ctx.reply(
-            embed=discord.Embed(
-                description=f"`Q:` {question}\n`A:` {choice(_8ball_responses)}",
-                color=discord.Color.purple(),
-            )
-        )
+        await ctx.reply(embed=discord.Embed(description=f"`Q:` {question}\n`A:` {choice(_8ball_responses)}",
+                                            color=discord.Color.purple()))
 
-    @commands.command(
-        name="pp", description="Shows pp size of member.", usage="pp [member]"
-    )
+    @commands.command(name='pp', description="Shows pp size of member.", usage="pp [member]")
     async def _pp(self, ctx: ApolloContext, member: commands.MemberConverter = None):
         member = member or ctx.author
-        await ctx.reply(
-            embed=discord.Embed(
-                title=f"{member.name}'s pp size",
-                description=f"8{'=' * randint(1, 10)}D",
-                color=discord.Color.purple(),
-            )
-        )
+        await ctx.reply(embed=discord.Embed(title=f"{member.name}'s pp size",
+                                            description=f"8{'=' * randint(1, 10)}D", color=discord.Color.purple()))
 
-    @commands.command(
-        name="gayrate", description="Shows gay of member.", usage="gayrate [member]"
-    )
-    async def _gayrate(
-        self, ctx: ApolloContext, member: commands.MemberConverter = None
-    ):
+    @commands.command(name='gayrate', description="Shows gay of member.", usage="gayrate [member]")
+    async def _gayrate(self, ctx: ApolloContext, member: commands.MemberConverter = None):
         member = member or ctx.author
-        await ctx.reply(
-            embed=discord.Embed(
-                description=f":rainbow: **{member.name}** is {randint(1, 100)}% gay",
-                color=discord.Color.purple(),
-            )
-        )
+        await ctx.reply(embed=discord.Embed(description=f":rainbow: **{member.name}** is {randint(1, 100)}% gay", color=discord.Color.purple()))
 
 
 def setup(bot) -> None:
