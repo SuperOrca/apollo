@@ -51,6 +51,11 @@ class Fun(commands.Cog):
         member = member or ctx.author
         await ctx.reply(embed=discord.Embed(description=f":rainbow: **{member.name}** is {randint(1, 100)}% gay", color=discord.Color.purple()))
 
+    @commands.command(name='roast', description="what u think it does", usage="roast [member]")
+    async def _roast(self, ctx: ApolloContext, member: commands.MemberConverter = None):
+        member = member or ctx.author
+        await ctx.reply(f"**{ctx.author.name},** " + await self.bot.dagpi.roast())
+
 
 def setup(bot) -> None:
     bot.add_cog(Fun(bot))
