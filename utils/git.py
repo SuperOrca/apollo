@@ -1,5 +1,5 @@
 def format_commit(commit):
-    return f"`[{commit['sha'][:7]}]({commit['html_url']})` {commit['commit']['message']}"
+    return f"[`{commit['sha'][:7]}`]({commit['html_url']}) {commit['commit']['message']}"
 
 
 async def get_last_commits(bot, count=3):
