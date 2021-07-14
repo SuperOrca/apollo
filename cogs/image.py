@@ -366,14 +366,14 @@ class Image(commands.Cog):
             embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
-    """
-    Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
-    """
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
     async def _minecraft(self, ctx: ApolloContext, image: Union[
             discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+        """
+        Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
+        """
         async with ctx.typing():
             url = await getImage(ctx, image)
             b = BytesIO(await (await self.bot.session.get(url)).read())
