@@ -32,7 +32,7 @@ JISHAKU_RETAIN = enabled("JISHAKU_RETAIN")
 
 # Flag to indicate that meta variables in REPL should not be prefixed with an underscore
 JISHAKU_NO_UNDERSCORE = True  # enabled("JISHAKU_NO_UNDERSCORE")
-SCOPE_PREFIX = '' if JISHAKU_NO_UNDERSCORE else '_'
+SCOPE_PREFIX = "" if JISHAKU_NO_UNDERSCORE else "_"
 
 # Flag to indicate whether or not to always use paginators in commands that now use files
 # as there is no file preview on mobile and some people just like the paginators better.

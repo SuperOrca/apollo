@@ -22,7 +22,9 @@ from discord.ext import commands
 from jishaku.flags import JISHAKU_NO_DM_TRACEBACK
 
 
-async def send_traceback(destination: discord.abc.Messageable, verbosity: int, *exc_info):
+async def send_traceback(
+    destination: discord.abc.Messageable, verbosity: int, *exc_info
+):
     """
     Sends a traceback of an exception to a destination.
     Used when REPL fails for any reason.
@@ -36,10 +38,12 @@ async def send_traceback(destination: discord.abc.Messageable, verbosity: int, *
     # to make pylint stop moaning
     etype, value, trace = exc_info
 
-    traceback_content = "".join(traceback.format_exception(etype, value, trace, verbosity)).replace("``", "`\u200b`")
+    traceback_content = "".join(
+        traceback.format_exception(etype, value, trace, verbosity)
+    ).replace("``", "`\u200b`")
 
-    paginator = commands.Paginator(prefix='```py')
-    for line in traceback_content.split('\n'):
+    paginator = commands.Paginator(prefix="```py")
+    for line in traceback_content.split("\n"):
         paginator.add_line(line)
 
     message = None
@@ -67,8 +71,9 @@ async def do_after_sleep(delay: float, coro, *args, **kwargs):
     return await coro(*args, **kwargs)
 
 
-async def attempt_add_reaction(msg: discord.Message, reaction: typing.Union[str, discord.Emoji]) \
-        -> typing.Optional[discord.Reaction]:
+async def attempt_add_reaction(
+    msg: discord.Message, reaction: typing.Union[str, discord.Emoji]
+) -> typing.Optional[discord.Reaction]:
     """
     Try to add a reaction to a message, ignoring it if it fails for any reason.
 
@@ -86,17 +91,28 @@ class ReactionProcedureTimer:  # pylint: disable=too-few-public-methods
     """
     Class that reacts to a message based on what happens during its lifetime.
     """
-    __slots__ = ('message', 'loop', 'handle', 'raised')
 
-    def __init__(self, message: discord.Message, loop: typing.Optional[asyncio.BaseEventLoop] = None):
+    __slots__ = ("message", "loop", "handle", "raised")
+
+    def __init__(
+        self,
+        message: discord.Message,
+        loop: typing.Optional[asyncio.BaseEventLoop] = None,
+    ):
         self.message = message
         self.loop = loop or asyncio.get_event_loop()
         self.handle = None
         self.raised = False
 
     async def __aenter__(self):
-        self.handle = self.loop.create_task(do_after_sleep(1, attempt_add_reaction, self.message,
-                                                           "\N{BLACK RIGHT-POINTING TRIANGLE}"))
+        self.handle = self.loop.create_task(
+            do_after_sleep(
+                1,
+                attempt_add_reaction,
+                self.message,
+                "\N{BLACK RIGHT-POINTING TRIANGLE}",
+            )
+        )
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
@@ -115,13 +131,17 @@ class ReactionProcedureTimer:  # pylint: disable=too-few-public-methods
             await attempt_add_reaction(self.message, "\N{ALARM CLOCK}")
         elif isinstance(exc_val, SyntaxError):
             # syntax error, single exclamation mark
-            await attempt_add_reaction(self.message, "\N{HEAVY EXCLAMATION MARK SYMBOL}")
+            await attempt_add_reaction(
+                self.message, "\N{HEAVY EXCLAMATION MARK SYMBOL}"
+            )
         else:
             # other error, double exclamation mark
             await attempt_add_reaction(self.message, "\N{DOUBLE EXCLAMATION MARK}")
 
 
-class ReplResponseReactor(ReactionProcedureTimer):  # pylint: disable=too-few-public-methods
+class ReplResponseReactor(
+    ReactionProcedureTimer
+):  # pylint: disable=too-few-public-methods
     """
     Extension of the ReactionProcedureTimer that absorbs errors, sending tracebacks.
     """
@@ -133,14 +153,21 @@ class ReplResponseReactor(ReactionProcedureTimer):  # pylint: disable=too-few-pu
         if not exc_val:
             return
 
-        if isinstance(exc_val, (SyntaxError, asyncio.TimeoutError, subprocess.TimeoutExpired)):
+        if isinstance(
+            exc_val, (SyntaxError, asyncio.TimeoutError, subprocess.TimeoutExpired)
+        ):
             # short traceback, send to channel
             await send_traceback(self.message.channel, 0, exc_type, exc_val, exc_tb)
         else:
             # this traceback likely needs more info, so increase verbosity, and DM it instead.
             await send_traceback(
-                self.message.channel if JISHAKU_NO_DM_TRACEBACK else self.message.author,
-                8, exc_type, exc_val, exc_tb
+                self.message.channel
+                if JISHAKU_NO_DM_TRACEBACK
+                else self.message.author,
+                8,
+                exc_type,
+                exc_val,
+                exc_tb,
             )
 
         return True  # the exception has been handled

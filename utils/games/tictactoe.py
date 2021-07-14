@@ -1,9 +1,9 @@
 import discord
 
 
-class TicTacToeButton(discord.ui.Button['TicTacToe']):
+class TicTacToeButton(discord.ui.Button["TicTacToe"]):
     def __init__(self, x: int, y: int):
-        super().__init__(style=discord.ButtonStyle.secondary, label='\u200b', row=y)
+        super().__init__(style=discord.ButtonStyle.secondary, label="\u200b", row=y)
         self.x = x
         self.y = y
 
@@ -16,13 +16,13 @@ class TicTacToeButton(discord.ui.Button['TicTacToe']):
 
         if view.current_player == view.X:
             self.style = discord.ButtonStyle.danger
-            self.label = 'X'
+            self.label = "X"
             view.board[self.y][self.x] = view.X
             view.current_player = view.O
             content = "It is now O's turn"
         else:
             self.style = discord.ButtonStyle.success
-            self.label = 'O'
+            self.label = "O"
             view.board[self.y][self.x] = view.O
             view.current_player = view.X
             content = "It is now X's turn"
@@ -31,9 +31,9 @@ class TicTacToeButton(discord.ui.Button['TicTacToe']):
         winner = view.check_board_winner()
         if winner is not None:
             if winner == view.X:
-                content = 'X won!'
+                content = "X won!"
             elif winner == view.O:
-                content = 'O won!'
+                content = "O won!"
             else:
                 content = "It's a tie!"
 
@@ -75,8 +75,7 @@ class TicTacToe(discord.ui.View):
 
         # Check vertical
         for line in range(3):
-            value = self.board[0][line] + \
-                    self.board[1][line] + self.board[2][line]
+            value = self.board[0][line] + self.board[1][line] + self.board[2][line]
             if value == -3:
                 return self.X
 

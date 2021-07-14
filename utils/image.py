@@ -17,12 +17,13 @@ from .metrics import isImage
 async def dagpi_process(ctx: ApolloContext, image, feature, **kwargs) -> discord.Embed:
     url = await getImage(ctx, image)
     async with ctx.typing():
-        img = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=str(url), **kwargs)
+        img = await ctx.bot.dagpi.image_process(
+            getattr(ImageFeatures, feature)(), url=str(url), **kwargs
+        )
         file = discord.File(img.image, f"{ctx.command.name}.{img.format}")
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.{img.format}")
-        embed.set_footer(
-            text=f"Processed in {float(img.process_time):.2f} seconds")
+        embed.set_footer(text=f"Processed in {float(img.process_time):.2f} seconds")
     await ctx.reply(file=file, embed=embed, can_delete=True)
 
 
@@ -39,7 +40,10 @@ def fileFromBytes(ctx, image) -> discord.File:
     return discord.File(buffer, f"{ctx.command.name}.png")
 
 
-async def getImage(ctx: ApolloContext, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):
+async def getImage(
+    ctx: ApolloContext,
+    url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None,
+):
     if isinstance(url, str):
         url = await twemoji.emoji_to_url(url)
 
@@ -47,12 +51,12 @@ async def getImage(ctx: ApolloContext, url: Union[discord.Member, discord.Emoji,
         ref = ctx.message.reference.resolved
         if ref.embeds:
             if ref.embeds[0].image.url != discord.Embed.Empty and isImage(
-                    ref.embeds[0].image.url
+                ref.embeds[0].image.url
             ):
                 return ref.embeds[0].image.url
 
             if ref.embeds[0].thumbnail.url != discord.Embed.Empty and isImage(
-                    ref.embeds[0].thumbnail.url
+                ref.embeds[0].thumbnail.url
             ):
                 return ref.embeds[0].thumbnail.url
 
@@ -64,10 +68,13 @@ async def getImage(ctx: ApolloContext, url: Union[discord.Member, discord.Emoji,
     if isinstance(url, discord.Member):
         return str(url.avatar.url)
     elif isinstance(url, str):
-        if re.search(
+        if (
+            re.search(
                 r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
                 url,
-        ) and isImage(url):
+            )
+            and isImage(url)
+        ):
             return url
 
     if isinstance(url, (discord.Emoji, discord.PartialEmoji)):
@@ -78,7 +85,9 @@ async def getImage(ctx: ApolloContext, url: Union[discord.Member, discord.Emoji,
         url = ctx.message.attachments[0].url or ctx.message.attachments[0].proxy_url
 
         if isImage(url):
-            return ctx.message.attachments[0].proxy_url or ctx.message.attachments[0].url
+            return (
+                ctx.message.attachments[0].proxy_url or ctx.message.attachments[0].url
+            )
 
         elif isinstance(url, discord.Member):
             return str(url.avatar.url)
@@ -99,11 +108,9 @@ async def process_minecraft(bot, b: BytesIO) -> BytesIO:
         np.expand_dims(arr, axis=-1)
         for y, r in enumerate(arr):
             for x, c in enumerate(r):
-                difference = np.sqrt(
-                    np.sum((minecraft_array - c) ** 2, axis=1))
+                difference = np.sqrt(np.sum((minecraft_array - c) ** 2, axis=1))
                 where = np.where(difference == np.amin(difference))
-                to_paste = bot.minecraft_blocks[tuple(
-                    minecraft_array[where][0])]
+                to_paste = bot.minecraft_blocks[tuple(minecraft_array[where][0])]
                 final_image.paste(to_paste, (x * 16, y * 16), to_paste)
     buffer = BytesIO()
     final_image.save(buffer, "PNG")
@@ -122,7 +129,6 @@ async def resize_and_save_minecraft_blocks(bot, b):
     try:
         with Image.open(b) as image:
             image = image.convert("RGBA")
-            bot.minecraft_blocks[image.resize(
-                (1, 1)).getdata()[0]] = image
+            bot.minecraft_blocks[image.resize((1, 1)).getdata()[0]] = image
     except UnidentifiedImageError:
         pass

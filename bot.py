@@ -29,7 +29,9 @@ load_dotenv()
 class Apollo(commands.AutoShardedBot):
     @staticmethod
     async def _get_prefix(bot, message: discord.Message):
-        return commands.when_mentioned_or(await bot.get_guild_prefix(message))(bot, message)
+        return commands.when_mentioned_or(await bot.get_guild_prefix(message))(
+            bot, message
+        )
 
     def __init__(self) -> None:
         self.connector = aiohttp.TCPConnector(limit=200)
@@ -41,47 +43,66 @@ class Apollo(commands.AutoShardedBot):
             emojis=True,
             voice_states=True,
             messages=True,
-            reactions=True
+            reactions=True,
         )
         description = """
         An open-source general-use discord.py bot.
         """
-        super().__init__(command_prefix=self._get_prefix, help_command=ApolloHelp(), case_insensitive=True,
-                         allowed_mentions=allowed_mentions, description=description, intents=intents,
-                         activity=discord.Game(f'@Apollo help'), strip_after_prefix=True, max_messages=1000,
-                         connector=self.connector)
+        super().__init__(
+            command_prefix=self._get_prefix,
+            help_command=ApolloHelp(),
+            case_insensitive=True,
+            allowed_mentions=allowed_mentions,
+            description=description,
+            intents=intents,
+            activity=discord.Game(f"@Apollo help"),
+            strip_after_prefix=True,
+            max_messages=1000,
+            connector=self.connector,
+        )
         self.__version__ = "1.0.0"
-        self.owner_ids = (int(getenv('OWNER_ID')),)
+        self.owner_ids = (int(getenv("OWNER_ID")),)
         self.init_logging()
         self.init_constants()
 
     async def init(self) -> None:
-        self.db = Database('sqlite:///bot.db')
+        self.db = Database("sqlite:///bot.db")
         await self.db.connect()
-        await self.db.execute("CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)")
+        await self.db.execute(
+            "CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)"
+        )
         self.tio = await Tio()
         self.session = aiohttp.ClientSession(
-            headers={'User-Agent': "Apollo Bot v{} Python/{}.{} aiohttp/{}".format(
-                self.__version__, sys.version_info[0], sys.version_info[1], aiohttp.__version__)},
+            headers={
+                "User-Agent": "Apollo Bot v{} Python/{}.{} aiohttp/{}".format(
+                    self.__version__,
+                    sys.version_info[0],
+                    sys.version_info[1],
+                    aiohttp.__version__,
+                )
+            },
             timeout=aiohttp.ClientTimeout(total=30),
-            loop=self.loop
+            loop=self.loop,
         )
         self.mystbin = mystbin.Client(session=self.session)
         self.statcord = statcord.Client(self, environ["STATCORD"])
         self.statcord.start_loop()
         self.dagpi = asyncdagpi.Client(
-            getenv('DAGPI'), session=self.session, loop=self.loop)
+            getenv("DAGPI"), session=self.session, loop=self.loop
+        )
         self.tts = aiogTTS()
         self.psutil_process = psutil.Process()
 
     def init_logging(self):
         coloredlogs.install()
-        self.log = logging.getLogger('discord')
+        self.log = logging.getLogger("discord")
         self.log.setLevel(logging.INFO)
         handler = logging.FileHandler(
-            filename="logs/discord.log", encoding='utf-8', mode='w')
-        handler.setFormatter(logging.Formatter(
-            '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+            filename="logs/discord.log", encoding="utf-8", mode="w"
+        )
+        handler.setFormatter(
+            logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+        )
         self.log.addHandler(handler)
 
     def init_constants(self):
@@ -96,80 +117,105 @@ class Apollo(commands.AutoShardedBot):
 
     async def get_guild_prefix(self, message: discord.Message) -> list:
         try:
-            prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id=:id", values={"id": message.guild.id})
+            prefix = await self.db.fetch_one(
+                f"SELECT * FROM prefixes WHERE id=:id", values={"id": message.guild.id}
+            )
         except AttributeError:
             prefix = None
-        return getenv('DEFAULT_PREFIX') if prefix is None else prefix[1]
+        return getenv("DEFAULT_PREFIX") if prefix is None else prefix[1]
 
     async def send_owner(self, content: str = None, **kwargs):
         await self.get_user(self.owner_ids[0]).send(content, **kwargs)
 
     def load(self):
-        for file in Path('cogs').glob('**/*.py'):
+        for file in Path("cogs").glob("**/*.py"):
             *tree, _ = file.parts
             try:
                 self.load_extension(f"{'.'.join(tree)}.{file.stem}")
             except Exception as e:
-                traceback.print_exception(
-                    type(e), e, e.__traceback__, file=sys.stderr)
+                traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
 
     async def on_ready(self) -> None:
         self.log.info("Running setup...")
         await self.init()
-        if not hasattr(self, 'uptime'):
+        if not hasattr(self, "uptime"):
             self.uptime = datetime.utcnow()
-        self.log.info("Bot connected. DWSP latency: " +
-                      str(round((self.latency * 1000))) + "ms")
+        self.log.info(
+            "Bot connected. DWSP latency: " + str(round((self.latency * 1000))) + "ms"
+        )
         self.load()
-        self.load_extension('jishaku')
+        self.load_extension("jishaku")
         self.log.info(f"Extensions loaded ({len(self.extensions)} loaded)")
         self.log.info("Bot ready!")
 
     async def on_message(self, message: discord.Message) -> None:
-        if message.author.bot or isinstance(message.channel, (discord.DMChannel, discord.GroupChannel)):
+        if message.author.bot or isinstance(
+            message.channel, (discord.DMChannel, discord.GroupChannel)
+        ):
             return
-        if message.content.startswith('jsk') and message.author.id == int(getenv('OWNER_ID')):
+        if message.content.startswith("jsk") and message.author.id == int(
+            getenv("OWNER_ID")
+        ):
             message.content = self.user.mention + " " + message.content
         await self.process_commands(message)
 
     @staticmethod
     async def send_error_embed(ctx: ApolloContext, content: str, **kwargs):
-        content = content.replace('"', '`')
-        embed = discord.Embed(
-            description=f'⚠ {content}', color=discord.Color.red())
+        content = content.replace('"', "`")
+        embed = discord.Embed(description=f"⚠ {content}", color=discord.Color.red())
         await ctx.reply(embed=embed)
 
     async def on_command_error(self, ctx: ApolloContext, error) -> None:
-        if hasattr(ctx.command, 'on_error'):
+        if hasattr(ctx.command, "on_error"):
             return
 
         if isinstance(error, commands.MissingRequiredArgument):
-            return await self.send_error_embed(ctx, f"You are missing the required `{error.param.name}` argument in `{ctx.command}`.")
+            return await self.send_error_embed(
+                ctx,
+                f"You are missing the required `{error.param.name}` argument in `{ctx.command}`.",
+            )
         if isinstance(error, commands.CheckFailure):
-            return await self.send_error_embed(ctx, f"You are not able to use `{ctx.command}`.")
+            return await self.send_error_embed(
+                ctx, f"You are not able to use `{ctx.command}`."
+            )
         if isinstance(error, commands.CommandOnCooldown):
-            return await self.send_error_embed(ctx, f"`{ctx.command}` is on cooldown for another `{error.retry_after:.1f} seconds`.")
+            return await self.send_error_embed(
+                ctx,
+                f"`{ctx.command}` is on cooldown for another `{error.retry_after:.1f} seconds`.",
+            )
         if isinstance(error, commands.CommandInvokeError):
             return await self.send_error_embed(ctx, f"{error.original}")
 
-        _ignored = (commands.CommandNotFound, commands.NoPrivateMessage,
-                    commands.DisabledCommand)
+        _ignored = (
+            commands.CommandNotFound,
+            commands.NoPrivateMessage,
+            commands.DisabledCommand,
+        )
         _input = commands.UserInputError
 
         if isinstance(error, _ignored):
             return
         if isinstance(error, _input):
-            return await self.send_error_embed(ctx, "There was an error with your arguments.")
+            return await self.send_error_embed(
+                ctx, "There was an error with your arguments."
+            )
 
-        await self.send_error_embed(ctx, "An unknown error has occured. I have contacted the developers.")
-        await self.send_owner('An exception in a user\'s command:\n```py\n' + '\n'.join(traceback.format_exception(
-            type(error), error, error.__traceback__)) + '\n```')
+        await self.send_error_embed(
+            ctx, "An unknown error has occured. I have contacted the developers."
+        )
+        await self.send_owner(
+            "An exception in a user's command:\n```py\n"
+            + "\n".join(
+                traceback.format_exception(type(error), error, error.__traceback__)
+            )
+            + "\n```"
+        )
 
     async def on_command(self, ctx: ApolloContext) -> None:
         self.statcord.command_run(ctx)
 
     async def on_socket_response(self, msg):
-        self.socket_stats[msg.get('t')] += 1
+        self.socket_stats[msg.get("t")] += 1
 
     async def get_context(self, message: discord.Message, *, cls=None):
         return await super().get_context(message, cls=cls or ApolloContext)
@@ -179,10 +225,10 @@ class Apollo(commands.AutoShardedBot):
 
     def run(self) -> None:
         self.log.info("Logging in...")
-        super().run(getenv('TOKEN'), reconnect=True)
+        super().run(getenv("TOKEN"), reconnect=True)
 
     async def close(self) -> None:
-        with open("blacklist.json", 'w') as f:
+        with open("blacklist.json", "w") as f:
             json.dump(self.blacklist, f, indent=4)
 
         await self.session.close()
