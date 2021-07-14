@@ -127,14 +127,19 @@ class Utility(commands.Cog):
 
     @commands.command(name='avatar', description="View the avatar of a member.", usage="avatar [member]")
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def _avatar(self, ctx: Context, member: discord.MemberConverter = None):
+    async def _avatar(self, ctx: Context, member: commands.MemberConverter = None):
         formats = [f"[`PNG`]({ctx.author.avatar.replace(format='png').url})"]
-        formats.append(f"[`JPG`]({ctx.author.avatar.replace(format='jpg').url})")
-        formats.append(f"[`JPEG`]({ctx.author.avatar.replace(format='jpeg').url})")
-        formats.append(f"[`WEBP`]({ctx.author.avatar.replace(format='webp').url})")
+        formats.append(
+            f"[`JPG`]({ctx.author.avatar.replace(format='jpg').url})")
+        formats.append(
+            f"[`JPEG`]({ctx.author.avatar.replace(format='jpeg').url})")
+        formats.append(
+            f"[`WEBP`]({ctx.author.avatar.replace(format='webp').url})")
         if ctx.author.avatar.is_animated():
-            formats.append(f"[`GIF`]({ctx.author.avatar.replace(format='gif').url})")
-        embed = discord.Embed(title=f"{ctx.author.name}'s avatar", description=' | '.join(formats), color=0x2F3136)
+            formats.append(
+                f"[`GIF`]({ctx.author.avatar.replace(format='gif').url})")
+        embed = discord.Embed(title=f"{ctx.author.name}'s avatar", description=' | '.join(
+            formats), color=0x2F3136)
         embed.set_image(url=ctx.author.avatar.url)
         await ctx.reply(embed=embed)
 
