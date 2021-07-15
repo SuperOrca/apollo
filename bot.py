@@ -162,7 +162,7 @@ class Apollo(commands.AutoShardedBot):
         if isinstance(error, commands.CommandOnCooldown):
             return await self.send_error_embed(ctx, f"`{ctx.command}` is on cooldown for another `{error.retry_after:.1f} seconds`.")
         if isinstance(error, commands.CommandInvokeError):
-            return await self.send_error_embed(ctx, f"{error.original}")
+            return await self.send_error_embed(ctx, str(error.original))
 
         _ignored = (commands.CommandNotFound, commands.NoPrivateMessage,
                     commands.DisabledCommand)
