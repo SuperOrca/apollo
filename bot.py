@@ -171,7 +171,7 @@ class Apollo(commands.AutoShardedBot):
         if isinstance(error, _ignored):
             return
         if isinstance(error, _input):
-            return await self.send_error_embed(ctx, str(error))
+            return await self.send_error_embed(ctx, str(error).replace('"', '`'))
             # return await self.send_error_embed(ctx, "There was an error with your arguments.")
 
         await self.send_error_embed(
