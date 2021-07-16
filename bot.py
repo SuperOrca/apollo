@@ -66,7 +66,7 @@ class Apollo(commands.AutoShardedBot):
         self.db = Database('sqlite:///bot.db')
         await self.db.connect()
         await self.db.execute(
-            "CREATE TABLE IF NOT EXISTS prefixes (id INTEGER PRIMARY KEY, prefix TEXT)"
+            "CREATE TABLE IF NOT EXISTS prefixes (id BIGINT PRIMARY KEY, prefix TEXT)"
         )
         self.session = aiohttp.ClientSession(
             headers={'User-Agent': "Apollo Bot v{} Python/{}.{} aiohttp/{}".format(
