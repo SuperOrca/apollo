@@ -100,6 +100,7 @@ class Apollo(commands.AutoShardedBot):
         with open("blacklist.json") as f:
             self.blacklist = json.load(f)
         self.add_check(self.is_blacklisted)
+        self.before_invoke(self.before_invoke_)
 
     async def is_blacklisted(self, ctx: ApolloContext) -> bool:
         return ctx.author.id not in self.blacklist
@@ -110,6 +111,9 @@ class Apollo(commands.AutoShardedBot):
         except AttributeError:
             prefix = None
         return getenv('DEFAULT_PREFIX') if prefix is None else prefix[1]
+
+    async def before_invoke_(self, ctx: ApolloContext):
+        await ctx.trigger_typing()
 
     async def send_owner(self, content: str = None, **kwargs):
         await self.get_user(self.owner_ids[0]).send(content, **kwargs)

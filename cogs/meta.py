@@ -39,11 +39,11 @@ class Meta(commands.Cog):
     @commands.command(name='ping', description="Shows the bot ping.")
     async def _ping(self, ctx: ApolloContext) -> None:
         typing = count()
-        async with ctx.typing():
-            typing = (count() - typing) * 1000
-            database = count()
-            await self.bot.db.execute("SELECT 1")
-            database = (count() - database) * 1000
+        m = await ctx.reply("Loading...")
+        typing = (count() - typing) * 1000
+        database = count()
+        await self.bot.db.execute("SELECT 1")
+        database = (count() - database) * 1000
         embed = discord.Embed(color=discord.Color.blurple())
         embed.add_field(name="Websocket",
                         value=f"```py\n{(self.bot.latency * 1000):.2f} ms\n```")
@@ -51,7 +51,7 @@ class Meta(commands.Cog):
         embed.add_field(name="Database",
                         value=f"```py\n{database:.2f} ms\n```")
         embed.set_thumbnail(url=self.bot.user.avatar.url)
-        await ctx.reply(embed=embed)
+        await m.edit(embed=embed)
 
     @commands.command(name='info', description="Shows information about the bot.")
     async def _info(self, ctx: ApolloContext) -> None:

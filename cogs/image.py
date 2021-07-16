@@ -300,70 +300,64 @@ class Image(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _flip(self, ctx: ApolloContext,
                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        async with ctx.typing():
-            start = time()
-            with await imageToPIL(ctx, image) as image:
-                new_image = image.rotate(180)
-            end = time()
-            embed = discord.Embed(color=discord.Color.dark_blue())
-            embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
+        start = time()
+        with await imageToPIL(ctx, image) as image:
+            new_image = image.rotate(180)
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _wide(self, ctx: ApolloContext,
                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        async with ctx.typing():
-            start = time()
-            with await imageToPIL(ctx, image) as image:
-                new_image = image.resize((image.height * 2, image.width))
-            end = time()
-            embed = discord.Embed(color=discord.Color.dark_blue())
-            embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
-        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
+        start = time()
+        with await imageToPIL(ctx, image) as image:
+            new_image = image.resize((image.height * 2, image.width))
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _ultrawide(self, ctx: ApolloContext,
                          image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        async with ctx.typing():
-            start = time()
-            with await imageToPIL(ctx, image) as image:
-                new_image = image.resize((image.height * 4, image.width))
-            end = time()
-            embed = discord.Embed(color=discord.Color.dark_blue())
-            embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
+        start = time()
+        with await imageToPIL(ctx, image) as image:
+            new_image = image.resize((image.height * 4, image.width))
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _squish(self, ctx: ApolloContext,
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        async with ctx.typing():
-            start = time()
-            with await imageToPIL(ctx, image) as image:
-                new_image = image.resize((image.height, image.width * 2))
-            end = time()
-            embed = discord.Embed(color=discord.Color.dark_blue())
-            embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
+        start = time()
+        with await imageToPIL(ctx, image) as image:
+            new_image = image.resize((image.height, image.width * 2))
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='ultrasquish', descripton="Ultrasquish an image.", usage="ultrasquish [image]")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def _ultrasquish(self, ctx: ApolloContext,
                            image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        async with ctx.typing():
-            start = time()
-            with await imageToPIL(ctx, image) as image:
-                new_image = image.resize((image.height, image.width * 4))
-            end = time()
-            embed = discord.Embed(color=discord.Color.dark_blue())
-            embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
+        start = time()
+        with await imageToPIL(ctx, image) as image:
+            new_image = image.resize((image.height, image.width * 4))
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(text=f"Processed in {end-start:.2f} seconds")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
@@ -374,18 +368,17 @@ class Image(commands.Cog):
         """
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """
-        async with ctx.typing():
-            url = await getImage(ctx, image)
-            b = BytesIO(await (await self.bot.session.get(url)).read())
-            start = time()
-            file = discord.File(await process_minecraft(self.bot, b), f"{ctx.command.name}.png")
-            end = time()
-            embed = discord.Embed(color=discord.Color.dark_blue())
-            embed.set_image(url=f"attachment://{ctx.command.name}.png")
-            embed.set_footer(
-                text=f"Processed in {end-start:.2f} seconds | Credits to The Anime Bot")
-            await ctx.send(file=file,
-                           embed=embed, can_delete=True)
+        url = await getImage(ctx, image)
+        b = BytesIO(await (await self.bot.session.get(url)).read())
+        start = time()
+        file = discord.File(await process_minecraft(self.bot, b), f"{ctx.command.name}.png")
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(
+            text=f"Processed in {end-start:.2f} seconds | Credits to The Anime Bot")
+        await ctx.send(file=file,
+                       embed=embed, can_delete=True)
 
 
 def setup(bot) -> None:

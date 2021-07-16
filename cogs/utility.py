@@ -14,8 +14,7 @@ class Utility(commands.Cog):
     @commands.command(name='pypi', description="Shows details of a python package.", usage="pypi <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _pypi(self, ctx: ApolloContext, package: str) -> None:
-        async with ctx.typing():
-            data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
+        data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
 
         if data.status != 200:
             raise commands.BadArgument("Invalid package.")
@@ -43,8 +42,7 @@ class Utility(commands.Cog):
     @commands.command(name='npm', description="Shows details of a node package.", usage="npm <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _npm(self, ctx: ApolloContext, package: str):
-        async with ctx.typing():
-            data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
+        data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
         if 'CODE' in data or 'collected' not in data:
             raise commands.BadArgument("Invalid package.")
 
@@ -66,28 +64,26 @@ class Utility(commands.Cog):
     @commands.command(name='deno', description="Shows details of a deno package.", usage="deno <package>")
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _deno(self, ctx: ApolloContext, package: str) -> None:
-        async with ctx.typing():
-            data = await (await self.bot.session.get(f"https://api.deno.land/modules/{package}")).json()
-            if data["success"]:
-                data = data['data']
-                version = await (
-                    await self.bot.session.get(f"https://cdn.deno.land/{data['name']}/meta/versions.json")).json()
-                embed = discord.Embed(title=data['name'], description=data['description'],
-                                      url=f"https://deno.land/x/{data['name']}", color=0x2F3136)
-                embed.add_field(name="Version", value=version['latest'])
-                embed.add_field(name="Stars", value=f"{data['star_count']:,}")
-                f = discord.File('assets/deno_logo.png', 'deno.png')
-                embed.set_thumbnail(url="attachment://deno.png")
-                await ctx.reply(embed=embed, file=f)
-            else:
-                raise commands.BadArgument("Invalid package.")
+        data = await (await self.bot.session.get(f"https://api.deno.land/modules/{package}")).json()
+        if data["success"]:
+            data = data['data']
+            version = await (
+                await self.bot.session.get(f"https://cdn.deno.land/{data['name']}/meta/versions.json")).json()
+            embed = discord.Embed(title=data['name'], description=data['description'],
+                                  url=f"https://deno.land/x/{data['name']}", color=0x2F3136)
+            embed.add_field(name="Version", value=version['latest'])
+            embed.add_field(name="Stars", value=f"{data['star_count']:,}")
+            f = discord.File('assets/deno_logo.png', 'deno.png')
+            embed.set_thumbnail(url="attachment://deno.png")
+            await ctx.reply(embed=embed, file=f)
+        else:
+            raise commands.BadArgument("Invalid package.")
 
     @commands.command(name='github', description="Shows details of a deno repository.", usage="github <repository>",
                       aliases=['gh'])
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def _github(self, ctx: ApolloContext, repository: str) -> None:
-        async with ctx.typing():
-            data = await (await self.bot.session.get(f"https://api.github.com/repos/{repository}")).json()
+        data = await (await self.bot.session.get(f"https://api.github.com/repos/{repository}")).json()
         if 'message' not in data:
             embed = discord.Embed(title=data['full_name'],
                                   url=data['html_url'], color=0x2F3136)
@@ -113,16 +109,14 @@ class Utility(commands.Cog):
                 "The text for text to speech can not be over 200 characters.")
 
         buffer = io.BytesIO()
-        async with ctx.typing():
-            await self.tts.write_to_fp(text, buffer, slow=True, lang="en")
+        await self.tts.write_to_fp(text, buffer, slow=True, lang="en")
         buffer.seek(0)
         await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
 
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def _execute(self, ctx: ApolloContext, language: str, *, code: codeblock_converter) -> None:
-        async with ctx.typing():
-            output = await self.bot.tio.execute(code.content, language=language)
+        output = await self.bot.tio.execute(code.content, language=language)
         await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
 
     @commands.command(name='avatar', description="View the avatar of a member.", usage="avatar [member]")
