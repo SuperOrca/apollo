@@ -31,7 +31,7 @@ class Moderation(commands.Cog):
         check_hierarchy(ctx.author, member)
         reason = reason or "no reason provided"
         try:
-            await member.reply(embed=discord.Embed(
+            await member.send(embed=discord.Embed(
                 description=f"You have been banned from `{ctx.guild.name}** for **{reason}` by {ctx.author.mention}.",
                 color=discord.Color.dark_red()))
         except discord.HTTPException:
@@ -47,7 +47,7 @@ class Moderation(commands.Cog):
         check_hierarchy(ctx.author, member)
         reason = reason or "no reason provided"
         try:
-            await member.reply(embed=discord.Embed(
+            await member.send(embed=discord.Embed(
                 description=f"You have been kicked from `{ctx.guild.name}** for **{reason}` by {ctx.author.mention}.",
                 color=discord.Color.dark_red()))
         except discord.HTTPException:

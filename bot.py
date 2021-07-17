@@ -52,7 +52,7 @@ class Apollo(commands.AutoShardedBot):
             allowed_mentions=allowed_mentions,
             description=description,
             intents=intents,
-            activity=discord.Game(f"@Apollo help"),
+            activity=discord.Game("@Apollo help"),
             strip_after_prefix=True,
             max_messages=1000,
             connector=self.connector,
