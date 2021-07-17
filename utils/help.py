@@ -6,12 +6,11 @@ from .git import get_last_commits
 
 class ApolloHelp(commands.HelpCommand):
     def __init__(self, **options):
-        super().__init__(**options)
-        self.command_attrs = {
+        super().__init__(command_attrs={
             'name': "hell",
             'aliases': ["help", "helps"],
             'cooldown': commands.Cooldown(1, 2.0, commands.BucketType.user)
-        }
+        }, **options)
 
     async def send_bot_help(self, mapping: dict):
         prefix = await self.context.bot.get_guild_prefix(self.context.message)
