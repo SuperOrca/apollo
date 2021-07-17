@@ -7,9 +7,9 @@ from .git import get_last_commits
 class ApolloHelp(commands.HelpCommand):
     def __init__(self, **options):
         super().__init__(command_attrs={
-            'name': "hell",
-            'aliases': ["help", "helps"],
-            'cooldown': commands.Cooldown(1, 2)
+            'name': "help",
+            'aliases': ["help", "helps", "?"],
+            'cooldown': commands.CooldownMapping.cooldown(1, 3, commands.BucketType.user)
         }, **options)
 
     async def send_bot_help(self, mapping: dict):
