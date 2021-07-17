@@ -156,17 +156,9 @@ class Apollo(commands.AutoShardedBot):
         await ctx.reply(embed=embed)
 
     async def on_command_error(self, ctx: ApolloContext, error) -> None:
+        m = None
         if hasattr(ctx.command, 'on_error'):
             return
-
-        if isinstance(error, commands.MissingRequiredArgument):
-            return await self.send_error_embed(ctx, f"You are missing the required `{error.param.name}` argument in `{ctx.command}`.")
-        if isinstance(error, commands.CheckFailure):
-            return await self.send_error_embed(ctx, f"You are not able to use `{ctx.command}`.")
-        if isinstance(error, commands.CommandOnCooldown):
-            return await self.send_error_embed(ctx, f"`{ctx.command}` is on cooldown for another `{error.retry_after:.1f} seconds`.")
-        if isinstance(error, commands.CommandInvokeError):
-            return await self.send_error_embed(ctx, str(error.original))
 
         _ignored = (commands.CommandNotFound, commands.NoPrivateMessage,
                     commands.DisabledCommand)
@@ -175,8 +167,19 @@ class Apollo(commands.AutoShardedBot):
         if isinstance(error, _ignored):
             return
         if isinstance(error, _input):
-            await self.send_error_embed(ctx, str(error).replace('"', '`'))
-            # return await self.send_error_embed(ctx, "There was an error with your arguments.")
+            m = str(error).replace('"', '`')
+
+        if isinstance(error, commands.MissingRequiredArgument):
+            return await self.send_error_embed(ctx, f"You are missing the required `{error.param.name}` argument in `{ctx.command}`.")
+        if isinstance(error, commands.CheckFailure):
+            m = f"You are not able to use `{ctx.command}`."
+        if isinstance(error, commands.CommandOnCooldown):
+            return await self.send_error_embed(ctx, f"`{ctx.command}` is on cooldown for another `{error.retry_after:.1f} seconds`.")
+        if isinstance(error, commands.CommandInvokeError):
+            m = str(error.original)
+
+        if m is not None:
+            await self.send_error_embed(ctx, m)
         else:
             await self.send_error_embed(
                 ctx, "An unknown error has occured. I have contacted the developers."
