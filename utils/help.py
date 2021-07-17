@@ -9,7 +9,7 @@ class ApolloHelp(commands.HelpCommand):
         super().__init__(command_attrs={
             'name': "hell",
             'aliases': ["help", "helps"],
-            'cooldown': commands.Cooldown(1, 2.0, commands.BucketType.user)
+            'cooldown': commands.Cooldown(1, 2)
         }, **options)
 
     async def send_bot_help(self, mapping: dict):
