@@ -11,7 +11,7 @@ class Moderation(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
         self._cd_type = commands.BucketType.user
-        self._cd = commands.CooldownMapping.from_cooldown(1, 5., self._cd_type)
+        self._cd = commands.CooldownMapping.from_cooldown(1, 2.5, self._cd_type)
 
     async def cog_check(self, ctx: ApolloContext):
         bucket = self._cd.get_bucket(ctx.message)

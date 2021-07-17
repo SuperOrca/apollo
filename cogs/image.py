@@ -17,7 +17,7 @@ class Image(commands.Cog):
             self.bot.minecraft_blocks = {}
             self.bot.loop.create_task(create_minecraft_blocks(self.bot))
         self._cd_type = commands.BucketType.user
-        self._cd = commands.CooldownMapping.from_cooldown(1, 10., self._cd_type)
+        self._cd = commands.CooldownMapping.from_cooldown(1, 5., self._cd_type)
 
     async def cog_check(self, ctx: ApolloContext):
         bucket = self._cd.get_bucket(ctx.message)
