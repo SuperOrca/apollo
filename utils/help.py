@@ -8,7 +8,7 @@ class ApolloHelp(commands.HelpCommand):
     def __init__(self, **options):
         super().__init__(command_attrs={
             'name': "help",
-            'aliases': ["help", "helps", "?"],
+            'aliases': ["helps", "?"],
             'cooldown': commands.CooldownMapping.from_cooldown(1, 3, commands.BucketType.user)
         }, **options)
 
