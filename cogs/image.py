@@ -16,13 +16,14 @@ class Image(commands.Cog):
         if not hasattr(bot, "minecraft_blocks"):
             self.bot.minecraft_blocks = {}
             self.bot.loop.create_task(create_minecraft_blocks(self.bot))
-        self._cd = commands.CooldownMapping.from_cooldown(1, 10, commands.BucketType.user)
+        self._cd_type = commands.BucketType.user
+        self._cd = commands.CooldownMapping.from_cooldown(1, 10., self._cd_type)
 
     async def cog_check(self, ctx: ApolloContext):
         bucket = self._cd.get_bucket(ctx.message)
         retry_after = bucket.update_rate_limit()
         if retry_after:
-            raise commands.CommandOnCooldown(self._cd, retry_after)
+            raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
 
     @commands.command(name='pixelate', description="Shows the image as pixelated.", usage="pixelate [image]")
     async def _pixelate(self, ctx: ApolloContext,

@@ -14,13 +14,14 @@ class Meta(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
         self._status.start()
-        self._cd = commands.CooldownMapping.from_cooldown(1, 2, commands.BucketType.user)
+        self._cd_type = commands.BucketType.user
+        self._cd = commands.CooldownMapping.from_cooldown(1, 2., self._cd_type)
 
     async def cog_check(self, ctx: ApolloContext):
         bucket = self._cd.get_bucket(ctx.message)
         retry_after = bucket.update_rate_limit()
         if retry_after:
-            raise commands.CommandOnCooldown(self._cd, retry_after)
+            raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
 
     @tasks.loop(minutes=2.)
     async def _status(self) -> None:

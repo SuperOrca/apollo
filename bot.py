@@ -186,7 +186,7 @@ class Apollo(commands.AutoShardedBot):
             )
         await self.send_owner(
             "An exception in a user's command:\n```py\n"
-            + "\n".join(
+            + "".join(
                 traceback.format_exception(
                     type(error), error, error.__traceback__)
             )
