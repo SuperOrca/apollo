@@ -5,6 +5,14 @@ from .git import get_last_commits
 
 
 class ApolloHelp(commands.HelpCommand):
+    def __init__(self, **options):
+        super().__init__(**options)
+        self.command_attrs = {
+            'name': "hell",
+            'aliases': ["help", "helps"],
+            'cooldown': commands.Cooldown(1, 2.0, commands.BucketType.user)
+        }
+
     async def send_bot_help(self, mapping: dict):
         prefix = await self.context.bot.get_guild_prefix(self.context.message)
         modules = list(mapping.keys())[:-2]
@@ -62,3 +70,10 @@ Total Commands: `{len(valid_commands)}`
 > {', '.join(f'`{cmd.name}`' for cmd in cog.get_commands())}
         """, color=discord.Color.blurple())
         await self.context.reply(embed=embed)
+
+    def command_not_found(self, string):
+        raise commands.UserInputError(f"No command called `{string}` found.")
+
+    def subcommand_not_found(self, command, string):
+        raise commands.UserInputError(
+            f"Command `{command.qualified_name}` has no subcommand named `{string}`.")

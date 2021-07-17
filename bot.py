@@ -175,12 +175,12 @@ class Apollo(commands.AutoShardedBot):
         if isinstance(error, _ignored):
             return
         if isinstance(error, _input):
-            return await self.send_error_embed(ctx, str(error).replace('"', '`'))
+            await self.send_error_embed(ctx, str(error).replace('"', '`'))
             # return await self.send_error_embed(ctx, "There was an error with your arguments.")
-
-        await self.send_error_embed(
-            ctx, "An unknown error has occured. I have contacted the developers."
-        )
+        else:
+            await self.send_error_embed(
+                ctx, "An unknown error has occured. I have contacted the developers."
+            )
         await self.send_owner(
             "An exception in a user's command:\n```py\n"
             + "\n".join(
