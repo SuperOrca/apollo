@@ -15,6 +15,8 @@ class Games(commands.Cog):
         retry_after = bucket.update_rate_limit()
         if retry_after:
             raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
+        else:
+            return True
 
     async def cog_check(self, ctx: ApolloContext):
         bucket = self._cd.get_bucket(ctx.message)

@@ -40,6 +40,8 @@ class Fun(commands.Cog):
         retry_after = bucket.update_rate_limit()
         if retry_after:
             raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
+        else:
+            return True
 
     @commands.command(name='8ball', description="Answers a yes/no question.", usage="8ball <question>")
     async def _8ball(self, ctx: ApolloContext, *, question: str) -> None:

@@ -18,6 +18,8 @@ class Utility(commands.Cog):
         retry_after = bucket.update_rate_limit()
         if retry_after:
             raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
+        else:
+            return True
 
     @commands.command(name='pypi', description="Shows details of a python package.", usage="pypi <package>")
     async def _pypi(self, ctx: ApolloContext, package: str) -> None:

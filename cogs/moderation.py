@@ -18,6 +18,8 @@ class Moderation(commands.Cog):
         retry_after = bucket.update_rate_limit()
         if retry_after:
             raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
+        else:
+            return True
 
     @commands.command(name='purge', description="Clean up messages in a channel.", aliases=['clear'],
                       usage="purge <limit> [channel]")

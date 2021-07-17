@@ -15,6 +15,8 @@ class Animals(commands.Cog):
         retry_after = bucket.update_rate_limit()
         if retry_after:
             raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
+        else:
+            return True
 
     @commands.command(name='dog', description="Shows a random dog.", aliases=['dogs'])
     async def _dog(self, ctx: ApolloContext) -> None:

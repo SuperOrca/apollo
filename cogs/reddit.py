@@ -15,6 +15,8 @@ class Reddit(commands.Cog):
         retry_after = bucket.update_rate_limit()
         if retry_after:
             raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
+        else:
+            return True
 
     @commands.command(name='meme', description="Shows a random meme.", aliases=['memes'])
     async def _meme(self, ctx: ApolloContext) -> None:

@@ -24,6 +24,8 @@ class Image(commands.Cog):
         retry_after = bucket.update_rate_limit()
         if retry_after:
             raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
+        else:
+            return True
 
     @commands.command(name='pixelate', description="Shows the image as pixelated.", usage="pixelate [image]")
     async def _pixelate(self, ctx: ApolloContext,
