@@ -7,15 +7,20 @@ from utils.reddit import getpost
 class Reddit(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
+        self._cd = commands.CooldownMapping.from_cooldown(1, 10, commands.BucketType.user)
+
+    async def cog_check(self, ctx: ApolloContext):
+        bucket = self._cd.get_bucket(ctx.message)
+        retry_after = bucket.update_rate_limit()
+        if retry_after:
+            raise commands.CommandOnCooldown(self._cd, retry_after)
 
     @commands.command(name='meme', description="Shows a random meme.", aliases=['memes'])
-    @commands.cooldown(1, 2, commands.BucketType.user)
     async def _meme(self, ctx: ApolloContext) -> None:
         await (await getpost(self.bot, ctx.channel, 'memes')).start(ctx)
 
     @commands.command(name='reddit', description="Shows a random image from a subreddit.", aliases=['r'],
                       usage="reddit <subreddit>")
-    @commands.cooldown(1, 2, commands.BucketType.user)
     async def _reddit(self, ctx: ApolloContext, subreddit) -> None:
         await (await getpost(self.bot, ctx.channel, subreddit)).start(ctx)
 

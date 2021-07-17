@@ -10,6 +10,13 @@ from utils.context import ApolloContext
 class Moderation(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
+        self._cd = commands.CooldownMapping.from_cooldown(1, 5, commands.BucketType.user)
+
+    async def cog_check(self, ctx: ApolloContext):
+        bucket = self._cd.get_bucket(ctx.message)
+        retry_after = bucket.update_rate_limit()
+        if retry_after:
+            raise commands.CommandOnCooldown(self._cd, retry_after)
 
     @commands.command(name='purge', description="Clean up messages in a channel.", aliases=['clear'],
                       usage="purge <limit> [channel]")

@@ -10,9 +10,15 @@ from utils.context import ApolloContext
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
+        self._cd = commands.CooldownMapping.from_cooldown(1, 5, commands.BucketType.user)
+
+    async def cog_check(self, ctx: ApolloContext):
+        bucket = self._cd.get_bucket(ctx.message)
+        retry_after = bucket.update_rate_limit()
+        if retry_after:
+            raise commands.CommandOnCooldown(self._cd, retry_after)
 
     @commands.command(name='pypi', description="Shows details of a python package.", usage="pypi <package>")
-    @commands.cooldown(1, 2, commands.BucketType.user)
     async def _pypi(self, ctx: ApolloContext, package: str) -> None:
         data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
 
@@ -40,7 +46,6 @@ class Utility(commands.Cog):
         await ctx.reply(embed=embed, file=f)
 
     @commands.command(name='npm', description="Shows details of a node package.", usage="npm <package>")
-    @commands.cooldown(1, 2, commands.BucketType.user)
     async def _npm(self, ctx: ApolloContext, package: str):
         data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
         if 'CODE' in data or 'collected' not in data:
@@ -62,7 +67,6 @@ class Utility(commands.Cog):
         await ctx.reply(embed=embed, file=f)
 
     @commands.command(name='deno', description="Shows details of a deno package.", usage="deno <package>")
-    @commands.cooldown(1, 2, commands.BucketType.user)
     async def _deno(self, ctx: ApolloContext, package: str) -> None:
         data = await (await self.bot.session.get(f"https://api.deno.land/modules/{package}")).json()
         if data["success"]:
@@ -81,7 +85,6 @@ class Utility(commands.Cog):
 
     @commands.command(name='github', description="Shows details of a deno repository.", usage="github <repository>",
                       aliases=['gh'])
-    @commands.cooldown(1, 2, commands.BucketType.user)
     async def _github(self, ctx: ApolloContext, repository: str) -> None:
         data = await (await self.bot.session.get(f"https://api.github.com/repos/{repository}")).json()
         if 'message' not in data:
@@ -94,7 +97,6 @@ class Utility(commands.Cog):
             raise commands.BadArgument("Invalid repository.")
 
     @commands.command(name='txt', description="Text to file.", usage="txt <text>")
-    @commands.cooldown(1, 2, commands.BucketType.user)
     async def _txt(self, ctx: ApolloContext, *, text: str) -> None:
         file = io.StringIO()
         file.write(text)
@@ -102,7 +104,6 @@ class Utility(commands.Cog):
         await ctx.reply(file=discord.File(file, 'output.txt'))
 
     @commands.command(name='tts', description="Text to speech.", usage="tts <text>", aliases=['texttospeech'])
-    @commands.cooldown(1, 5, commands.BucketType.user)
     async def _tts(self, ctx: ApolloContext, *, text: str) -> None:
         if len(text) > 200:
             raise commands.BadArgument(
@@ -114,13 +115,11 @@ class Utility(commands.Cog):
         await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
 
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
-    @commands.cooldown(1, 5, commands.BucketType.user)
     async def _execute(self, ctx: ApolloContext, language: str, *, code: codeblock_converter) -> None:
         output = await self.bot.tio.execute(code.content, language=language)
         await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
 
     @commands.command(name='avatar', description="View the avatar of a member.", usage="avatar [member]")
-    @commands.cooldown(1, 5, commands.BucketType.user)
     async def _avatar(self, ctx: ApolloContext, member: commands.MemberConverter = None):
         formats = [f"[`PNG`]({ctx.author.avatar.replace(format='png').url})"]
         formats.append(
