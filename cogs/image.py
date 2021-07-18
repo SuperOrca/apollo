@@ -5,7 +5,7 @@ from time import time
 import asyncdagpi
 import discord
 from discord.ext import commands
-from wand import Image as WandImage
+from wand.image import Image as WandImage
 from PIL import Image as PILImage
 
 from utils.context import ApolloContext
