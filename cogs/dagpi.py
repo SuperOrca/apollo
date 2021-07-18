@@ -1,5 +1,6 @@
 from discord.ext import commands
 from utils.image import dagpi_process
+from utils.context import ApolloContext
 
 
 class Dagpi(commands.Cog):
