@@ -175,6 +175,8 @@ class Apollo(commands.AutoShardedBot):
             m = f"You are not able to use `{ctx.command}`."
         if isinstance(error, commands.CommandOnCooldown):
             return await self.send_error_embed(ctx, f"`{ctx.command}` is on cooldown for another `{error.retry_after:.1f} seconds`.")
+        if isinstance(error, commands.CommandOnCooldown):
+            return await self.send_error_embed(ctx, f"I am missing the `{', '.join(error.missing_perms)}` permissions.")
 
         if m is not None:
             await self.send_error_embed(ctx, m)
