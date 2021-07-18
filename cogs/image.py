@@ -103,7 +103,35 @@ class Image(commands.Cog):
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.png")
         embed.set_footer(text=f"Processed in {(end-start) * 1000:,.0f}ms")
-        file = discord.File(BytesIO(buffer), 'swirl.png')
+        file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')
+        await ctx.reply(file=file, embed=embed, can_delete=True)
+
+    @commands.command(name='blur', description="Blur an image.", usage="blur [image]")
+    async def _blur(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+        start = time()
+        blob = await imageToBytes(ctx, image)
+        with WandImage(blob=blob) as image:
+            image.blur(sigma=20)
+            buffer = image.make_blob('png')
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(text=f"Processed in {(end-start) * 1000:,.0f}ms")
+        file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')
+        await ctx.reply(file=file, embed=embed, can_delete=True)
+
+    @commands.command(name='sharpen', description="Sharpen an image.", usage="sharpen [image]")
+    async def _sharpen(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+        start = time()
+        blob = await imageToBytes(ctx, image)
+        with WandImage(blob=blob) as image:
+            image.sharpen(sigma=10)
+            buffer = image.make_blob('png')
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(text=f"Processed in {(end-start) * 1000:,.0f}ms")
+        file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')
         await ctx.reply(file=file, embed=embed, can_delete=True)
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",

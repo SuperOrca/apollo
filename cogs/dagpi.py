@@ -73,11 +73,6 @@ class Dagpi(commands.Cog):
                             discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, "triangle")
 
-    @commands.command(name='blur', description="Shows the image as a blur.", usage="blur [image]")
-    async def _blur(self, ctx: ApolloContext,
-                    image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
-        await dagpi_process(ctx, image, "blur")
-
     @commands.command(name='rgb-graph', description="Shows the image with rgb graph.", usage="rgb-graph [image]")
     async def _rgb_graph(self, ctx: ApolloContext,
                          image: Union[
