@@ -5,9 +5,11 @@ from time import time
 import asyncdagpi
 import discord
 from discord.ext import commands
+from wand import Image as WandImage
+from PIL import Image as PILImage
 
 from utils.context import ApolloContext
-from utils.image import dagpi_process, imageToPIL, fileFromBytes, getImage, create_minecraft_blocks, process_minecraft
+from utils.image import imageToBytes, fileFromBytes, getImage, create_minecraft_blocks, process_minecraft
 
 
 class Image(commands.Cog):
@@ -31,7 +33,8 @@ class Image(commands.Cog):
     async def _flip(self, ctx: ApolloContext,
                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         start = time()
-        with await imageToPIL(ctx, image) as image:
+        blob = await imageToBytes(ctx, image)
+        with PILImage.open(blob) as image:
             new_image = image.rotate(180)
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
@@ -43,7 +46,8 @@ class Image(commands.Cog):
     async def _wide(self, ctx: ApolloContext,
                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         start = time()
-        with await imageToPIL(ctx, image) as image:
+        blob = await imageToBytes(ctx, image)
+        with await PILImage.open(blob) as image:
             new_image = image.resize((image.height * 2, image.width))
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
@@ -54,7 +58,8 @@ class Image(commands.Cog):
     async def _ultrawide(self, ctx: ApolloContext,
                          image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         start = time()
-        with await imageToPIL(ctx, image) as image:
+        blob = await imageToBytes(ctx, image)
+        with PILImage.open(blob) as image:
             new_image = image.resize((image.height * 4, image.width))
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
@@ -66,7 +71,8 @@ class Image(commands.Cog):
     async def _squish(self, ctx: ApolloContext,
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         start = time()
-        with await imageToPIL(ctx, image) as image:
+        blob = await imageToBytes(ctx, image)
+        with PILImage.open(blob) as image:
             new_image = image.resize((image.height, image.width * 2))
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
@@ -78,7 +84,8 @@ class Image(commands.Cog):
     async def _ultrasquish(self, ctx: ApolloContext,
                            image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         start = time()
-        with await imageToPIL(ctx, image) as image:
+        blob = await imageToBytes(ctx, image)
+        with PILImage.open(blob) as image:
             new_image = image.resize((image.height, image.width * 4))
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
@@ -94,8 +101,7 @@ class Image(commands.Cog):
         """
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """
-        url = await getImage(ctx, image)
-        b = BytesIO(await (await self.bot.session.get(url)).read())
+        b = await imageToBytes(ctx, image)
         start = time()
         file = discord.File(await process_minecraft(self.bot, b), f"{ctx.command.name}.png")
         end = time()

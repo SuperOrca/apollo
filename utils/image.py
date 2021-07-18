@@ -25,10 +25,11 @@ async def dagpi_process(ctx: ApolloContext, image, feature, **kwargs) -> discord
     await ctx.reply(file=file, embed=embed, can_delete=True)
 
 
-async def imageToPIL(ctx, image) -> Image:
+async def imageToBytes(ctx, image) -> BytesIO:
     url = await getImage(ctx, image)
     response = await ctx.bot.session.get(url)
-    return Image.open(BytesIO(await response.read()))
+    return BytesIO(await response.read())
+
 
 def fileFromBytes(ctx, image) -> discord.File:
     buffer = BytesIO()
