@@ -120,7 +120,7 @@ class ManagementFeature(Feature):
     async def jsk_socketstats(self, ctx: commands.Context):
         delta = datetime.utcnow() - ctx.bot.uptime
         minutes = delta.total_seconds() / 60
-        data = {key: f'{value} ({value/minutes:.2f}/sec)' for key, value in sorted(
+        data = {key: f'{value} ({value/minutes:.2f}/min)' for key, value in sorted(
             dict(ctx.bot.socket_stats).items(), reverse=True, key=lambda item: item[1])}
         table = io.StringIO()
         header = "{:<80} {:<30}\n".format('Name', 'Value')

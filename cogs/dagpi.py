@@ -9,7 +9,7 @@ class Dagpi(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._cd_type = commands.BucketType.user
-        self._cd = commands.CooldownMapping.from_cooldown(1, 7., self._cd_type)
+        self._cd = commands.CooldownMapping.from_cooldown(1, 10., self._cd_type)
 
     async def cog_check(self, ctx: ApolloContext):
         bucket = self._cd.get_bucket(ctx.message)
