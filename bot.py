@@ -176,9 +176,9 @@ class Apollo(commands.AutoShardedBot):
         if isinstance(error, commands.CommandOnCooldown):
             return await self.send_error_embed(ctx, f"`{ctx.command}` is on cooldown for another `{error.retry_after:.1f} seconds`.")
         if isinstance(error, commands.BotMissingPermissions):
-            return await self.send_error_embed(ctx, f"I am missing the `{', '.join(error.missing_permissions)}` permissions.")
+            return await self.send_error_embed(ctx, f"I am missing the `{', '.join([str(perm).replace('_', ' ') for perm in error.missing_permissions])}` permissions.")
         if isinstance(error, commands.MissingPermissions):
-            return await self.send_error_embed(ctx, f"You are missing the `{', '.join(error.missing_permissions)}` permissions.")
+            return await self.send_error_embed(ctx, f"You are missing the `{', '.join([str(perm).replace('_', ' ') for perm in error.missing_permissions])}` permissions.")
 
         if m is not None:
             await self.send_error_embed(ctx, m)
