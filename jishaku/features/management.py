@@ -16,10 +16,13 @@ import math
 import time
 import traceback
 import json
+from datetime import datetime
+import io
 from typing import Optional
 
 import aiofile
 from discord.ext import commands
+import discord
 
 from jishaku.features.baseclass import Feature
 from jishaku.flags import JISHAKU_USE_BRAILLE_J
@@ -115,7 +118,17 @@ class ManagementFeature(Feature):
 
     @Feature.Command(parent="jsk", name="socketstats")
     async def jsk_socketstats(self, ctx: commands.Context):
-        await ctx.reply(f"```\n{json.dumps({key: value for key, value in sorted(dict(ctx.bot.socket_stats).items(), reverse=True, key=lambda item: item[1])}, indent=4)}\n```")
+        delta = datetime.utcnow() - ctx.bot.uptime
+        minutes = delta.total_seconds() / 60
+        data = {key: f'{value} ({value/minutes:.2f}/sec)' for key, value in sorted(
+            dict(ctx.bot.socket_stats).items(), reverse=True, key=lambda item: item[1])}
+        table = io.StringIO()
+        header = "{:<80} {:<30}\n".format('Name', 'Value')
+        values = '\n'.join("{:<80} {:<30}".format(str(k), str(v))
+                           for k, v in data.items())
+        table.write(header + values)
+        table.seek(0)
+        await ctx.reply(file=discord.File(table, 'socketstats.txt'))
 
     @Feature.Command(parent="jsk", name="blacklist")
     async def jsk_blacklist(self, ctx: commands.Context, mode: str, user: Optional[commands.UserConverter] = None):
