@@ -48,7 +48,7 @@ class Image(commands.Cog):
                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         start = time()
         blob = await imageToBytes(ctx, image)
-        with await PILImage.open(blob) as image:
+        with PILImage.open(blob) as image:
             new_image = image.resize((image.height * 2, image.width))
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
