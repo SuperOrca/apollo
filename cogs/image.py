@@ -103,7 +103,7 @@ class Image(commands.Cog):
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.png")
         embed.set_footer(text=f"Processed in {(end-start) * 1000:,.0f}ms")
-        await ctx.reply(file=fileFromBytes(ctx, BytesIO(buffer)), embed=embed, can_delete=True)
+        await ctx.reply(file=discord.File(buffer, 'swirl.png'), embed=embed, can_delete=True)
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
