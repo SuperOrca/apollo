@@ -168,11 +168,6 @@ class Dagpi(commands.Cog):
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, "sepia")
 
-    @commands.command(name='swirl', description="Shows the image as swirl.", usage="swirl [image]")
-    async def _swirl(self, ctx: ApolloContext,
-                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
-        await dagpi_process(ctx, image, "swirl")
-
     @commands.command(name='paint', description="Shows the image as painted.", usage="paint [image]")
     async def _paint(self, ctx: ApolloContext,
                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:

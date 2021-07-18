@@ -2,7 +2,6 @@ from io import BytesIO
 from typing import Union
 from time import time
 
-import asyncdagpi
 import discord
 from discord.ext import commands
 from wand.image import Image as WandImage
@@ -92,6 +91,19 @@ class Image(commands.Cog):
         embed.set_image(url=f"attachment://{ctx.command.name}.png")
         embed.set_footer(text=f"Processed in {(end-start) * 1000:,.0f}ms")
         await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
+
+    @commands.command(name='swirl', description="Swirl an image.", usage="swirl [image]")
+    async def _swirl(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+        start = time()
+        blob = await imageToBytes(ctx, image)
+        with WandImage(blob=blob) as image:
+            image.swirl(degree=100)
+            buffer = image.make_blob('png')
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(text=f"Processed in {(end-start) * 1000:,.0f}ms")
+        await ctx.reply(file=fileFromBytes(ctx, BytesIO(buffer)), embed=embed, can_delete=True)
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
