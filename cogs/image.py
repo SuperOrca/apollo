@@ -18,13 +18,15 @@ class Image(commands.Cog):
             self.bot.minecraft_blocks = {}
             self.bot.loop.create_task(create_minecraft_blocks(self.bot))
         self._cd_type = commands.BucketType.user
-        self._cd = commands.CooldownMapping.from_cooldown(1, 10., self._cd_type)
+        self._cd = commands.CooldownMapping.from_cooldown(
+            1, 10., self._cd_type)
 
     async def cog_check(self, ctx: ApolloContext):
         bucket = self._cd.get_bucket(ctx.message)
         retry_after = bucket.update_rate_limit()
         if retry_after:
-            raise commands.CommandOnCooldown(self._cd, retry_after, self._cd_type)
+            raise commands.CommandOnCooldown(
+                self._cd, retry_after, self._cd_type)
         else:
             return True
 
@@ -52,6 +54,7 @@ class Image(commands.Cog):
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.png")
         embed.set_footer(text=f"Processed in {(end-start) * 1000:,.0f}ms")
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
     async def _ultrawide(self, ctx: ApolloContext,
