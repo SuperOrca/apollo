@@ -138,7 +138,7 @@ class Image(commands.Cog):
         await ctx.reply(file=file, embed=embed, can_delete=True)
 
     class MinecraftFlags(commands.FlagConverter, delimiter=' ', prefix='--'):
-        quality: int = 64
+        quality: str = '64'
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
@@ -148,7 +148,7 @@ class Image(commands.Cog):
         """
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """
-        if not 0 < flags.quality <= 100:
+        if not 0 < int(flags.quality) <= 100:
             raise commands.BadArgument("Quality must be between 1 and 100.")
         b = await imageToBytes(ctx, image)
         start = time()
