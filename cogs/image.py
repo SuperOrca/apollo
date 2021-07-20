@@ -138,7 +138,7 @@ class Image(commands.Cog):
         await ctx.reply(file=file, embed=embed, can_delete=True)
 
     class MinecraftFlags(commands.FlagConverter, delimiter=' ', prefix='--'):
-        quality: Union[int, None]
+        quality: int = commands.flag(name='quality', default=64)
 
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
