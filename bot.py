@@ -164,6 +164,11 @@ class Apollo(commands.AutoShardedBot):
                 "uses": data[1] + 1
             })
 
+    async def on_guild_remove(self, guild: discord.Guild):
+        if not guild: return
+
+        self.db.execute("DELETE FROM prefixes WHERE id = :id", values={"id": guild.id})
+
     @staticmethod
     async def send_error_embed(ctx: ApolloContext, content: str, **kwargs) -> None:
         content = content.replace('"', "`")
