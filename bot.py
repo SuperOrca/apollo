@@ -154,10 +154,10 @@ class Apollo(commands.AutoShardedBot):
         await self.process_commands(message)
 
     async def on_command_completion(self, ctx: ApolloContext):
-        data = self.db.fetch_one("SELECT * FROM usage WHERE command = :command", values={"command": ctx.command})
+        data = await self.db.fetch_one("SELECT * FROM usage WHERE command = :command", values={"command": ctx.command})
         if data is None:
             data = (ctx.command, 0)
-        self.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:command, :uses)", values={
+        await self.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:command, :uses)", values={
             "command": data[0],
             "uses": data[1] + 1
         })
