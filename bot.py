@@ -155,7 +155,7 @@ class Apollo(commands.AutoShardedBot):
 
     async def on_command_completion(self, ctx: ApolloContext):
         if str(ctx.command.parent) != 'jishaku':
-            cmd = str(ctx.command.parent) or ctx.command.name
+            cmd = str(ctx.command.parent or ctx.command.name)
             data = await self.db.fetch_one("SELECT * FROM usage WHERE command = :command", values={"command": cmd})
             if data is None:
                 data = (cmd, 0)
