@@ -112,13 +112,13 @@ class Apollo(commands.AutoShardedBot):
             prefix = None
         return getenv('DEFAULT_PREFIX') if prefix is None else prefix[1]
 
-    async def before_invoke_(self, ctx: ApolloContext):
+    async def before_invoke_(self, ctx: ApolloContext) -> None:
         await ctx.trigger_typing()
 
-    async def send_owner(self, content: str = None, **kwargs):
+    async def send_owner(self, content: str = None, **kwargs) -> None:
         await self.get_user(self.owner_ids[0]).send(content, **kwargs)
 
-    def load(self):
+    def load(self) -> None:
         for file in Path('cogs').glob('**/*.py'):
             *tree, _ = file.parts
             try:
@@ -146,10 +146,12 @@ class Apollo(commands.AutoShardedBot):
             return
         if message.content.startswith('jsk') and message.author.id == int(getenv('OWNER_ID')):
             message.content = self.user.mention + " " + message.content
+        if self.user.mentioned_in(message):
+            return await message.reply(embed=f"The server prefix is `{self.get_guild_prefix(message)}`.")
         await self.process_commands(message)
 
     @staticmethod
-    async def send_error_embed(ctx: ApolloContext, content: str, **kwargs):
+    async def send_error_embed(ctx: ApolloContext, content: str, **kwargs) -> None:
         content = content.replace('"', "`")
         embed = discord.Embed(
             description=f"⚠ {content}", color=discord.Color.red())
@@ -195,13 +197,13 @@ class Apollo(commands.AutoShardedBot):
             + "\n```"
         )
 
-    async def on_socket_response(self, msg):
+    async def on_socket_response(self, msg) -> None:
         self.socket_stats[msg.get('t')] += 1
 
     async def get_context(self, message: discord.Message, *, cls=None):
         return await super().get_context(message, cls=cls or ApolloContext)
 
-    def get_message(self, message_id):
+    def get_message(self, message_id) -> discord.Message:
         return self._connection._get_message(message_id)
 
     def run(self) -> None:
