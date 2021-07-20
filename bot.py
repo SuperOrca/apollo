@@ -155,9 +155,10 @@ class Apollo(commands.AutoShardedBot):
 
     async def on_command_completion(self, ctx: ApolloContext):
         if ctx.command.parent != 'jishaku':
-            data = await self.db.fetch_one("SELECT * FROM usage WHERE command = :command", values={"command": ctx.command.name})
+            cmd = ctx.command.parent or ctx.command.name
+            data = await self.db.fetch_one("SELECT * FROM usage WHERE command = :command", values={"command": cmd})
             if data is None:
-                data = (ctx.command.name, 0)
+                data = (cmd, 0)
             await self.db.execute("INSERT OR REPLACE INTO usage VALUES (:command, :uses)", values={
                 "command": data[0],
                 "uses": data[1] + 1
