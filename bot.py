@@ -68,6 +68,9 @@ class Apollo(commands.AutoShardedBot):
         await self.db.execute(
             "CREATE TABLE IF NOT EXISTS prefixes (id BIGINT PRIMARY KEY, prefix TEXT)"
         )
+        await self.db.execute(
+            "CREATE TABLE IF NOT EXISTS usage (command TEXT PRIMARY KEY, uses BIGINT)"
+        )
         self.session = aiohttp.ClientSession(
             headers={'User-Agent': "Apollo Bot v{} Python/{}.{} aiohttp/{}".format(
                 self.__version__, sys.version_info[0], sys.version_info[1], aiohttp.__version__)},
@@ -149,6 +152,20 @@ class Apollo(commands.AutoShardedBot):
         if self.user.mentioned_in(message):
             return await message.reply(f"The server prefix is `{await self.get_guild_prefix(message)}`.")
         await self.process_commands(message)
+
+    async def on_command_completion(self, ctx: Context):
+        await self.db.execute(
+            f"""
+            IF EXISTS (SELECT 1 FROM usage WHERE command=:name
+            BEGIN
+                UPDATE usage SET uses=uses+1 WHERE command=:name
+            END
+            ELSE
+            BEGIN
+                INSERT INTO usage VALUES (:name, 1)
+            END
+            """, values={"name": ctx.command}
+        )
 
     @staticmethod
     async def send_error_embed(ctx: ApolloContext, content: str, **kwargs) -> None:
