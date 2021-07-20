@@ -144,15 +144,13 @@ class Image(commands.Cog):
                       aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
     async def _minecraft(self, ctx: ApolloContext, image: Union[
-            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None, flags: MinecraftFlags = None) -> None:
+            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None, quality: int = None) -> None:
         """
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """
-        if not 0 < int(flags.quality) <= 100:
-            raise commands.BadArgument("Quality must be between 1 and 100.")
         b = await imageToBytes(ctx, image)
         start = time()
-        file = discord.File(await process_minecraft(self.bot, b, flags.quality), f"{ctx.command.name}.png")
+        file = discord.File(await process_minecraft(self.bot, b, quality), f"{ctx.command.name}.png")
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.png")
