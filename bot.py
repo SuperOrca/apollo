@@ -153,7 +153,7 @@ class Apollo(commands.AutoShardedBot):
             return await message.reply(f"The server prefix is `{await self.get_guild_prefix(message)}`.")
         await self.process_commands(message)
 
-    async def on_command_completion(self, ctx: Context):
+    async def on_command_completion(self, ctx: ApolloContext):
         await self.db.execute(
             f"""
             IF EXISTS (SELECT 1 FROM usage WHERE command=:name
