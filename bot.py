@@ -110,7 +110,7 @@ class Apollo(commands.AutoShardedBot):
 
     async def get_guild_prefix(self, message: discord.Message) -> list:
         try:
-            prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id=:id", values={"id": message.guild.id})
+            prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id})
         except AttributeError:
             prefix = None
         return getenv('DEFAULT_PREFIX') if prefix is None else prefix[1]
@@ -156,9 +156,9 @@ class Apollo(commands.AutoShardedBot):
     async def on_command_completion(self, ctx: ApolloContext):
         await self.db.execute(
             f"""
-            IF EXISTS (SELECT * FROM usage WHERE command=:name)
-                UPDATE usage SET uses=uses+1 WHERE command=:name
-                ELSE
+            IF EXISTS (SELECT * FROM usage WHERE command = :name)
+                UPDATE usage SET uses = uses + 1 WHERE command = :name
+            ELSE
                 INSERT INTO usage VALUES (:name, 1)
             """, values={"name": ctx.command}
         )
