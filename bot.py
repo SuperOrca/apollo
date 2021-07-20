@@ -154,14 +154,14 @@ class Apollo(commands.AutoShardedBot):
         await self.process_commands(message)
 
     async def on_command_completion(self, ctx: ApolloContext):
-        print(ctx.command.parent)
-        data = await self.db.fetch_one("SELECT * FROM usage WHERE command = :command", values={"command": ctx.command.name})
-        if data is None:
-            data = (ctx.command.name, 0)
-        await self.db.execute("INSERT OR REPLACE INTO usage VALUES (:command, :uses)", values={
-            "command": data[0],
-            "uses": data[1] + 1
-        })
+        if ctx.command.parent != 'jishaku':
+            data = await self.db.fetch_one("SELECT * FROM usage WHERE command = :command", values={"command": ctx.command.name})
+            if data is None:
+                data = (ctx.command.name, 0)
+            await self.db.execute("INSERT OR REPLACE INTO usage VALUES (:command, :uses)", values={
+                "command": data[0],
+                "uses": data[1] + 1
+            })
 
     @staticmethod
     async def send_error_embed(ctx: ApolloContext, content: str, **kwargs) -> None:
