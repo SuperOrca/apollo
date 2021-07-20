@@ -30,8 +30,8 @@ __all__ = (
 )
 
 STANDARD_FEATURES = (
-VoiceFeature, GuildFeature, FilesystemFeature, InvocationFeature, ShellFeature, PythonFeature, ManagementFeature,
-RootCommand)
+    VoiceFeature, GuildFeature, FilesystemFeature, InvocationFeature, ShellFeature, PythonFeature, ManagementFeature,
+    RootCommand)
 
 OPTIONAL_FEATURES = []
 

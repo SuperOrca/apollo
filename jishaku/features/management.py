@@ -11,18 +11,16 @@ The jishaku extension and bot control commands.
 
 """
 
+import io
 import itertools
 import math
 import time
 import traceback
-import json
 from datetime import datetime
-import io
 from typing import Optional
 
-import aiofile
-from discord.ext import commands
 import discord
+from discord.ext import commands
 
 from jishaku.features.baseclass import Feature
 from jishaku.flags import JISHAKU_USE_BRAILLE_J
@@ -114,13 +112,14 @@ class ManagementFeature(Feature):
 
     @Feature.Command(parent="jsk", name="grammar")
     async def jsk_grammar(self, ctx: commands.Context, *, text: str):
-        await ctx.send(''.join(char.upper() if index % 2 == 0 else char.lower() for index, char in enumerate(text, start=1)))
+        await ctx.send(
+            ''.join(char.upper() if index % 2 == 0 else char.lower() for index, char in enumerate(text, start=1)))
 
     @Feature.Command(parent="jsk", name="socketstats")
     async def jsk_socketstats(self, ctx: commands.Context):
         delta = datetime.utcnow() - ctx.bot.uptime
         minutes = delta.total_seconds() / 60
-        data = {key: f'{value} ({value/minutes:.2f}/min)' for key, value in sorted(
+        data = {key: f'{value} ({value / minutes:.2f}/min)' for key, value in sorted(
             dict(ctx.bot.socket_stats).items(), reverse=True, key=lambda item: item[1])}
         table = io.StringIO()
         header = "{:<80} {:<30}\n".format('Name', 'Value')

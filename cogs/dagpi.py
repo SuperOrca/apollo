@@ -195,7 +195,8 @@ class Dagpi(commands.Cog):
 
     @commands.command(name='polaroid', description="Shows the image with polaroid.", usage="shatter [image]")
     async def _polaroid(self, ctx: ApolloContext,
-                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                        image: Union[
+                            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, "polaroid")
 
     @commands.command(name='petpet', description="Shows the image with petpet.", usage="petpet [image]")
@@ -220,7 +221,8 @@ class Dagpi(commands.Cog):
 
     @commands.command(name='dissolve', description="Shows the image with dissolve.", usage="dissolve [image]")
     async def _dissolve(self, ctx: ApolloContext,
-                        image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
+                        image: Union[
+                            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         await dagpi_process(ctx, image, "dissolve")
 
     @commands.command(name='cube', description="Shows the image with cube.", usage="cube [image]")

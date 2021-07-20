@@ -112,7 +112,7 @@ class GuildFeature(Feature):
                     for key in dict(discord.Permissions.all()).keys():
                         if not permissions[key][0]:
                             permissions[key] = (
-                            True, f"it is granted by Administrator on the server-wide {role.name} permission")
+                                True, f"it is granted by Administrator on the server-wide {role.name} permission")
 
             # If Administrator was granted, there is no reason to even do channel permissions
             if not is_administrator:
