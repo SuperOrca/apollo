@@ -14,7 +14,8 @@ Paginator-related tools and interfaces for Jishaku.
 import collections
 
 # emoji settings, this sets what emoji are used for PaginatorInterface
-EmojiSettings = collections.namedtuple('EmojiSettings', 'start back forward end close')
+EmojiSettings = collections.namedtuple(
+    'EmojiSettings', 'start back forward end close')
 
 EMOJI_DEFAULT = EmojiSettings(
     start="\N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}",

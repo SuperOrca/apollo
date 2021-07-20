@@ -156,7 +156,8 @@ def content_type_inspection(obj):
     total = len(obj)
     types = collections.Counter(type(x) for x in obj)
 
-    output = ', '.join(f'{x.__name__} ({y * 100 / total:.1f}\uFF05)' for x, y in types.most_common(3))
+    output = ', '.join(
+        f'{x.__name__} ({y * 100 / total:.1f}\uFF05)' for x, y in types.most_common(3))
     if len(types) > 3:
         output += ', ...'
 

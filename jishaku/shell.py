@@ -71,8 +71,10 @@ class ShellReader:
         self.loop = loop or asyncio.get_event_loop()
         self.timeout = timeout
 
-        self.stdout_task = self.make_reader_task(self.process.stdout, self.stdout_handler)
-        self.stderr_task = self.make_reader_task(self.process.stderr, self.stderr_handler)
+        self.stdout_task = self.make_reader_task(
+            self.process.stdout, self.stdout_handler)
+        self.stderr_task = self.make_reader_task(
+            self.process.stderr, self.stderr_handler)
 
         self.queue = asyncio.Queue(maxsize=250)
 

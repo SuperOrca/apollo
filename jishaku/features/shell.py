@@ -42,7 +42,8 @@ class ShellFeature(Feature):
                     paginator = WrappedPaginator(prefix=prefix, max_size=1975)
                     paginator.add_line(f"{reader.ps1} {argument.content}\n")
 
-                    interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
+                    interface = PaginatorInterface(
+                        ctx.bot, paginator, owner=ctx.author)
                     self.bot.loop.create_task(interface.send_to(ctx))
 
                     async for line in reader:

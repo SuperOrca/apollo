@@ -91,7 +91,8 @@ class PythonFeature(Feature):
         try:
             async with ReplResponseReactor(ctx.message):
                 with self.submit(ctx):
-                    executor = AsyncCodeExecutor(argument.content, scope, arg_dict=arg_dict)
+                    executor = AsyncCodeExecutor(
+                        argument.content, scope, arg_dict=arg_dict)
                     async for send, result in AsyncSender(executor):
                         if result is None:
                             continue
@@ -130,11 +131,13 @@ class PythonFeature(Feature):
                             else:
                                 # inconsistency here, results get wrapped in codeblocks when they are too large
                                 #  but don't if they're not. probably not that bad, but noting for later review
-                                paginator = WrappedPaginator(prefix='```py', suffix='```', max_size=1985)
+                                paginator = WrappedPaginator(
+                                    prefix='```py', suffix='```', max_size=1985)
 
                                 paginator.add_line(result)
 
-                                interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
+                                interface = PaginatorInterface(
+                                    ctx.bot, paginator, owner=ctx.author)
                                 send(await interface.send_to(ctx))
 
         finally:
@@ -155,11 +158,13 @@ class PythonFeature(Feature):
         try:
             async with ReplResponseReactor(ctx.message):
                 with self.submit(ctx):
-                    executor = AsyncCodeExecutor(argument.content, scope, arg_dict=arg_dict)
+                    executor = AsyncCodeExecutor(
+                        argument.content, scope, arg_dict=arg_dict)
                     async for send, result in AsyncSender(executor):
                         self.last_result = result
 
-                        header = repr(result).replace("``", "`\u200b`").replace(self.bot.http.token, "[token omitted]")
+                        header = repr(result).replace("``", "`\u200b`").replace(
+                            self.bot.http.token, "[token omitted]")
 
                         if len(header) > 485:
                             header = header[0:482] + "..."
@@ -178,11 +183,13 @@ class PythonFeature(Feature):
                                 fp=io.BytesIO(text.encode('utf-8'))
                             )))
                         else:
-                            paginator = WrappedPaginator(prefix="```prolog", max_size=1985)
+                            paginator = WrappedPaginator(
+                                prefix="```prolog", max_size=1985)
 
                             paginator.add_line(text)
 
-                            interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
+                            interface = PaginatorInterface(
+                                ctx.bot, paginator, owner=ctx.author)
                             send(await interface.send_to(ctx))
         finally:
             scope.clear_intersection(arg_dict)
@@ -209,5 +216,6 @@ class PythonFeature(Feature):
 
                 paginator.add_line(text)
 
-                interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
+                interface = PaginatorInterface(
+                    ctx.bot, paginator, owner=ctx.author)
                 await interface.send_to(ctx)

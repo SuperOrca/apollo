@@ -54,7 +54,8 @@ def wrap_code(code: str, args: str = '') -> ast.Module:
 
     # We do not use the keyword transformer here, since it might produce misleading disassembly.
 
-    is_asyncgen = any(isinstance(node, ast.Yield) for node in ast.walk(definition))
+    is_asyncgen = any(isinstance(node, ast.Yield)
+                      for node in ast.walk(definition))
     last_expr = definition.body[-1]
 
     # if the last part isn't an expression, ignore it
@@ -84,9 +85,11 @@ def disassemble(code: str, scope: Scope = None, arg_dict: dict = None):
     scope = scope or Scope()
 
     wrapped = wrap_code(code, args=', '.join(arg_names))
-    exec(compile(wrapped, '<repl>', 'exec'), scope.globals, scope.locals)  # pylint: disable=exec-used
+    exec(compile(wrapped, '<repl>', 'exec'), scope.globals,
+         scope.locals)  # pylint: disable=exec-used
 
-    func_def = scope.locals.get('_repl_coroutine') or scope.globals['_repl_coroutine']
+    func_def = scope.locals.get(
+        '_repl_coroutine') or scope.globals['_repl_coroutine']
 
     # pylint is gonna really hate this part onwards
     # pylint: disable=protected-access, invalid-name

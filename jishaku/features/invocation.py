@@ -158,9 +158,12 @@ class InvocationFeature(Feature):
                 fp=io.BytesIO(source_text.encode('utf-8'))
             ))
         else:
-            paginator = WrappedPaginator(prefix='```py', suffix='```', max_size=1985)
+            paginator = WrappedPaginator(
+                prefix='```py', suffix='```', max_size=1985)
 
-            paginator.add_line(source_text.replace('```', '``\N{zero width space}`'))
+            paginator.add_line(source_text.replace(
+                '```', '``\N{zero width space}`'))
 
-            interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
+            interface = PaginatorInterface(
+                ctx.bot, paginator, owner=ctx.author)
             await interface.send_to(ctx)

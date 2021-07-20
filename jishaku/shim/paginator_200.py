@@ -98,7 +98,8 @@ class PaginatorInterface(ui.View):  # pylint: disable=too-many-instance-attribut
         # pylint: disable=protected-access
         paginator_pages = list(self.paginator._pages)
         if len(self.paginator._current_page) > 1:
-            paginator_pages.append('\n'.join(self.paginator._current_page) + '\n' + (self.paginator.suffix or ''))
+            paginator_pages.append(
+                '\n'.join(self.paginator._current_page) + '\n' + (self.paginator.suffix or ''))
         # pylint: enable=protected-access
 
         return paginator_pages
@@ -117,7 +118,8 @@ class PaginatorInterface(ui.View):  # pylint: disable=too-many-instance-attribut
         Returns the current page the paginator interface is on.
         """
 
-        self._display_page = max(0, min(self.page_count - 1, self._display_page))
+        self._display_page = max(
+            0, min(self.page_count - 1, self._display_page))
         return self._display_page
 
     @display_page.setter

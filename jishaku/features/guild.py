@@ -39,14 +39,16 @@ class GuildFeature(Feature):
             # Check that this is denied and it is not already denied
             # (we want to show the lowest-level reason for the denial)
             if value and permissions[key][0]:
-                permissions[key] = (False, f"it is the channel's {name} overwrite")
+                permissions[key] = (
+                    False, f"it is the channel's {name} overwrite")
 
         # Then allows
         for key, value in dict(allow).items():
             # Check that this is allowed and it is not already allowed
             # (we want to show the lowest-level reason for the allowance)
             if value and not permissions[key][0]:
-                permissions[key] = (True, f"it is the channel's {name} overwrite")
+                permissions[key] = (
+                    True, f"it is the channel's {name} overwrite")
 
     @staticmethod
     def chunks(array: list, chunk_size: int):
@@ -70,7 +72,8 @@ class GuildFeature(Feature):
         It calculates permissions the same way Discord does, while keeping track of the source.
         """
 
-        member_ids = {target.id: target for target in targets if isinstance(target, discord.Member)}
+        member_ids = {target.id: target for target in targets if isinstance(
+            target, discord.Member)}
         roles = []
 
         for target in targets:
@@ -89,21 +92,24 @@ class GuildFeature(Feature):
         if member_ids and channel.guild.owner_id in member_ids:
             # Is owner, has all perms
             for key in dict(discord.Permissions.all()).keys():
-                permissions[key] = (True, f"{channel.guild.owner.mention} owns the server")
+                permissions[key] = (
+                    True, f"{channel.guild.owner.mention} owns the server")
         else:
             # Otherwise, either not a member or not the guild owner, calculate perms manually
             is_administrator = False
 
             # Handle guild-level perms first
             for key, value in dict(channel.guild.default_role.permissions).items():
-                permissions[key] = (value, "it is the server-wide @everyone permission")
+                permissions[key] = (
+                    value, "it is the server-wide @everyone permission")
 
             for role in roles:
                 for key, value in dict(role.permissions).items():
                     # Roles can only ever allow permissions
                     # Denying a permission does nothing if a lower role allows it
                     if value and not permissions[key][0]:
-                        permissions[key] = (value, f"it is the server-wide {role.name} permission")
+                        permissions[key] = (
+                            value, f"it is the server-wide {role.name} permission")
 
                 # Then administrator handling
                 if role.permissions.administrator:
@@ -171,7 +177,8 @@ class GuildFeature(Feature):
 
         for key, value in permissions.items():
             if value[0]:
-                allows.append(f"\N{WHITE HEAVY CHECK MARK} {key} (because {value[1]})")
+                allows.append(
+                    f"\N{WHITE HEAVY CHECK MARK} {key} (because {value[1]})")
             else:
                 denies.append(f"\N{CROSS MARK} {key} (because {value[1]})")
 

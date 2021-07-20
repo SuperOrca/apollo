@@ -18,7 +18,8 @@ import pkg_resources
 from braceexpand import UnbalancedBracesError, braceexpand
 from discord.ext import commands
 
-__all__ = ('find_extensions_in', 'resolve_extensions', 'package_version', 'ExtensionConverter')
+__all__ = ('find_extensions_in', 'resolve_extensions',
+           'package_version', 'ExtensionConverter')
 
 
 def find_extensions_in(path: typing.Union[str, pathlib.Path]) -> list:

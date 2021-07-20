@@ -32,7 +32,8 @@ class FilesystemFeature(Feature):
     Feature containing the filesystem-related commands
     """
 
-    __cat_line_regex = re.compile(r"(?:\.\/+)?(.+?)(?:#L?(\d+)(?:\-L?(\d+))?)?$")
+    __cat_line_regex = re.compile(
+        r"(?:\.\/+)?(.+?)(?:#L?(\d+)(?:\-L?(\d+))?)?$")
 
     @Feature.Command(parent="jsk", name="cat")
     async def jsk_cat(self, ctx: commands.Context, argument: str):  # pylint: disable=too-many-locals
@@ -73,7 +74,8 @@ class FilesystemFeature(Feature):
                     if line_span:
                         content, *_ = guess_file_traits(file.read())
 
-                        lines = content.split('\n')[line_span[0] - 1:line_span[1]]
+                        lines = content.split(
+                            '\n')[line_span[0] - 1:line_span[1]]
 
                         await ctx.reply(file=discord.File(
                             filename=pathlib.Path(file.name).name,
@@ -85,8 +87,10 @@ class FilesystemFeature(Feature):
                             fp=file
                         ))
                 else:
-                    paginator = WrappedFilePaginator(file, line_span=line_span, max_size=1985)
-                    interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
+                    paginator = WrappedFilePaginator(
+                        file, line_span=line_span, max_size=1985)
+                    interface = PaginatorInterface(
+                        ctx.bot, paginator, owner=ctx.author)
                     await interface.send_to(ctx)
         except UnicodeDecodeError:
             return await ctx.reply(f"`{path}`: Couldn't determine the encoding of this file.")
@@ -134,11 +138,13 @@ class FilesystemFeature(Feature):
                 ))
             else:
                 try:
-                    paginator = WrappedFilePaginator(io.BytesIO(data), language_hints=hints, max_size=1985)
+                    paginator = WrappedFilePaginator(io.BytesIO(
+                        data), language_hints=hints, max_size=1985)
                 except UnicodeDecodeError:
                     return await ctx.reply(f"Couldn't determine the encoding of the response. (status code {code})")
                 except ValueError as exc:
                     return await ctx.reply(f"Couldn't read response (status code {code}), {exc}")
 
-                interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
+                interface = PaginatorInterface(
+                    ctx.bot, paginator, owner=ctx.author)
                 await interface.send_to(ctx)

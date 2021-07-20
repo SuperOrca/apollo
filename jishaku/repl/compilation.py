@@ -123,8 +123,10 @@ class AsyncCodeExecutor:  # pylint: disable=too-few-public-methods
         self.loop = loop or asyncio.get_event_loop()
 
     def __aiter__(self):
-        exec(compile(self.code, '<repl>', 'exec'), self.scope.globals, self.scope.locals)  # pylint: disable=exec-used
-        func_def = self.scope.locals.get('_repl_coroutine') or self.scope.globals['_repl_coroutine']
+        exec(compile(self.code, '<repl>', 'exec'), self.scope.globals,
+             self.scope.locals)  # pylint: disable=exec-used
+        func_def = self.scope.locals.get(
+            '_repl_coroutine') or self.scope.globals['_repl_coroutine']
 
         return self.traverse(func_def)
 
