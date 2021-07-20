@@ -143,8 +143,8 @@ class Image(commands.Cog):
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
-    async def _minecraft(self, ctx: ApolloContext, image: Union[
-            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None, flags: MinecraftFlags = None) -> None:
+    async def _minecraft(self, ctx: ApolloContext, flags: MinecraftFlags, image: Union[
+            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None) -> None:
         """
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """
