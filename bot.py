@@ -157,13 +157,9 @@ class Apollo(commands.AutoShardedBot):
         await self.db.execute(
             f"""
             IF EXISTS (SELECT * FROM usage WHERE command=:name)
-            BEGIN
                 UPDATE usage SET uses=uses+1 WHERE command=:name
-            END
-            ELSE
-            BEGIN
+                ELSE
                 INSERT INTO usage VALUES (:name, 1)
-            END
             """, values={"name": ctx.command}
         )
 
