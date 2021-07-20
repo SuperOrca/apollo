@@ -156,7 +156,7 @@ class Apollo(commands.AutoShardedBot):
     async def on_command_completion(self, ctx: ApolloContext):
         await self.db.execute(
             f"""
-            IF EXISTS (SELECT 1 FROM usage WHERE command=:name
+            IF EXISTS (SELECT 1 FROM usage WHERE command=:name)
             BEGIN
                 UPDATE usage SET uses=uses+1 WHERE command=:name
             END
