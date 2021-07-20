@@ -89,11 +89,11 @@ async def getImage(ctx: ApolloContext,
         return str(ctx.author.avatar.url)
 
 
-async def process_minecraft(bot, b: BytesIO) -> BytesIO:
+async def process_minecraft(bot, b: BytesIO, quality=64) -> BytesIO:
     minecraft_array = np.array(list(bot.minecraft_blocks.keys()))
     np.expand_dims(minecraft_array, axis=-1)
     image = Image.open(b)
-    image = image.convert("RGBA").resize((64, 64))
+    image = image.convert("RGBA").resize((quality, quality))
     with Image.new("RGBA", (image.width * 16, image.height * 16)) as final_image:
         arr = np.asarray(image)
         np.expand_dims(arr, axis=-1)
@@ -111,14 +111,14 @@ async def process_minecraft(bot, b: BytesIO) -> BytesIO:
     return buffer
 
 
-async def create_minecraft_blocks(bot):
+async def create_minecraft_blocks(bot) -> None:
     for _file in os.listdir("assets/minecraft_blocks"):
         async with aiofile.async_open("assets/minecraft_blocks/" + _file, "rb") as afp:
             b = await afp.read()
             await resize_and_save_minecraft_blocks(bot, BytesIO(b))
 
 
-async def resize_and_save_minecraft_blocks(bot, b):
+async def resize_and_save_minecraft_blocks(bot, b) -> None:
     try:
         with Image.open(b) as image:
             image = image.convert("RGBA")
