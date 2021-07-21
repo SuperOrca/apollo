@@ -24,6 +24,22 @@ from utils.help import ApolloHelp
 
 load_dotenv()
 
+allowed_mentions = discord.AllowedMentions.none()
+
+intents = discord.Intents(
+    guilds=True,
+    members=True,
+    bans=True,
+    emojis=True,
+    voice_states=True,
+    messages=True,
+    reactions=True
+)
+
+description = """
+An open-source general-use discord.py bot.
+"""
+
 
 class Apollo(commands.AutoShardedBot):
     @staticmethod
@@ -32,19 +48,6 @@ class Apollo(commands.AutoShardedBot):
 
     def __init__(self) -> None:
         self.connector = aiohttp.TCPConnector(limit=200)
-        allowed_mentions = discord.AllowedMentions.none()
-        intents = discord.Intents(
-            guilds=True,
-            members=True,
-            bans=True,
-            emojis=True,
-            voice_states=True,
-            messages=True,
-            reactions=True
-        )
-        description = """
-        An open-source general-use discord.py bot.
-        """
         super().__init__(
             command_prefix=self._get_prefix,
             help_command=ApolloHelp(),
