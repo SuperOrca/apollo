@@ -27,8 +27,8 @@ class Economy(commands.Cog):
         member = member or ctx.author
         acc = await Account.fetch(self.bot, member)
         embed = discord.Embed(color=discord.Color.green())
-        embed.add_field(name="Wallet", description=f"${acc.wallet:,}", inline=True)
-        embed.add_field(name="Bank", description=f"${acc.bank:,}", inline=True)
+        embed.add_field(name="Wallet", value=f"${acc.wallet:,}", inline=True)
+        embed.add_field(name="Bank", value=f"${acc.bank:,}", inline=True)
         embed.set_author(name=f"{member}'s Account", icon_url=member.avatar.url)
         await ctx.reply(embed=embed)
 
