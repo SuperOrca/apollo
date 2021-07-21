@@ -8,6 +8,7 @@ from utils.context import ApolloContext
 class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self._cd_type = commands.BucketType.user
         self._cd = commands.CooldownMapping.from_cooldown(
             1, 2.5, self._cd_type)
 
