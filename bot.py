@@ -217,12 +217,12 @@ class Apollo(commands.AutoShardedBot):
                 ctx, "An unknown error has occured. I have contacted the developers."
             )
         await self.send_owner(
-            "An exception in a user's command:\n```py\n"
+            f"An exception in a {ctx.author}'s ({ctx.author.id}) command:\n```py\n"
             + "".join(
                 traceback.format_exception(
                     type(error), error, error.__traceback__)
             )
-            + "\n```"
+            + f"\n```\nCommand: {ctx.message.content}"
         )
 
     async def on_socket_response(self, msg) -> None:
