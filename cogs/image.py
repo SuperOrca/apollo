@@ -148,6 +148,8 @@ class Image(commands.Cog):
         """
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """
+        if 128 < quality < 1:
+            raise commands.BadArgument("Quality must be between 1 and 128.")
         b = await imageToBytes(ctx, image)
         start = time()
         file = discord.File(await process_minecraft(self.bot, b, quality), f"{ctx.command.name}.png")
