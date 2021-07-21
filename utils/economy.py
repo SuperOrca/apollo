@@ -14,20 +14,20 @@ class Account:
 
     async def withdraw(self, money: int):
         if money <= 0:
-            raise commands.BadArgument(f"You must withdraw at least $1.")
+            raise commands.BadArgument(f"You must withdraw at least `$1`.")
         if self.bank < money:
             raise commands.BadArgument(
-                f"You cannot withdraw more than ${self.bank:,}.")
+                f"You cannot withdraw more than `${self.bank:,}`.")
         self.bank -= money
         self.wallet += money
         await self.commit()
 
     async def deposit(self, money: int):
         if money <= 0:
-            raise commands.BadArgument(f"You must deposit at least $1.")
+            raise commands.BadArgument(f"You must deposit at least `$1`.")
         if self.wallet < money:
             raise commands.BadArgument(
-                f"You cannot deposit more than ${self.wallet:,}.")
+                f"You cannot deposit more than `${self.wallet:,}`.")
         self.wallet -= money
         self.bank += money
         await self.commit()
