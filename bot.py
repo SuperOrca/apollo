@@ -54,7 +54,7 @@ class Apollo(commands.AutoShardedBot):
             intents=intents,
             activity=discord.Game("@Apollo help"),
             strip_after_prefix=True,
-            max_messages=1000,
+            max_messages=10000,
             connector=self.connector,
         )
         self.__version__ = "1.0.0"
@@ -70,6 +70,9 @@ class Apollo(commands.AutoShardedBot):
         )
         await self.db.execute(
             "CREATE TABLE IF NOT EXISTS usage (command TEXT PRIMARY KEY, uses BIGINT)"
+        )
+        await self.db.execute(
+            "CREATE TABLE IF NOT EXISTS economy (id BIGINT PRIMARY KEY, wallet INT, bank INT, bankcap INT, multi INT, daily TIMESTAMP)"
         )
         self.session = aiohttp.ClientSession(
             headers={'User-Agent': "Apollo Bot v{} Python/{}.{} aiohttp/{}".format(
@@ -165,9 +168,11 @@ class Apollo(commands.AutoShardedBot):
             })
 
     async def on_guild_remove(self, guild: discord.Guild):
-        if not guild: return
+        if not guild:
+            return
 
-        self.db.execute("DELETE FROM prefixes WHERE id = :id", values={"id": guild.id})
+        self.db.execute("DELETE FROM prefixes WHERE id = :id",
+                        values={"id": guild.id})
 
     @staticmethod
     async def send_error_embed(ctx: ApolloContext, content: str, **kwargs) -> None:
