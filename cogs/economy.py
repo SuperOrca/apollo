@@ -21,40 +21,40 @@ class Economy(commands.Cog):
         else:
             return True
 
-    @commands.command(help="Get the balance of a member.", aliases=['bal'])
+    @commands.command(description="Get the balance of a member.", aliases=['bal'], usage="balance [member]")
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def balance(self, ctx: ApolloContext, member: commands.MemberConverter = None):
         member = member or ctx.author
         acc = await Account.fetch(self.bot, member)
-        embed = discord.Embed(
-            description=f"Wallet: ${acc.wallet:,}\nBank: ${acc.bank:,}")
-        embed.set_author(name=f"{member}'s Account",
-                         icon_url=member.avatar.url)
-        await ctx.send(embed=embed)
+        embed = discord.Embed(color=discord.Color.green())
+        embed.add_field(name="Wallet", description=f"${acc.wallet:,}", inline=True)
+        embed.add_field(name="Bank", description=f"${acc.bank:,}", inline=True)
+        embed.set_author(name=f"{member}'s Account", icon_url=member.avatar.url)
+        await ctx.reply(embed=embed)
 
-    @commands.command(help="Withdraw money from your bank.")
+    @commands.command(description="Withdraw money from your bank.", usage="withdraw <money>")
     async def withdraw(self, ctx: ApolloContext, money: int):
         acc = await Account.fetch(self.bot, ctx.author)
         await acc.withdraw(money)
-        await ctx.send(f"You withdrew ${money} from your bank.")
+        await ctx.reply(embed=discord.Embed(description=f"You withdrew ${money} from your bank.", color=discord.Color.green()))
 
-    @commands.command(help="Deposit money in your bank.", aliases=['dep'])
+    @commands.command(description="Deposit money in your bank.", aliases=['dep'], usage="deposit <money>")
     async def deposit(self, ctx: ApolloContext, money: int):
         acc = await Account.fetch(self.bot, ctx.author)
         await acc.deposit(money)
-        await ctx.send(f"You desposited ${money} in your bank.")
+        await ctx.reply(embed=discord.Embed(description=f"You desposited ${money} in your bank.", color=discord.Color.green()))
 
-    @commands.command(help="Beg for a bit of money.")
+    @commands.command(name='beg', description="Beg for a bit of money.")
     @commands.cooldown(1, 15, commands.BucketType.user)
-    async def beg(self, ctx: ApolloContext):
+    async def _beg(self, ctx: ApolloContext):
         if choice([True, False]):
             money = randint(4, 12)
             acc = await Account.fetch(self.bot, ctx.author)
             acc.wallet += money
             await acc.commit()
-            await ctx.send(f"Here you go! +${money}")
+            await ctx.reply(f"Here you go! +${money}")
         else:
-            await ctx.send("Sorry, I have no cash today. :(")
+            await ctx.reply(embed=discord.Embed(description="Sorry, I have no cash today. :(", color=discord.Color.green()))
 
 
 def setup(bot):
