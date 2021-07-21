@@ -80,6 +80,7 @@ class Apollo(commands.AutoShardedBot):
         self.session = aiohttp.ClientSession(
             headers={'User-Agent': "Apollo Bot v{} Python/{}.{} aiohttp/{}".format(
                 self.__version__, sys.version_info[0], sys.version_info[1], aiohttp.__version__)},
+            connector=self.connector,
             timeout=aiohttp.ClientTimeout(total=30),
             loop=self.loop
         )
