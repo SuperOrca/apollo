@@ -156,7 +156,7 @@ class Apollo(commands.AutoShardedBot):
             return
         if message.content.startswith('jsk') and message.author.id == int(getenv('OWNER_ID')):
             message.content = self.user.mention + " " + message.content
-        if message.content in commands.when_mentioned(self, message):
+        if self.user.id in [mention.id for mention in message.mentions]:
             return await message.reply(f"The server prefix is `{await self.get_guild_prefix(message)}`.")
         await self.process_commands(message)
 
