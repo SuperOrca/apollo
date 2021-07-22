@@ -18,11 +18,7 @@ async def dagpi_process(ctx: ApolloContext, image, feature, **kwargs) -> discord
     url = await getImage(ctx, image)
     img = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=str(url), **kwargs)
     file = discord.File(img.image, f"{ctx.command.name}.{img.format}")
-    embed = discord.Embed(color=discord.Color.dark_blue())
-    embed.set_image(url=f"attachment://{ctx.command.name}.{img.format}")
-    embed.set_footer(
-        text=f"Processed in {float(img.process_time) * 1000:,.0f}ms")
-    await ctx.reply(file=file, embed=embed, can_delete=True)
+    await ctx.reply(file=file, can_delete=True)
 
 
 async def imageToBytes(ctx, image) -> BytesIO:
