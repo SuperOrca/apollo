@@ -137,9 +137,22 @@ class Image(commands.Cog):
         file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')
         await ctx.reply(file=file, embed=embed, can_delete=True)
 
-    class MinecraftFlags(commands.FlagConverter, delimiter=' ', prefix='--'):
-        quality: int = commands.flag(name='quality', default=64)
-
+    @commands.command(name='eigishf', descripton="Eigishf meme.", usage="eigishf [image]")
+    async def _eigishf(self, ctx: ApolloContext,
+                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+        start = time()
+        blob = await imageToBytes(ctx, image)
+        image = PILImage.open(blob)
+        with PILImage.open('assets/eigishf.jpg') as new_image:
+            image.resize((350, 350))
+            new_image = new_image.paste(image, (250, 770))
+        image.close()
+        end = time()
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.set_image(url=f"attachment://{ctx.command.name}.png")
+        embed.set_footer(text=f"Processed in {(end-start) * 1000:,.0f}ms")
+        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
+        
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
