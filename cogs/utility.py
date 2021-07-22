@@ -110,12 +110,12 @@ class Utility(commands.Cog):
 
     @commands.command(name='tts', description="Text to speech.", usage="tts <text>", aliases=['texttospeech'])
     async def _tts(self, ctx: ApolloContext, *, text: str) -> None:
-        if len(text) > 200:
+        if len(text) > 500:
             raise commands.BadArgument(
                 "The text for text to speech can not be over 200 characters.")
 
         buffer = io.BytesIO()
-        await self.tts.write_to_fp(text, buffer, slow=True, lang="en")
+        await self.bot.tts.write_to_fp(text, buffer, slow=True, lang="en")
         buffer.seek(0)
         await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
 
