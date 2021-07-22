@@ -144,9 +144,9 @@ class Image(commands.Cog):
         blob = await imageToBytes(ctx, image)
         image = PILImage.open(blob)
         with PILImage.open('assets/eigishf.jpg') as final:
-            img1 = image.resize((300, 300))
+            image = image.resize((300, 300))
             final.paste(image, (250, 770))
-        img1.close()
+        image.close()
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.png")
