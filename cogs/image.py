@@ -142,11 +142,11 @@ class Image(commands.Cog):
                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         start = time()
         blob = await imageToBytes(ctx, image)
-        image = PILImage.open(blob)
-        with PILImage.open('assets/eigishf.jpg') as new_image:
-            image.resize((350, 350))
-            new_image = new_image.paste(image, (250, 770))
-        image.close()
+        img1 = PILImage.open(blob)
+        with PILImage.open('assets/eigishf.jpg') as img2:
+            img1.resize((350, 350))
+            new_image = img2.paste(img1, (250, 770))
+        img1.close()
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.png")
