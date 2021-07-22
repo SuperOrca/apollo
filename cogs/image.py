@@ -145,13 +145,14 @@ class Image(commands.Cog):
         img1 = PILImage.open(blob)
         with PILImage.open('assets/eigishf.jpg') as img2:
             img1.resize((350, 350))
-            new_image = img2.paste(img1, (250, 770))
+            img2.paste(img1, (250, 770))
+            final_img = img2
         img1.close()
         end = time()
         embed = discord.Embed(color=discord.Color.dark_blue())
         embed.set_image(url=f"attachment://{ctx.command.name}.png")
         embed.set_footer(text=f"Processed in {(end-start) * 1000:,.0f}ms")
-        await ctx.reply(file=fileFromBytes(ctx, new_image), embed=embed, can_delete=True)
+        await ctx.reply(file=fileFromBytes(ctx, final_img), embed=embed, can_delete=True)
         
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
