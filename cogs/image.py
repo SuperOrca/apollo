@@ -144,7 +144,7 @@ class Image(commands.Cog):
         blob = await imageToBytes(ctx, image)
         img1 = PILImage.open(blob)
         with PILImage.open('assets/eigishf.jpg') as img2:
-            img1.resize((300, 300))
+            img1 = img1.resize((350, 350))
             img2.paste(img1, (250, 770))
             final_img = img2
         img1.close()
