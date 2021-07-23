@@ -1,8 +1,10 @@
-from discord.ext import commands
-import discord
 from random import choice, randint
-from utils.economy import Account
+
+import discord
+from discord.ext import commands
+
 from utils.context import ApolloContext
+from utils.economy import Account
 
 
 class Economy(commands.Cog):
@@ -36,13 +38,15 @@ class Economy(commands.Cog):
     async def withdraw(self, ctx: ApolloContext, money: int):
         acc = await Account.fetch(self.bot, ctx.author)
         await acc.withdraw(money)
-        await ctx.reply(embed=discord.Embed(description=f"You withdrew `${money}`` from your bank.", color=discord.Color.green()))
+        await ctx.reply(
+            embed=discord.Embed(description=f"You withdrew `${money}`` from your bank.", color=discord.Color.green()))
 
     @commands.command(description="Deposit money in your bank.", aliases=['dep'], usage="deposit <money>")
     async def deposit(self, ctx: ApolloContext, money: int):
         acc = await Account.fetch(self.bot, ctx.author)
         await acc.deposit(money)
-        await ctx.reply(embed=discord.Embed(description=f"You desposited `${money}`` in your bank.", color=discord.Color.green()))
+        await ctx.reply(
+            embed=discord.Embed(description=f"You desposited `${money}`` in your bank.", color=discord.Color.green()))
 
     @commands.command(name='beg', description="Beg for a bit of money.")
     @commands.cooldown(1, 15, commands.BucketType.user)
@@ -54,7 +58,8 @@ class Economy(commands.Cog):
             await acc.commit()
             await ctx.reply(embed=discord.Embed(description=f"Here you go! `+${money}`", color=discord.Color.green()))
         else:
-            await ctx.reply(embed=discord.Embed(description="Sorry, I have no cash today. :(", color=discord.Color.green()))
+            await ctx.reply(
+                embed=discord.Embed(description="Sorry, I have no cash today. :(", color=discord.Color.green()))
 
 
 def setup(bot):

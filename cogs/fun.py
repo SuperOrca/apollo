@@ -59,7 +59,8 @@ class Fun(commands.Cog):
     @commands.command(name='gayrate', description="Shows gay of member.", usage="gayrate [member]")
     async def _gayrate(self, ctx: ApolloContext, member: commands.MemberConverter = None):
         member = member or ctx.author
-        await ctx.reply(embed=discord.Embed(description=f":rainbow: **{member.name}** is {randint(1, 100)}% gay", color=discord.Color.purple()))
+        await ctx.reply(embed=discord.Embed(description=f":rainbow: **{member.name}** is {randint(1, 100)}% gay",
+                                            color=discord.Color.purple()))
 
     @commands.command(name='roast', description="what u think it does", usage="roast [member]")
     async def _roast(self, ctx: ApolloContext, member: commands.MemberConverter = None):

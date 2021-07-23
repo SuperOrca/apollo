@@ -110,7 +110,7 @@ class Utility(commands.Cog):
 
     @commands.command(name='tts', description="Text to speech.", usage="tts <text>", aliases=['texttospeech'])
     async def _tts(self, ctx: ApolloContext, *, text: str) -> None:
-        if len(text) > 500:
+        if len(text) > 1000:
             raise commands.BadArgument(
                 "The text for text to speech can not be over 200 characters.")
 

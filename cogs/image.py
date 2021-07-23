@@ -1,14 +1,13 @@
 from io import BytesIO
 from typing import Union
-from time import time
 
 import discord
+from PIL import Image as PILImage
 from discord.ext import commands
 from wand.image import Image as WandImage
-from PIL import Image as PILImage
 
 from utils.context import ApolloContext
-from utils.image import imageToBytes, fileFromBytes, getImage, create_minecraft_blocks, process_minecraft
+from utils.image import imageToBytes, fileFromBytes, create_minecraft_blocks, process_minecraft
 
 
 class Image(commands.Cog):
@@ -71,7 +70,8 @@ class Image(commands.Cog):
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='swirl', description="Swirl an image.", usage="swirl [image]")
-    async def _swirl(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _swirl(self, ctx: commands.Context,
+                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         blob = await imageToBytes(ctx, image)
         with WandImage(blob=blob) as image:
             image.swirl(degree=100)
@@ -80,7 +80,8 @@ class Image(commands.Cog):
         await ctx.reply(file=file, can_delete=True)
 
     @commands.command(name='blur', description="Blur an image.", usage="blur [image]")
-    async def _blur(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _blur(self, ctx: commands.Context,
+                    image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         blob = await imageToBytes(ctx, image)
         with WandImage(blob=blob) as image:
             image.blur(sigma=20)
@@ -89,7 +90,8 @@ class Image(commands.Cog):
         await ctx.reply(file=file, can_delete=True)
 
     @commands.command(name='sharpen', description="Sharpen an image.", usage="sharpen [image]")
-    async def _sharpen(self, ctx: commands.Context, image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
+    async def _sharpen(self, ctx: commands.Context,
+                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
         blob = await imageToBytes(ctx, image)
         with WandImage(blob=blob) as image:
             image.sharpen(sigma=10)
@@ -112,7 +114,7 @@ class Image(commands.Cog):
                       aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
     async def _minecraft(self, ctx: ApolloContext, image: Union[
-            discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None, quality: int = 64) -> None:
+        discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None, quality: int = 64) -> None:
         """
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """

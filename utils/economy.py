@@ -1,5 +1,5 @@
-from discord.ext import commands
 import discord
+from discord.ext import commands
 
 
 class Account:
@@ -33,13 +33,15 @@ class Account:
         await self.commit()
 
     async def commit(self):
-        await self.bot.db.execute("UPDATE economy SET wallet = :wallet, bank = :bank, bankcap = :bankcap, multi = :multi, daily = :daily", values={
-            "wallet": self.wallet,
-            "bank": self.bank,
-            "bankcap": self.bankcap,
-            "multi": self.multi,
-            "daily": self.daily
-        })
+        await self.bot.db.execute(
+            "UPDATE economy SET wallet = :wallet, bank = :bank, bankcap = :bankcap, multi = :multi, daily = :daily",
+            values={
+                "wallet": self.wallet,
+                "bank": self.bank,
+                "bankcap": self.bankcap,
+                "multi": self.multi,
+                "daily": self.daily
+            })
 
     @classmethod
     async def fetch(cls, bot: commands.Bot, member: discord.Member):

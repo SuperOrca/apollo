@@ -1,8 +1,10 @@
+from typing import Union
+
 import discord
 from discord.ext import commands
-from utils.image import dagpi_process
+
 from utils.context import ApolloContext
-from typing import Union
+from utils.image import dagpi_process
 
 
 class Dagpi(commands.Cog):
