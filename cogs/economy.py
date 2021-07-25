@@ -39,14 +39,14 @@ class Economy(commands.Cog):
         acc = await Account.fetch(self.bot, ctx.author)
         await acc.withdraw(money)
         await ctx.reply(
-            embed=discord.Embed(description=f"You withdrew `${money}`` from your bank.", color=discord.Color.green()))
+            embed=discord.Embed(description=f"You withdrew `${money}` from your bank.", color=discord.Color.green()))
 
     @commands.command(description="Deposit money in your bank.", aliases=['dep'], usage="deposit <money>")
     async def deposit(self, ctx: ApolloContext, money: int):
         acc = await Account.fetch(self.bot, ctx.author)
         await acc.deposit(money)
         await ctx.reply(
-            embed=discord.Embed(description=f"You desposited `${money}`` in your bank.", color=discord.Color.green()))
+            embed=discord.Embed(description=f"You desposited `${money}` in your bank.", color=discord.Color.green()))
 
     @commands.command(name='beg', description="Beg for a bit of money.")
     @commands.cooldown(1, 15, commands.BucketType.user)

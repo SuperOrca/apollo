@@ -88,19 +88,6 @@ class Utility(commands.Cog):
         else:
             raise commands.BadArgument("Invalid package.")
 
-    @commands.command(name='github', description="Shows details of a deno repository.", usage="github <repository>",
-                      aliases=['gh'])
-    async def _github(self, ctx: ApolloContext, repository: str) -> None:
-        data = await (await self.bot.session.get(f"https://api.github.com/repos/{repository}")).json()
-        if 'message' not in data:
-            embed = discord.Embed(title=data['full_name'],
-                                  url=data['html_url'], color=0x2F3136)
-            embed.set_image(
-                url=f"https://opengraph.githubassets.com/c76ba569f3d5fd1be198fd9ac5577b03dc2bd09eed29021adfd94e615aad4315/{data['full_name']}")
-            await ctx.reply(embed=embed)
-        else:
-            raise commands.BadArgument("Invalid repository.")
-
     @commands.command(name='txt', description="Text to file.", usage="txt <text>")
     async def _txt(self, ctx: ApolloContext, *, text: str) -> None:
         file = io.StringIO()

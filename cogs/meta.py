@@ -62,7 +62,7 @@ class Meta(commands.Cog):
         embed.add_field(name="Database",
                         value=f"```py\n{database:.2f} ms\n```")
         embed.set_thumbnail(url=self.bot.user.avatar.url)
-        await m.edit(embed=embed)
+        await m.edit(content=None, embed=embed)
 
     @commands.command(name='info', description="Shows information about the bot.")
     async def _info(self, ctx: ApolloContext) -> None:
