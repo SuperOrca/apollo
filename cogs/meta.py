@@ -38,9 +38,10 @@ class Meta(commands.Cog):
 
     @commands.command(name='invite', description="Shows the bot invite.")
     async def _invite(self, ctx: ApolloContext) -> None:
-        await ctx.reply(embed=discord.Embed(
-            description="Invite the bot [here](https://discord.com/api/oauth2/authorize?client_id=847566539607769089&permissions=8&scope=bot).",
-            color=discord.Color.blurple()))
+        embed = discord.Embed(color=discord.Color.blurple())
+        embed.add_field(name="Administrator", value=f"[click]({self.bot.admin_invite})", inline=True)
+        embed.add_field(name="No Permissions", value=f"[click]({self.bot.none_invite})", inline=True)
+        await ctx.reply(embed=embed)
 
     @commands.command(name='uptime', description="Shows the bot uptime.")
     async def _uptime(self, ctx: ApolloContext) -> None:

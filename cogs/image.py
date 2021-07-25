@@ -8,6 +8,7 @@ from wand.image import Image as WandImage
 
 from utils.context import ApolloContext
 from utils.image import imageToBytes, fileFromBytes, create_minecraft_blocks, process_minecraft
+from utils.converters import ImageConverter
 
 
 class Image(commands.Cog):
@@ -30,60 +31,46 @@ class Image(commands.Cog):
             return True
 
     @commands.command(name='flip', descripton="Flip an image.", usage="flip [image]")
-    async def _flip(self, ctx: ApolloContext,
-                    image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        blob = await imageToBytes(ctx, image)
-        with PILImage.open(blob) as image:
+    async def _flip(self, ctx: ApolloContext, image: ImageConverter):
+        with PILImage.open(image) as image:
             new_image = image.rotate(180)
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
-    async def _wide(self, ctx: ApolloContext,
-                    image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        blob = await imageToBytes(ctx, image)
-        with PILImage.open(blob) as image:
+    async def _wide(self, ctx: ApolloContext, image: ImageConverter):
+        with PILImage.open(image) as image:
             new_image = image.resize((image.height * 2, image.width))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
-    async def _ultrawide(self, ctx: ApolloContext,
-                         image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        blob = await imageToBytes(ctx, image)
-        with PILImage.open(blob) as image:
+    async def _ultrawide(self, ctx: ApolloContext, image: ImageConverter):
+        with PILImage.open(image) as image:
             new_image = image.resize((image.height * 4, image.width))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
-    async def _squish(self, ctx: ApolloContext,
-                      image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        blob = await imageToBytes(ctx, image)
-        with PILImage.open(blob) as image:
+    async def _squish(self, ctx: ApolloContext, image: ImageConverter):
+        with PILImage.open(image) as image:
             new_image = image.resize((image.height, image.width * 2))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='ultrasquish', descripton="Ultrasquish an image.", usage="ultrasquish [image]")
-    async def _ultrasquish(self, ctx: ApolloContext,
-                           image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        blob = await imageToBytes(ctx, image)
-        with PILImage.open(blob) as image:
+    async def _ultrasquish(self, ctx: ApolloContext, image: ImageConverter):
+        with PILImage.open(image) as image:
             new_image = image.resize((image.height, image.width * 4))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='swirl', description="Swirl an image.", usage="swirl [image]")
-    async def _swirl(self, ctx: commands.Context,
-                     image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        blob = await imageToBytes(ctx, image)
-        with WandImage(blob=blob) as image:
+    async def _swirl(self, ctx: commands.Context, image: ImageConverter):
+        with WandImage(blob=image) as image:
             image.swirl(degree=100)
             buffer = image.make_blob('png')
         file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')
         await ctx.reply(file=file, can_delete=True)
 
     @commands.command(name='blur', description="Blur an image.", usage="blur [image]")
-    async def _blur(self, ctx: commands.Context,
-                    image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        blob = await imageToBytes(ctx, image)
-        with WandImage(blob=blob) as image:
+    async def _blur(self, ctx: commands.Context, image: ImageConverter):
+        with WandImage(blob=image) as image:
             image.blur(sigma=20)
             buffer = image.make_blob('png')
         file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')
@@ -100,10 +87,8 @@ class Image(commands.Cog):
         await ctx.reply(file=file, can_delete=True)
 
     @commands.command(name='eigishf', descripton="Eigishf meme.", usage="eigishf [image]")
-    async def _eigishf(self, ctx: ApolloContext,
-                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        blob = await imageToBytes(ctx, image)
-        image = PILImage.open(blob)
+    async def _eigishf(self, ctx: ApolloContext, image: ImageConverter):
+        image = PILImage.open(image)
         with PILImage.open('assets/eigishf.jpg') as final:
             image = image.resize((300, 300))
             final.paste(image, (250, 770), image)
@@ -113,15 +98,13 @@ class Image(commands.Cog):
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
-    async def _minecraft(self, ctx: ApolloContext, image: Union[
-        discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None, quality: int = 64) -> None:
+    async def _minecraft(self, ctx: ApolloContext, image: ImageConverter, quality: int = 64) -> None:
         """
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """
         if 128 < quality or quality < 1:
             raise commands.BadArgument("Quality must be between 1 and 128.")
-        b = await imageToBytes(ctx, image)
-        file = discord.File(await process_minecraft(self.bot, b, quality), f"{ctx.command.name}.png")
+        file = discord.File(await process_minecraft(self.bot, image, quality), f"{ctx.command.name}.png")
         await ctx.reply(file=file, can_delete=True)
 
 
