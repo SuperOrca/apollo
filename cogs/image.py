@@ -20,10 +20,10 @@ def _transform(self, ctx, param):
 
         if ctx.message.attachments:
             param = Parameter(
-                param.name, param.kind, default=ctx.message.attachments[0].url, annotation=param.annotation)
+                param.name, param.kind, default=ImageConverter().to_blob(ctx, ctx.message.attachments[0].url), annotation=param.annotation)
         else:
             param = Parameter(
-                param.name, param.kind, default=ctx.author.avatar.url, annotation=param.annotation)
+                param.name, param.kind, default=ImageConverter().to_blob(ctx, ctx.author.avatar.url), annotation=param.annotation)
 
     return _old_transform(self, ctx, param)
 
