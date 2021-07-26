@@ -1,5 +1,5 @@
 from io import BytesIO
-from bot import Apollo
+from bot import ApolloContext
 from discord.ext import commands
 
 
@@ -29,8 +29,9 @@ class PrefixConverter(commands.clean_content):
 class ImageConverter(commands.Converter):
 
     async def to_blob(self, ctx: ApolloContext, url: str) -> BytesIO:
+        print(url)
         response = await ctx.bot.session.get(url)
-        return BytesIO(await response.read())
+        return await self.to_blob(ctx, BytesIO(await response.read()))
 
     async def convert(self, ctx: ApolloContext, argument: str) -> BytesIO:
 
@@ -39,29 +40,28 @@ class ImageConverter(commands.Converter):
         except commands.BadArgument:
             pass
         else:
-            await ctx.reply(f'Editing the avatar of `{member}`. If this is a mistake please specify the user/image you would like to edit before any extra arguments.')
-            return member.avatar.url
+            return await self.to_blob(ctx, member.avatar.url)
 
         if (check := yarl.URL(argument)) and check.scheme and check.host:
-            return argument
+            return await self.to_blob(ctx, argument)
 
         try:
             emoji = await commands.EmojiConverter().convert(ctx=ctx, argument=str(argument))
         except commands.EmojiNotFound:
             pass
         else:
-            return str(emoji.url)
+            return await self.to_blob(ctx, str(emoji.url))
 
         try:
             partial_emoji = await commands.PartialEmojiConverter().convert(ctx=ctx, argument=str(argument))
         except commands.PartialEmojiConversionFailure:
             pass
         else:
-            return str(partial_emoji.url)
+            return await self.to_blob(ctx, str(partial_emoji.url))
 
         url = f'https://twemoji.maxcdn.com/v/latest/72x72/{ord(argument[0]):x}.png'
         async with ctx.bot.session.get(url) as response:
             if response.status == 200:
-                return url
+                return await self.to_blob(ctx, url)
 
         raise commands.ConversionError(self, original=argument)
