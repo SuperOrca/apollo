@@ -1,11 +1,9 @@
 from io import BytesIO
-import discord
+from bot import Apollo
 from discord.ext import commands
-import twemoji_parser as twemoji
 
 
-import re
-from typing import Union
+import yarl
 
 from .context import ApolloContext
 from .metrics import isImage
@@ -29,57 +27,41 @@ class PrefixConverter(commands.clean_content):
 
 
 class ImageConverter(commands.Converter):
-    async def convert(self, ctx: ApolloContext, url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None) -> BytesIO:
-        if isinstance(url, str):
-            url = await twemoji.emoji_to_url(url)
 
-        if ctx.message.reference:
-            ref = ctx.message.reference.resolved
-            if ref.embeds:
-                if ref.embeds[0].image.url != discord.Embed.Empty and isImage(
-                        ref.embeds[0].image.url
-                ):
-                    url = ref.embeds[0].image.url
-
-                if ref.embeds[0].thumbnail.url != discord.Embed.Empty and isImage(
-                        ref.embeds[0].thumbnail.url
-                ):
-                    url = ref.embeds[0].thumbnail.url
-
-            elif ref.attachments:
-                url = ref.attachments[0].url or ref.attachments[0].proxy_url
-                if isImage(url):
-                    url = url
-
-        if isinstance(url, discord.Member):
-            url = str(url.avatar.url)
-        elif isinstance(url, str):
-            if re.search(
-                    r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
-                    url,
-            ) and isImage(url):
-                url = url
-
-        if isinstance(url, (discord.Emoji, discord.PartialEmoji)):
-            url = url.url
-
-        if ctx.message.attachments:
-
-            url = ctx.message.attachments[0].url or ctx.message.attachments[0].proxy_url
-
-            if isImage(url):
-                url = ctx.message.attachments[0].proxy_url or ctx.message.attachments[0].url
-
-            elif isinstance(url, discord.Member):
-                url = str(url.avatar.url)
-            else:
-                url = str(ctx.author.avatar.url)
-
-        if url is None:
-            url = str(ctx.author.avatar.url)
-
-        print(url)
+    async def to_blob(self, ctx: ApolloContext, url: str) -> BytesIO:
         response = await ctx.bot.session.get(url)
-        blob = BytesIO(await response.read())
-        blob.seek(0)
-        return blob
+        return BytesIO(await response.read())
+
+    async def convert(self, ctx: ApolloContext, argument: str) -> BytesIO:
+
+        try:
+            member = await commands.MemberConverter().convert(ctx=ctx, argument=str(argument))
+        except commands.BadArgument:
+            pass
+        else:
+            await ctx.reply(f'Editing the avatar of `{member}`. If this is a mistake please specify the user/image you would like to edit before any extra arguments.')
+            return member.avatar.url
+
+        if (check := yarl.URL(argument)) and check.scheme and check.host:
+            return argument
+
+        try:
+            emoji = await commands.EmojiConverter().convert(ctx=ctx, argument=str(argument))
+        except commands.EmojiNotFound:
+            pass
+        else:
+            return str(emoji.url)
+
+        try:
+            partial_emoji = await commands.PartialEmojiConverter().convert(ctx=ctx, argument=str(argument))
+        except commands.PartialEmojiConversionFailure:
+            pass
+        else:
+            return str(partial_emoji.url)
+
+        url = f'https://twemoji.maxcdn.com/v/latest/72x72/{ord(argument[0]):x}.png'
+        async with ctx.bot.session.get(url) as response:
+            if response.status == 200:
+                return url
+
+        raise commands.ConversionError(self, original=argument)
