@@ -23,7 +23,7 @@ class PrefixConverter(commands.clean_content):
             raise commands.BadArgument(
                 'Your prefix can not be more than 15 characters.')
 
-        url = argument
+        return argument
 
 
 class ImageConverter(commands.Converter):
@@ -31,7 +31,7 @@ class ImageConverter(commands.Converter):
     async def to_blob(self, ctx: ApolloContext, url: str) -> BytesIO:
         print(url)
         response = await ctx.bot.session.get(url)
-        return await self.to_blob(ctx, BytesIO(await response.read()))
+        return BytesIO(await response.read())
 
     async def convert(self, ctx: ApolloContext, argument: str) -> BytesIO:
 
