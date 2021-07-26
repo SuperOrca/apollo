@@ -31,9 +31,11 @@ class ImageConverter(commands.Converter):
 
     async def to_blob(self, ctx: ApolloContext, url: str) -> BytesIO:
         response = await ctx.bot.session.get(url)
-        blob = BytesIO(await response.read())
-        blob.seek(0)
-        return blob
+        if response.status == 200 and 'image/' in response.content_type:
+            blob = BytesIO(await response.read())
+            blob.seek(0)
+            return blob
+        raise commands.BadArgument("URL is not image.")
 
     async def convert(self, ctx: ApolloContext, argument: str) -> BytesIO:
 
@@ -68,6 +70,6 @@ class ImageConverter(commands.Converter):
 
         pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
         if re.match(pattern, argument):
-
+            return await self.to_blob(ctx, argument)
 
         raise commands.ConversionError(self, original=argument)
