@@ -31,37 +31,37 @@ class Image(commands.Cog):
             return True
 
     @commands.command(name='flip', descripton="Flip an image.", usage="flip [image]")
-    async def _flip(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+    async def _flip(self, ctx: ApolloContext, image: ImageConverter):
         with PILImage.open(image) as image:
             new_image = image.rotate(180)
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
-    async def _wide(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+    async def _wide(self, ctx: ApolloContext, image: ImageConverter):
         with PILImage.open(image) as image:
             new_image = image.resize((image.height * 2, image.width))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
-    async def _ultrawide(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+    async def _ultrawide(self, ctx: ApolloContext, image: ImageConverter):
         with PILImage.open(image) as image:
             new_image = image.resize((image.height * 4, image.width))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
-    async def _squish(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+    async def _squish(self, ctx: ApolloContext, image: ImageConverter):
         with PILImage.open(image) as image:
             new_image = image.resize((image.height, image.width * 2))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='ultrasquish', descripton="Ultrasquish an image.", usage="ultrasquish [image]")
-    async def _ultrasquish(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+    async def _ultrasquish(self, ctx: ApolloContext, image: ImageConverter):
         with PILImage.open(image) as image:
             new_image = image.resize((image.height, image.width * 4))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='swirl', description="Swirl an image.", usage="swirl [image]")
-    async def _swirl(self, ctx: commands.Context, image: Optional[ImageConverter]):
+    async def _swirl(self, ctx: commands.Context, image: ImageConverter):
         with WandImage(blob=image) as image:
             image.swirl(degree=100)
             buffer = image.make_blob('png')
@@ -69,7 +69,7 @@ class Image(commands.Cog):
         await ctx.reply(file=file, can_delete=True)
 
     @commands.command(name='blur', description="Blur an image.", usage="blur [image]")
-    async def _blur(self, ctx: commands.Context, image: Optional[ImageConverter]):
+    async def _blur(self, ctx: commands.Context, image: ImageConverter):
         with WandImage(blob=image) as image:
             image.blur(sigma=20)
             buffer = image.make_blob('png')
@@ -77,7 +77,7 @@ class Image(commands.Cog):
         await ctx.reply(file=file, can_delete=True)
 
     @commands.command(name='sharpen', description="Sharpen an image.", usage="sharpen [image]")
-    async def _sharpen(self, ctx: commands.Context, image: Optional[ImageConverter]):
+    async def _sharpen(self, ctx: commands.Context, image: ImageConverter):
         with WandImage(blob=image) as image:
             image.sharpen(sigma=10)
             buffer = image.make_blob('png')
@@ -85,7 +85,7 @@ class Image(commands.Cog):
         await ctx.reply(file=file, can_delete=True)
 
     @commands.command(name='eigishf', descripton="Eigishf meme.", usage="eigishf [image]")
-    async def _eigishf(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+    async def _eigishf(self, ctx: ApolloContext, image: ImageConverter):
         image = PILImage.open(image)
         with PILImage.open('assets/eigishf.jpg') as final:
             image = image.resize((300, 300))
@@ -96,7 +96,7 @@ class Image(commands.Cog):
     @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
                       aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
-    async def _minecraft(self, ctx: ApolloContext, image: Optional[ImageConverter], quality: int = 64) -> None:
+    async def _minecraft(self, ctx: ApolloContext, image: ImageConverter, quality: int = 64) -> None:
         """
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """

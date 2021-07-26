@@ -29,9 +29,10 @@ class PrefixConverter(commands.clean_content):
 class ImageConverter(commands.Converter):
 
     async def to_blob(self, ctx: ApolloContext, url: str) -> BytesIO:
-        print(url)
         response = await ctx.bot.session.get(url)
-        return BytesIO(await response.read())
+        blob = BytesIO(await response.read())
+        blob.seek(0)
+        return blob
 
     async def convert(self, ctx: ApolloContext, argument: str) -> BytesIO:
 
