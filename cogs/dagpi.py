@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Optional
 from inspect import Parameter
 
 import discord
@@ -6,7 +6,7 @@ from discord.ext import commands
 
 from utils.context import ApolloContext
 from utils.image import dagpi_process
-from utils.decorators import ImageConverter
+from utils.converters import ImageConverter
 
 _old_transform = commands.Command.transform
 
