@@ -4,6 +4,7 @@ from discord.ext import commands
 
 
 import yarl
+import re
 
 from .context import ApolloContext
 from .metrics import isImage
@@ -64,5 +65,9 @@ class ImageConverter(commands.Converter):
         async with ctx.bot.session.get(url) as response:
             if response.status == 200:
                 return await self.to_blob(ctx, url)
+
+        pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+        if re.match(pattern, argument):
+
 
         raise commands.ConversionError(self, original=argument)
