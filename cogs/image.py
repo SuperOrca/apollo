@@ -77,10 +77,8 @@ class Image(commands.Cog):
         await ctx.reply(file=file, can_delete=True)
 
     @commands.command(name='sharpen', description="Sharpen an image.", usage="sharpen [image]")
-    async def _sharpen(self, ctx: commands.Context,
-                       image: Union[discord.Emoji, discord.PartialEmoji, commands.MemberConverter, str] = None):
-        blob = await imageToBytes(ctx, image)
-        with WandImage(blob=blob) as image:
+    async def _sharpen(self, ctx: commands.Context, image: ImageConverter):
+        with WandImage(blob=image) as image:
             image.sharpen(sigma=10)
             buffer = image.make_blob('png')
         file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')

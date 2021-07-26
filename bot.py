@@ -106,8 +106,6 @@ class Apollo(commands.AutoShardedBot):
 
     def init_constants(self):
         self.socket_stats = Counter()
-        self.admin_invite = discord.utils.oauth_url(client_id=self.user.id, permissions=discord.Permissions(administrator=True))
-        self.default_invite = discord.utils.oauth_url(client_id=self.user.id)
 
         with open("blacklist.json") as f:
             self.blacklist = json.load(f)
