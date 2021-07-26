@@ -78,5 +78,8 @@ class ImageConverter(commands.Converter):
         if url is None:
             url = str(ctx.author.avatar.url)
 
+        print(url)
         response = await ctx.bot.session.get(url)
-        return BytesIO(await response.read())
+        blob = BytesIO(await response.read())
+        blob.seek(0)
+        return blob
