@@ -15,16 +15,16 @@ from .metrics import isImage
 
 
 async def dagpi_process(ctx: ApolloContext, image, feature, **kwargs) -> discord.Embed:
-    url = await getImage(ctx, image)
-    img = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=str(url), **kwargs)
+    img = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=str(image), **kwargs)
     file = discord.File(img.image, f"{ctx.command.name}.{img.format}")
     await ctx.reply(file=file, can_delete=True)
 
 
-async def imageToBytes(ctx, image) -> BytesIO:
-    url = await getImage(ctx, image)
+async def urlToBytes(ctx, url) -> BytesIO:
     response = await ctx.bot.session.get(url)
-    return BytesIO(await response.read())
+    blob = BytesIO(await response.read())
+    blob.seek(0)
+    return blob
 
 
 def fileFromBytes(ctx, image) -> discord.File:

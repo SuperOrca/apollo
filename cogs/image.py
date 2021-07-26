@@ -8,7 +8,7 @@ from inspect import Parameter
 from wand.image import Image as WandImage
 
 from utils.context import ApolloContext
-from utils.image import fileFromBytes, create_minecraft_blocks, process_minecraft
+from utils.image import fileFromBytes, create_minecraft_blocks, process_minecraft, urlToBytes
 from utils.converters import ImageConverter
 
 _old_transform = commands.Command.transform
@@ -17,13 +17,12 @@ _old_transform = commands.Command.transform
 def _transform(self, ctx, param):
 
     if param.annotation is Optional[ImageConverter]:
-        loop = ctx.bot.loop
         if ctx.message.attachments:
             param = Parameter(
-                param.name, param.kind, default=ImageConverter(ctx.message.attachments[0].url), annotation=ImageConverter)
+                param.name, param.kind, default=ctx.message.attachments[0].url, annotation=ImageConverter)
         else:
             param = Parameter(
-                param.name, param.kind, default=ImageConverter(ctx.author.avatar.url), annotation=ImageConverter)
+                param.name, param.kind, default=ctx.author.avatar.url, annotation=ImageConverter)
 
     return _old_transform(self, ctx, param)
 
@@ -52,36 +51,42 @@ class Image(commands.Cog):
 
     @commands.command(name='flip', descripton="Flip an image.", usage="flip [image]")
     async def _flip(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+        image = urlToBytes(image)
         with PILImage.open(image) as image:
             new_image = image.rotate(180)
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
     async def _wide(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+        image = urlToBytes(image)
         with PILImage.open(image) as image:
             new_image = image.resize((image.height * 2, image.width))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
     async def _ultrawide(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+        image = urlToBytes(image)
         with PILImage.open(image) as image:
             new_image = image.resize((image.height * 4, image.width))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
     async def _squish(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+        image = urlToBytes(image)
         with PILImage.open(image) as image:
             new_image = image.resize((image.height, image.width * 2))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='ultrasquish', descripton="Ultrasquish an image.", usage="ultrasquish [image]")
     async def _ultrasquish(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+        image = urlToBytes(image)
         with PILImage.open(image) as image:
             new_image = image.resize((image.height, image.width * 4))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
     @commands.command(name='swirl', description="Swirl an image.", usage="swirl [image]")
     async def _swirl(self, ctx: commands.Context, image: Optional[ImageConverter]):
+        image = urlToBytes(image)
         with WandImage(blob=image) as image:
             image.swirl(degree=100)
             buffer = image.make_blob('png')
@@ -90,6 +95,7 @@ class Image(commands.Cog):
 
     @commands.command(name='blur', description="Blur an image.", usage="blur [image]")
     async def _blur(self, ctx: commands.Context, image: Optional[ImageConverter]):
+        image = urlToBytes(image)
         with WandImage(blob=image) as image:
             image.blur(sigma=20)
             buffer = image.make_blob('png')
@@ -98,6 +104,7 @@ class Image(commands.Cog):
 
     @commands.command(name='sharpen', description="Sharpen an image.", usage="sharpen [image]")
     async def _sharpen(self, ctx: commands.Context, image: Optional[ImageConverter]):
+        image = urlToBytes(image)
         with WandImage(blob=image) as image:
             image.sharpen(sigma=10)
             buffer = image.make_blob('png')
@@ -106,6 +113,7 @@ class Image(commands.Cog):
 
     @commands.command(name='eigishf', descripton="Eigishf meme.", usage="eigishf [image]")
     async def _eigishf(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+        image = urlToBytes(image)
         image = PILImage.open(image)
         with PILImage.open('assets/eigishf.jpg') as final:
             image = image.resize((300, 300))
@@ -122,6 +130,7 @@ class Image(commands.Cog):
         """
         if 128 < quality or quality < 1:
             raise commands.BadArgument("Quality must be between 1 and 128.")
+        image = urlToBytes(image)
         file = discord.File(await process_minecraft(self.bot, image, quality), f"{ctx.command.name}.png")
         await ctx.reply(file=file, can_delete=True)
 
