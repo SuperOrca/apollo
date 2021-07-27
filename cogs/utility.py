@@ -1,4 +1,6 @@
 import io
+import json
+from typing import Optional
 
 import discord
 from discord.ext import commands
@@ -128,6 +130,18 @@ class Utility(commands.Cog):
             formats), color=0x2F3136)
         embed.set_image(url=member.avatar.url)
         await ctx.reply(embed=embed)
+
+    @commands.command(name='rawmsg', description="Get the raw json of a message.", usage="rawmsg [message]")
+    async def _rawmsg(self, ctx: ApolloContext, message: Optional[commands.MessageConverter] = None) -> None:
+        message = message or ctx.message.reference
+
+        if not message:
+            raise commands.BadArgument("You didn't reply or specify a message.")
+
+        raw_message = await self.bot.http.get_message(message.channel.id, message.id)
+        raw_message = json.dumps(raw_message, indent=4)
+        await ctx.reply(f"```json\n{raw_message}\n```")
+
 
 
 def setup(bot) -> None:

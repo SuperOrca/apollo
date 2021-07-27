@@ -1,14 +1,12 @@
 import os
 import re
 from io import BytesIO
-from typing import Union
 
 from discord.ext import commands
 
 import aiofile
 import discord
 import numpy as np
-import twemoji_parser as twemoji
 from PIL import Image, UnidentifiedImageError
 from asyncdagpi import ImageFeatures
 
