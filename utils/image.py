@@ -3,6 +3,8 @@ import re
 from io import BytesIO
 from typing import Union
 
+from discord.ext import commands
+
 import aiofile
 import discord
 import numpy as np
@@ -22,7 +24,10 @@ async def dagpi_process(ctx: ApolloContext, image, feature, **kwargs) -> discord
 
 async def urlToBytes(ctx, url) -> BytesIO:
     response = await ctx.bot.session.get(url)
-    blob = BytesIO(await response.read())
+    byte = await response.read()
+    if byte.__sizeof__() > 10 * (2**20):
+        raise commands.BadArgument("Exceeded 10MB.")
+    blob = BytesIO(byte)
     blob.seek(0)
     return blob
 
@@ -32,57 +37,6 @@ def fileFromBytes(ctx, image) -> discord.File:
     image.save(buffer, "png")
     buffer.seek(0)
     return discord.File(buffer, f"{ctx.command.name}.png")
-
-
-async def getImage(ctx: ApolloContext,
-                   url: Union[discord.Member, discord.Emoji, discord.PartialEmoji, None, str] = None):
-    if isinstance(url, str):
-        url = await twemoji.emoji_to_url(url)
-
-    if ctx.message.reference:
-        ref = ctx.message.reference.resolved
-        if ref.embeds:
-            if ref.embeds[0].image.url != discord.Embed.Empty and isImage(
-                    ref.embeds[0].image.url
-            ):
-                return ref.embeds[0].image.url
-
-            if ref.embeds[0].thumbnail.url != discord.Embed.Empty and isImage(
-                    ref.embeds[0].thumbnail.url
-            ):
-                return ref.embeds[0].thumbnail.url
-
-        elif ref.attachments:
-            url = ref.attachments[0].url or ref.attachments[0].proxy_url
-            if isImage(url):
-                return url
-
-    if isinstance(url, discord.Member):
-        return str(url.avatar.url)
-    elif isinstance(url, str):
-        if re.search(
-                r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
-                url,
-        ) and isImage(url):
-            return url
-
-    if isinstance(url, (discord.Emoji, discord.PartialEmoji)):
-        return url.url
-
-    if ctx.message.attachments:
-
-        url = ctx.message.attachments[0].url or ctx.message.attachments[0].proxy_url
-
-        if isImage(url):
-            return ctx.message.attachments[0].proxy_url or ctx.message.attachments[0].url
-
-        elif isinstance(url, discord.Member):
-            return str(url.avatar.url)
-        else:
-            return str(ctx.author.avatar.url)
-
-    if url is None:
-        return str(ctx.author.avatar.url)
 
 
 async def process_minecraft(bot, b: BytesIO, quality=64) -> BytesIO:
