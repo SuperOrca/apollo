@@ -4,6 +4,7 @@ from typing import Optional
 
 import discord
 from discord.ext import commands
+from discord.message import MessageReference
 
 from jishaku.codeblocks import codeblock_converter
 from utils.context import ApolloContext
@@ -138,8 +139,10 @@ class Utility(commands.Cog):
         if not message:
             raise commands.BadArgument("You didn't reply or specify a message.")
 
-        message = self.bot.get_message(message.id)
-        raw_message = await self.bot.http.get_message(message.channel.id, message.id)
+        channel = message.channel_id if isinstance(message, discord.MessageReference) else message.channel.id
+        message = message.message_id if isinstance(message, discord.MessageReference) else message.id
+
+        raw_message = await self.bot.http.get_message(channel, message)
         raw_message = json.dumps(raw_message, indent=4)
         await ctx.reply(f"```json\n{raw_message}\n```")
 
