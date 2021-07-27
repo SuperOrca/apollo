@@ -114,7 +114,7 @@ class Image(commands.Cog):
     @commands.command(name='eigishf', descripton="Eigishf meme.", usage="eigishf [image]")
     async def _eigishf(self, ctx: ApolloContext, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
-        image = PILImage.open(image)
+        image = PILImage.open(image).convert("RGBA")
         with PILImage.open('assets/eigishf.jpg') as final:
             image = image.resize((300, 300))
             final.paste(image, (250, 770), mask=image)
