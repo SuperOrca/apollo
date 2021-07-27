@@ -117,7 +117,7 @@ class Image(commands.Cog):
         image = PILImage.open(image)
         with PILImage.open('assets/eigishf.jpg') as final:
             image = image.resize((300, 300))
-            final.paste(image, (250, 770), image)
+            final.paste(image, (250, 770))
         image.close()
         await ctx.reply(file=fileFromBytes(ctx, final), can_delete=True)
 

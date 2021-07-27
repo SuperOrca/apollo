@@ -34,7 +34,7 @@ class Fun(commands.Cog):
         self.bot = bot
         self._cd_type = commands.BucketType.user
         self._cd = commands.CooldownMapping.from_cooldown(
-            1, 1.5, self._cd_type)
+            1, 2., self._cd_type)
 
     async def cog_check(self, ctx: ApolloContext):
         bucket = self._cd.get_bucket(ctx.message)
