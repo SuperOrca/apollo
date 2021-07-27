@@ -39,8 +39,13 @@ class Meta(commands.Cog):
     @commands.command(name='invite', description="Shows the bot invite.")
     async def _invite(self, ctx: ApolloContext) -> None:
         embed = discord.Embed(color=discord.Color.blurple())
-        embed.add_field(name="Administrator", value=f"[click]({self.bot.admin_invite})", inline=True)
-        embed.add_field(name="No Permissions", value=f"[click]({self.bot.none_invite})", inline=True)
+        embed.add_field(name="Administrator", value=f"[click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions(administrator=True))})", inline=True)
+        embed.add_field(name="No Permissions", value=f"[click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions.none())})", inline=True)
+        await ctx.reply(embed=embed)
+
+    @commands.command(name='discordbotlist', description="Shows the bot invite.", aliases=['dbl'])
+    async def _discordbotlist(self, ctx: ApolloContext) -> None:
+        embed = discord.Embed(description="Click [here](https://discordbotlist.com/bots/apollo-5670) for the bot list.", color=discord.Color.blurple())
         await ctx.reply(embed=embed)
 
     @commands.command(name='uptime', description="Shows the bot uptime.")
