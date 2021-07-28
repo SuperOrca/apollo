@@ -4,11 +4,12 @@ import discord
 from discord import ui
 from discord.ext import commands
 
-from .context import ApolloContext
-from .metrics import isImage
+from utils.context import ApolloContext
+from utils.metrics import isImage
 
 
 async def getpost(bot, channel, subreddit) -> discord.Embed:
+    """A method that fetches a post from a subreddit and returns an embed with a view."""
     async def post():
         embed = None
         i = 0

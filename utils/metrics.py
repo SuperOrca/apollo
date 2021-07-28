@@ -2,6 +2,7 @@ import time
 
 
 def isImage(url):
+    """A method that checks if a url is an image."""
     url = url.lower()
     return bool(
         url.endswith("png")

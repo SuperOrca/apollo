@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from .git import get_last_commits
+from utils.git import get_last_commits
 
 
 class ApolloHelp(commands.HelpCommand):

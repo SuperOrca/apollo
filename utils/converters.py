@@ -6,10 +6,11 @@ from discord.ext import commands
 import yarl
 import re
 
-from .context import ApolloContext
+from utils.context import ApolloContext
 
 
 class PrefixConverter(commands.clean_content):
+    """A converter for format an argument for use as prefix."""
     async def convert(self, ctx: ApolloContext, argument: str) -> str:
         self.escape_markdown = True
 
@@ -27,6 +28,7 @@ class PrefixConverter(commands.clean_content):
 
 
 class ImageConverter(commands.Converter):
+    """A converter for getting a url from an argument."""
     async def convert(self, ctx: ApolloContext, argument: str) -> BytesIO:
 
         try:

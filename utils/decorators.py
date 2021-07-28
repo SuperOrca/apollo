@@ -3,6 +3,7 @@ from functools import wraps
 
 
 def asyncexe():
+    """Make synchronous functions asynchronous."""
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):

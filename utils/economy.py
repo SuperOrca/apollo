@@ -45,6 +45,7 @@ class Account:
 
     @classmethod
     async def fetch(cls, bot: commands.Bot, member: discord.Member):
+        """A method that fetches the account of a member."""
         if member.bot:
             raise commands.BadArgument(
                 "You cannot use this command with a bot.")

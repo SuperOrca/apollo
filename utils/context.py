@@ -18,6 +18,7 @@ class TrashView(ui.View):
 
 class ApolloContext(commands.Context):
     async def reply(self, content: str = None, **kwargs):
+        """Adds a can_delete kwarg to the reply method."""
         can_delete = kwargs.pop('can_delete', False)
         if can_delete:
             return await self.message.reply(
@@ -31,6 +32,7 @@ class ApolloContext(commands.Context):
             return await self.message.reply(content, **kwargs, mention_author=False)
 
     async def send(self, content: str = None, **kwargs):
+        """Adds a can_delete kwarg to the send method."""
         can_delete = kwargs.pop('can_delete', False)
         if can_delete:
             return await self.channel.send(

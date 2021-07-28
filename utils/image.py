@@ -10,17 +10,19 @@ import numpy as np
 from PIL import Image, UnidentifiedImageError
 from asyncdagpi import ImageFeatures
 
-from .context import ApolloContext
-from .metrics import isImage
+from utils.context import ApolloContext
+from utils.metrics import isImage
 
 
 async def dagpi_process(ctx: ApolloContext, image, feature, **kwargs) -> discord.Embed:
+    """A method that uses dagpi to process images."""
     img = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=str(image), **kwargs)
     file = discord.File(img.image, f"{ctx.command.name}.{img.format}")
     await ctx.reply(file=file, can_delete=True)
 
 
 async def urlToBytes(ctx, url) -> BytesIO:
+    """A method that fetches bytes from a url."""
     response = await ctx.bot.session.get(url)
     byte = await response.read()
     if byte.__sizeof__() > 10 * (2**20):
@@ -31,6 +33,7 @@ async def urlToBytes(ctx, url) -> BytesIO:
 
 
 def fileFromBytes(ctx, image) -> discord.File:
+    """A method that creates a file from bytes."""
     buffer = BytesIO()
     image.save(buffer, "png")
     buffer.seek(0)
@@ -38,6 +41,7 @@ def fileFromBytes(ctx, image) -> discord.File:
 
 
 async def process_minecraft(bot, b: BytesIO, quality=64) -> BytesIO:
+    """A method that creates an image from minecraft blocks."""
     minecraft_array = np.array(list(bot.minecraft_blocks.keys()))
     np.expand_dims(minecraft_array, axis=-1)
     image = Image.open(b)
@@ -60,6 +64,7 @@ async def process_minecraft(bot, b: BytesIO, quality=64) -> BytesIO:
 
 
 async def create_minecraft_blocks(bot) -> None:
+    """A method that iterates through all the minecraft textures."""
     for _file in os.listdir("assets/minecraft_blocks"):
         async with aiofile.async_open("assets/minecraft_blocks/" + _file, "rb") as afp:
             b = await afp.read()
@@ -67,6 +72,7 @@ async def create_minecraft_blocks(bot) -> None:
 
 
 async def resize_and_save_minecraft_blocks(bot, b) -> None:
+    """A method that resizes an image for minecraft command."""
     try:
         with Image.open(b) as image:
             image = image.convert("RGBA")
