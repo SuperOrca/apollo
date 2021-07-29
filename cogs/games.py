@@ -19,16 +19,10 @@ class Games(commands.Cog):
         else:
             return True
 
-    async def cog_check(self, ctx: ApolloContext):
-        bucket = self._cd.get_bucket(ctx.message)
-        retry_after = bucket.update_rate_limit()
-        if retry_after:
-            raise commands.CommandOnCooldown(self._cd, retry_after)
-
     @commands.command(name='typeracer', description="Typeracer game!")
     async def _typeracer(self, ctx: ApolloContext) -> None:
         await typeracer.TypeRacer().start(ctx, embed_color=0x2F3136, show_author=False,
-                                          path_to_text_font='/usr/share/fonts/truetype/freefont/FreeSans.ttf',
+                                          path_to_text_font='assets/fira.ttf',
                                           timeout=60.)
 
 
