@@ -4,20 +4,20 @@ from discord.ext import commands
 
 
 class TrashView(ui.View):
-    def __init__(self, author):
-        super().__init__(timeout=60)
-        self.author = author
+    def __init__(self, ctx):
+        super().__init__(timeout=180)
+        self.ctx = ctx
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        return self.author == interaction.user
 
     @ui.button(emoji='🗑️', style=discord.ButtonStyle.red)
     async def delete(self, button: ui.Button, interaction: discord.Interaction):
-        if self.author == interaction.user:
-            await interaction.message.delete()
-        else:
-            await interaction.response.send_message("This is not your command.", ephemeral=True)
+        await interaction.message.delete()
 
 
 class ApolloContext(commands.Context):
-    async def reply(self, content: str = None, **kwargs):
+    async def reply(self, content: str = None, **kwargs) -> discord.Message:
         """Adds a can_delete kwarg to the reply method."""
         can_delete = kwargs.pop('can_delete', False)
         if can_delete:
@@ -31,7 +31,7 @@ class ApolloContext(commands.Context):
         else:
             return await self.message.reply(content, **kwargs, mention_author=False)
 
-    async def send(self, content: str = None, **kwargs):
+    async def send(self, content: str = None, **kwargs) -> discord.Message:
         """Adds a can_delete kwarg to the send method."""
         can_delete = kwargs.pop('can_delete', False)
         if can_delete:
@@ -42,3 +42,11 @@ class ApolloContext(commands.Context):
             )
         else:
             return await self.channel.send(content, **kwargs)
+
+    async def tick(self, tick: bool = True) -> bool:
+        if tick:
+            await self.message.add_reaction('<:greenTick:596576670815879169>')
+        else:
+            await self.message.add_reaction('<:redTick:596576672149667840>')
+
+        return True
