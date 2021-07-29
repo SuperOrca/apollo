@@ -45,8 +45,11 @@ class ApolloContext(commands.Context):
         else:
             return await self.channel.send(content, **kwargs)
 
-    async def tick(self, tick: bool = True) -> bool:
-        if tick:
-            await self.message.add_reaction('<:greenTick:596576670815879169>')
-        else:
-            await self.message.add_reaction('<:redTick:596576672149667840>')
+    async def tick(self, tick: bool = True) -> None:
+        try:
+            if tick:
+                await self.message.add_reaction('<:greenTick:596576670815879169>')
+            else:
+                await self.message.add_reaction('<:redTick:596576672149667840>')
+        except:
+            ...
