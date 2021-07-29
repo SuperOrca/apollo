@@ -33,7 +33,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             except KeyError as e:
                 embed = None
             i += 1
-            if i >= 3:
+            if i >= 5:
                 raise commands.BadArgument(
                     f"Could not find a image from `{subreddit}`.")
         return embed
@@ -56,6 +56,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
         @ui.button(emoji='🛑', style=discord.ButtonStyle.red)
         async def on_stop(self, button: ui.Button, interaction: discord.Interaction):
             await interaction.message.edit(view=None)
+            self.stop()
 
         @ui.button(emoji='➡️', style=discord.ButtonStyle.blurple)
         async def forwards(self, button: ui.Button, interaction: discord.Interaction):
@@ -63,10 +64,12 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             try:
                 await interaction.message.edit(embed=self.log[self.num])
             except IndexError:
-                embed = await post()
+                try:
+                    embed = await post()
+                except commands.BadArgument:
+                    self.on_stop(button, interaction)
                 self.log.append(embed)
                 await interaction.message.edit(embed=embed)
-
 
         @classmethod
         async def start(cls, ctx: ApolloContext):

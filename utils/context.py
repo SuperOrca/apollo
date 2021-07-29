@@ -13,6 +13,7 @@ class TrashView(ui.View):
 
     @ui.button(emoji='🗑️', style=discord.ButtonStyle.red)
     async def delete(self, button: ui.Button, interaction: discord.Interaction):
+        self.stop()
         await interaction.message.delete()
 
 
