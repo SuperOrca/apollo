@@ -46,6 +46,7 @@ class ApolloContext(commands.Context):
             return await self.channel.send(content, **kwargs)
 
     async def tick(self, tick: bool = True) -> None:
+        """Adds a tick method to the context."""
         try:
             if tick:
                 await self.message.add_reaction('<:greenTick:596576670815879169>')
