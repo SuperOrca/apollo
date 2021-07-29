@@ -2,10 +2,9 @@ import discord
 from discord import ui
 from discord.ext import commands
 
-from utils.context import ApolloContext
 
 class TrashView(ui.View):
-    def __init__(self, ctx: ApolloContext):
+    def __init__(self, ctx):
         super().__init__(timeout=180)
         self.ctx = ctx
 
