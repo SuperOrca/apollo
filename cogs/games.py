@@ -1,7 +1,7 @@
-from Discord_Games import typeracer
 from discord.ext import commands
 
 from utils.context import ApolloContext
+from utils.games.typeracer import TypeRacer
 
 
 class Games(commands.Cog):
@@ -21,7 +21,7 @@ class Games(commands.Cog):
 
     @commands.command(name='typeracer', description="Typeracer game!")
     async def _typeracer(self, ctx: ApolloContext) -> None:
-        await typeracer.TypeRacer().start(ctx, embed_color=0x2F3136, show_author=False,
+        await TypeRacer().start(ctx, embed_color=0x2F3136, show_author=False,
                                           path_to_text_font='assets/fira.ttf',
                                           timeout=60.)
 
