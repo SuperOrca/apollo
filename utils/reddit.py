@@ -55,6 +55,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
 
         @ui.button(emoji='🛑', style=discord.ButtonStyle.red)
         async def on_stop(self, button: ui.Button, interaction: discord.Interaction):
+            await self.ctx.tick()
             await interaction.message.edit(view=None)
             self.stop()
 
