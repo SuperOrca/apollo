@@ -42,36 +42,31 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
         def __init__(self):
             super().__init__(timeout=120)
 
+        async def interaction_check(self, interaction: discord.Interaction):
+            return self.ctx.author == interaction.user
+
         @ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple)
         async def previous(self, button: ui.Button, interaction: discord.Interaction):
-            if self.ctx.author == interaction.user:
-                if self.num > 0:
-                    self.num -= 1
-                    await self.message.edit(embed=self.log[self.num])
-                else:
-                    await interaction.response.send_message("Cannot go to previous.", ephemeral=True)
+            if self.num > 0:
+                self.num -= 1
+                await self.interaction.message.edit(embed=self.log[self.num])
             else:
-                await interaction.response.send_message("This is not your command.", ephemeral=True)
+                await interaction.response.send_message("Cannot go to previous.", ephemeral=True)
 
         @ui.button(emoji='🛑', style=discord.ButtonStyle.red)
         async def on_stop(self, button: ui.Button, interaction: discord.Interaction):
-            if self.ctx.author == interaction.user:
-                await self.message.edit(view=None)
-            else:
-                await interaction.response.send_message("This is not your command.", ephemeral=True)
+            await self.interaction.message.edit(view=None)
 
         @ui.button(emoji='➡️', style=discord.ButtonStyle.blurple)
         async def forwards(self, button: ui.Button, interaction: discord.Interaction):
-            if self.ctx.author == interaction.user:
-                self.num += 1
-                try:
-                    await self.message.edit(embed=self.log[self.num])
-                except IndexError:
-                    embed = await post()
-                    self.log.append(embed)
-                    await self.message.edit(embed=embed)
-            else:
-                await interaction.response.send_message("This is not your command.", ephemeral=True)
+            self.num += 1
+            try:
+                await self.interaction.message.edit(embed=self.log[self.num])
+            except IndexError:
+                embed = await post()
+                self.log.append(embed)
+                await self.interaction.message.edit(embed=embed)
+
 
         @classmethod
         async def start(cls, ctx: ApolloContext):
@@ -80,6 +75,6 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             cls.num = 0
             embed = await post()
             cls.log.append(embed)
-            cls.message = await ctx.reply(embed=embed, view=cls())
+            await ctx.reply(embed=embed, view=cls())
 
     return RedditView

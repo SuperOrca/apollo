@@ -22,12 +22,14 @@ class Reddit(commands.Cog):
 
     @commands.command(name='meme', description="Shows a random meme.", aliases=['memes'])
     async def _meme(self, ctx: ApolloContext) -> None:
-        await (await getpost(self.bot, ctx.channel, 'memes')).start(ctx)
+        view = await getpost(self.bot, ctx.channel, 'memes')
+        await view.start(ctx)
 
     @commands.command(name='reddit', description="Shows a random image from a subreddit.", aliases=['r'],
                       usage="reddit <subreddit>")
     async def _reddit(self, ctx: ApolloContext, subreddit) -> None:
-        await (await getpost(self.bot, ctx.channel, subreddit)).start(ctx)
+        view = await getpost(self.bot, ctx.channel, subreddit)
+        await view.start(ctx)
 
 
 def setup(bot) -> None:
