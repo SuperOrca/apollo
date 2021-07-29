@@ -49,23 +49,23 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
         async def previous(self, button: ui.Button, interaction: discord.Interaction):
             if self.num > 0:
                 self.num -= 1
-                await self.interaction.message.edit(embed=self.log[self.num])
+                await interaction.message.edit(embed=self.log[self.num])
             else:
                 await interaction.response.send_message("Cannot go to previous.", ephemeral=True)
 
         @ui.button(emoji='🛑', style=discord.ButtonStyle.red)
         async def on_stop(self, button: ui.Button, interaction: discord.Interaction):
-            await self.interaction.message.edit(view=None)
+            await interaction.message.edit(view=None)
 
         @ui.button(emoji='➡️', style=discord.ButtonStyle.blurple)
         async def forwards(self, button: ui.Button, interaction: discord.Interaction):
             self.num += 1
             try:
-                await self.interaction.message.edit(embed=self.log[self.num])
+                await interaction.message.edit(embed=self.log[self.num])
             except IndexError:
                 embed = await post()
                 self.log.append(embed)
-                await self.interaction.message.edit(embed=embed)
+                await interaction.message.edit(embed=embed)
 
 
         @classmethod
