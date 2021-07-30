@@ -46,7 +46,7 @@ class Fun(commands.Cog):
             return True
 
     @commands.command(name='8ball', description="Answers a yes/no question.", usage="8ball <question>")
-    async def _8ball(self, ctx: ApolloContext, *, question: str) -> None:
+    async def _8ball(self, ctx: ApolloContext, *, question: commands.clean_content) -> None:
         await ctx.reply(embed=discord.Embed(description=f"`Q:` {question}\n`A:` {choice(_8ball_responses)}",
                                             color=discord.Color.purple()))
 

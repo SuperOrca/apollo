@@ -41,7 +41,7 @@ class Moderation(commands.Cog):
     @commands.command(name='ban', description="Ban a member.", usage="ban <member> [reason]")
     @commands.has_guild_permissions(ban_members=True)
     @commands.bot_has_guild_permissions(ban_members=True)
-    async def _ban(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: str = None) -> None:
+    async def _ban(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: commands.clean_content = None) -> None:
         check_hierarchy(ctx, member)
         reason = reason or "no reason provided"
         try:
@@ -58,7 +58,7 @@ class Moderation(commands.Cog):
     @commands.command(name='kick', description="Kick a member.", usage="kick <member> [reason]")
     @commands.has_guild_permissions(kick_members=True)
     @commands.bot_has_guild_permissions(kick_members=True)
-    async def _kick(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: str = None) -> None:
+    async def _kick(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: commands.clean_content = None) -> None:
         check_hierarchy(ctx, member)
         reason = reason or "no reason provided"
         try:
@@ -99,7 +99,7 @@ class Moderation(commands.Cog):
                       usage="nick <member> <nick>")
     @commands.has_guild_permissions(manage_nicknames=True)
     @commands.bot_has_guild_permissions(manage_nicknames=True)
-    async def _setnick(self, ctx: ApolloContext, member: commands.MemberConverter, nick: str):
+    async def _setnick(self, ctx: ApolloContext, member: commands.MemberConverter, nick: commands.clean_content):
         check_hierarchy(ctx, member)
         if nick == "reset":
             await member.edit(nick=None)

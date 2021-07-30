@@ -26,7 +26,7 @@ class Utility(commands.Cog):
             return True
 
     @commands.command(name='pypi', description="Shows details of a python package.", usage="pypi <package>")
-    async def _pypi(self, ctx: ApolloContext, package: str) -> None:
+    async def _pypi(self, ctx: ApolloContext, package: commands.clean_content) -> None:
         data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
 
         if data.status != 200:
@@ -53,7 +53,7 @@ class Utility(commands.Cog):
         await ctx.reply(embed=embed, file=f)
 
     @commands.command(name='npm', description="Shows details of a node package.", usage="npm <package>")
-    async def _npm(self, ctx: ApolloContext, package: str):
+    async def _npm(self, ctx: ApolloContext, package: commands.clean_content):
         data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
         if 'CODE' in data or 'collected' not in data:
             raise commands.BadArgument("Invalid package.")
@@ -74,7 +74,7 @@ class Utility(commands.Cog):
         await ctx.reply(embed=embed, file=f)
 
     @commands.command(name='deno', description="Shows details of a deno package.", usage="deno <package>")
-    async def _deno(self, ctx: ApolloContext, package: str) -> None:
+    async def _deno(self, ctx: ApolloContext, package: commands.clean_content) -> None:
         data = await (await self.bot.session.get(f"https://api.deno.land/modules/{package}")).json()
         if data["success"]:
             data = data['data']
@@ -98,7 +98,7 @@ class Utility(commands.Cog):
         await ctx.reply(file=discord.File(file, 'output.txt'))
 
     @commands.command(name='tts', description="Text to speech.", usage="tts <text>", aliases=['texttospeech'])
-    async def _tts(self, ctx: ApolloContext, *, text: str) -> None:
+    async def _tts(self, ctx: ApolloContext, *, text: commands.clean_content) -> None:
         if len(text) > 1000:
             raise commands.BadArgument(
                 "The text for text to speech can not be over 200 characters.")
@@ -109,7 +109,7 @@ class Utility(commands.Cog):
         await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
 
     @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
-    async def _execute(self, ctx: ApolloContext, language: str, *, code: codeblock_converter) -> None:
+    async def _execute(self, ctx: ApolloContext, language: commands.clean_content, *, code: codeblock_converter) -> None:
         output = await self.bot.tio.execute(code.content, language=language)
         await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
 

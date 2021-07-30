@@ -38,19 +38,19 @@ class Meta(commands.Cog):
 
     @commands.command(name='invite', description="Shows the bot invite.")
     async def _invite(self, ctx: ApolloContext) -> None:
-        embed = discord.Embed(color=discord.Color.blurple())
+        embed = discord.Embed(title="Apollo Invite", color=discord.Color.blurple())
         embed.add_field(name="Administrator", value=f"[click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions(administrator=True))})", inline=True)
         embed.add_field(name="No Permissions", value=f"[click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions.none())})", inline=True)
         await ctx.reply(embed=embed)
 
     @commands.command(name='discordbotlist', description="Shows the bot invite.", aliases=['dbl'])
     async def _discordbotlist(self, ctx: ApolloContext) -> None:
-        embed = discord.Embed(description="Click [here](https://discordbotlist.com/bots/apollo-5670) for the bot list.", color=discord.Color.blurple())
+        embed = discord.Embed(title="Apollo Bot List", description="Click [here](https://discordbotlist.com/bots/apollo-5670) for the bot list.", color=discord.Color.blurple())
         await ctx.reply(embed=embed)
 
     @commands.command(name='uptime', description="Shows the bot uptime.")
     async def _uptime(self, ctx: ApolloContext) -> None:
-        await ctx.reply(embed=discord.Embed(description=f"The bot has been online for `{self.get_uptime()}`.",
+        await ctx.reply(embed=discord.Embed(title="Apollo Uptime", description=f"The bot has been online for `{self.get_uptime()}`.",
                                             color=discord.Color.blurple()))
 
     @commands.command(name='ping', description="Shows the bot ping.")
@@ -61,7 +61,7 @@ class Meta(commands.Cog):
         database = count()
         await self.bot.db.execute("SELECT 1")
         database = (count() - database) * 1000
-        embed = discord.Embed(color=discord.Color.blurple())
+        embed = discord.Embed(title="Apollo Ping", color=discord.Color.blurple())
         embed.add_field(name="Websocket",
                         value=f"```py\n{(self.bot.latency * 1000):.2f} ms\n```")
         embed.add_field(name="Typing", value=f"```py\n{typing:.2f} ms\n```")
@@ -73,7 +73,7 @@ class Meta(commands.Cog):
     @commands.command(name='info', description="Shows information about the bot.")
     async def _info(self, ctx: ApolloContext) -> None:
         embed = discord.Embed(
-            title="Apollo", description=self.bot.description, color=discord.Color.blurple())
+            title="Apollo Info", description=self.bot.description, color=discord.Color.blurple())
         embed.set_thumbnail(url=self.bot.user.avatar.with_static_format('png'))
         embed.add_field(
             name="Version", value=self.bot.__version__, inline=True)
@@ -92,7 +92,7 @@ class Meta(commands.Cog):
     @commands.command(name='source', description="Shows source of the bot.", aliases=['src', 'contribute', 'contrib'])
     async def _source(self, ctx: ApolloContext) -> None:
         await ctx.reply(
-            embed=discord.Embed(description="View the bot source [here](https://github.com/SuperOrca/apollo).",
+            embed=discord.Embed(title="Apollo Source", description="View the bot source [here](https://github.com/SuperOrca/apollo).",
                                 color=discord.Color.blurple()))
 
     @commands.command(name='prefix', description="Change the bot prefix.", usage="prefix [prefix]")
@@ -100,11 +100,11 @@ class Meta(commands.Cog):
         if ctx.author.guild_permissions.administrator and prefix:
             await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)",
                                       values={"id": ctx.guild.id, "prefix": prefix})
-            await ctx.reply(embed=discord.Embed(description=f"Set the server prefix to `{prefix}`.",
+            await ctx.reply(embed=discord.Embed(title="Apollo Prefix", description=f"Set the server prefix to `{prefix}`.",
                                                 color=discord.Color.blurple()))
         else:
             prefix = await self.bot.get_guild_prefix(ctx.message)
-            await ctx.reply(embed=discord.Embed(description=f"The current server prefix is `{prefix}`.",
+            await ctx.reply(embed=discord.Embed(title="Apollo Prefix", description=f"The current server prefix is `{prefix}`.",
                                                 color=discord.Color.blurple()))
 
 
