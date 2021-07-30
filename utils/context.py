@@ -50,6 +50,8 @@ class ApolloContext(commands.Context):
         try:
             if tick:
                 await self.message.add_reaction('<:greenTick:596576670815879169>')
+            elif tick is None:
+                await self.message.add_reaction('<:grayTick:596576672900186113>')
             else:
                 await self.message.add_reaction('<:redTick:596576672149667840>')
         except:

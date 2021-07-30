@@ -114,7 +114,7 @@ class Utility(commands.Cog):
         await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
 
     @commands.command(name='avatar', description="View the avatar of a member.", usage="avatar [member]")
-    async def _avatar(self, ctx: ApolloContext, member: commands.MemberConverter = None):
+    async def _avatar(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
         formats = [f"[`PNG`]({member.avatar.replace(format='png').url})"]
         formats.append(
@@ -136,15 +136,20 @@ class Utility(commands.Cog):
         message = message or ctx.message.reference
 
         if not message:
-            raise commands.BadArgument("You didn't reply or specify a message.")
+            raise commands.BadArgument(
+                "You didn't reply or specify a message.")
 
-        channel = message.channel_id if isinstance(message, discord.MessageReference) else message.channel.id
-        message = message.message_id if isinstance(message, discord.MessageReference) else message.id
+        channel = message.channel_id if isinstance(
+            message, discord.MessageReference) else message.channel.id
+        message = message.message_id if isinstance(
+            message, discord.MessageReference) else message.id
 
         raw_message = await self.bot.http.get_message(channel, message)
         raw_message = json.dumps(raw_message, indent=4)
         await ctx.reply(f"```json\n{raw_message}\n```")
 
+        # TODO userinfo command
+        # TODO serverinfo command
 
 
 def setup(bot) -> None:

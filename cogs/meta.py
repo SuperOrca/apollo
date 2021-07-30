@@ -1,5 +1,6 @@
 from datetime import datetime
 from time import time as count
+from typing import Optional
 
 import discord
 import humanize
@@ -33,8 +34,11 @@ class Meta(commands.Cog):
     def cog_unload(self) -> None:
         self._status.cancel()
 
-    def get_uptime(self) -> str:
-        return humanize.naturaldelta(datetime.utcnow() - self.bot.uptime)
+    def get_uptime(self, breif=False) -> str:
+        if breif:
+            return humanize.naturaldelta(datetime.utcnow() - self.bot.uptime)
+        else:
+            return humanize.precisedelta(datetime.utcnow() - self.bot.uptime)
 
     @commands.command(name='invite', description="Shows the bot invite.")
     async def _invite(self, ctx: ApolloContext) -> None:
@@ -84,7 +88,7 @@ class Meta(commands.Cog):
         embed.add_field(
             name="Guilds", value=f"{len(self.bot.guilds):,}", inline=True)
         embed.add_field(
-            name="Uptime", value=f"{self.get_uptime()}", inline=True)
+            name="Uptime", value=f"{self.get_uptime(breif=True)}", inline=True)
         dpy = pkg_resources.get_distribution('discord.py').version
         embed.add_field(name="discord.py", value=f"v{dpy}")
         await ctx.reply(embed=embed)
@@ -96,7 +100,7 @@ class Meta(commands.Cog):
                                 color=discord.Color.blurple()))
 
     @commands.command(name='prefix', description="Change the bot prefix.", usage="prefix [prefix]")
-    async def _prefix(self, ctx: ApolloContext, prefix: PrefixConverter = None) -> None:
+    async def _prefix(self, ctx: ApolloContext, prefix: Optional[PrefixConverter] = None) -> None:
         if ctx.author.guild_permissions.administrator and prefix:
             await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)",
                                       values={"id": ctx.guild.id, "prefix": prefix})

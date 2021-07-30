@@ -1,4 +1,5 @@
 from random import choice, randint
+from typing import Optional
 
 import discord
 from discord.ext import commands
@@ -51,19 +52,19 @@ class Fun(commands.Cog):
                                             color=discord.Color.purple()))
 
     @commands.command(name='pp', description="Shows pp size of member.", usage="pp [member]")
-    async def _pp(self, ctx: ApolloContext, member: commands.MemberConverter = None):
+    async def _pp(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
         await ctx.reply(embed=discord.Embed(title=f"{member.name}'s pp size",
                                             description=f"8{'=' * randint(1, 10)}D", color=discord.Color.purple()))
 
     @commands.command(name='gayrate', description="Shows gay of member.", usage="gayrate [member]")
-    async def _gayrate(self, ctx: ApolloContext, member: commands.MemberConverter = None):
+    async def _gayrate(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
         await ctx.reply(embed=discord.Embed(description=f":rainbow: **{member.name}** is {randint(1, 100)}% gay",
                                             color=discord.Color.purple()))
 
     @commands.command(name='roast', description="what u think it does", usage="roast [member]")
-    async def _roast(self, ctx: ApolloContext, member: commands.MemberConverter = None):
+    async def _roast(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
         await ctx.reply(f"**{member.name},** " + await self.bot.dagpi.roast())
 

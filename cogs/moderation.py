@@ -1,4 +1,5 @@
 import asyncio
+from typing import Optional
 
 import discord
 from discord.ext import commands
@@ -27,7 +28,7 @@ class Moderation(commands.Cog):
                       usage="purge <limit> [channel]")
     @commands.has_guild_permissions(manage_messages=True)
     @commands.bot_has_guild_permissions(manage_messages=True)
-    async def _purge(self, ctx: ApolloContext, limit: int, channel: commands.TextChannelConverter = None) -> None:
+    async def _purge(self, ctx: ApolloContext, limit: int, channel: Optional[commands.TextChannelConverter] = None) -> None:
         if limit < 1 or limit > 100:
             raise commands.BadArgument("Limit must been between 1 and 100.")
 
@@ -41,7 +42,7 @@ class Moderation(commands.Cog):
     @commands.command(name='ban', description="Ban a member.", usage="ban <member> [reason]")
     @commands.has_guild_permissions(ban_members=True)
     @commands.bot_has_guild_permissions(ban_members=True)
-    async def _ban(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: commands.clean_content = None) -> None:
+    async def _ban(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: Optional[commands.clean_content] = None) -> None:
         check_hierarchy(ctx, member)
         reason = reason or "no reason provided"
         try:
@@ -58,7 +59,7 @@ class Moderation(commands.Cog):
     @commands.command(name='kick', description="Kick a member.", usage="kick <member> [reason]")
     @commands.has_guild_permissions(kick_members=True)
     @commands.bot_has_guild_permissions(kick_members=True)
-    async def _kick(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: commands.clean_content = None) -> None:
+    async def _kick(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: Optional[commands.clean_content] = None) -> None:
         check_hierarchy(ctx, member)
         reason = reason or "no reason provided"
         try:
@@ -76,7 +77,7 @@ class Moderation(commands.Cog):
                       aliases=['sm'])
     @commands.has_guild_permissions(manage_messages=True)
     @commands.bot_has_guild_permissions(manage_messages=True)
-    async def _slowmode(self, ctx: ApolloContext, seconds: int, channel: commands.TextChannelConverter = None) -> None:
+    async def _slowmode(self, ctx: ApolloContext, seconds: int, channel: Optional[commands.TextChannelConverter] = None) -> None:
         if seconds < 0 or seconds > 21600:
             raise commands.BadArgument(
                 "Slowmode must been between 0 and 21,600.")

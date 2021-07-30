@@ -1,4 +1,5 @@
 from random import choice, randint
+from typing import Optional
 
 import discord
 from discord.ext import commands
@@ -25,7 +26,7 @@ class Economy(commands.Cog):
 
     @commands.command(description="Get the balance of a member.", aliases=['bal'], usage="balance [member]")
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def balance(self, ctx: ApolloContext, member: commands.MemberConverter = None):
+    async def balance(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
         acc = await Account.fetch(self.bot, member)
         embed = discord.Embed(color=discord.Color.green())
