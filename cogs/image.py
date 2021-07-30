@@ -49,42 +49,42 @@ class Image(commands.Cog):
         else:
             return True
 
-    @commands.command(name='flip', descripton="Flip an image.", usage="flip [image]")
+    @commands.command(name='flip', descripton="Flip an image.", usage="[image]")
     async def _flip(self, ctx: ApolloContext, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
         with PILImage.open(image) as image:
             new_image = image.rotate(180)
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
-    @commands.command(name='wide', descripton="Widen an image.", usage="wide [image]")
+    @commands.command(name='wide', descripton="Widen an image.", usage="[image]")
     async def _wide(self, ctx: ApolloContext, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
         with PILImage.open(image) as image:
             new_image = image.resize((image.height * 2, image.width))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
-    @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="ultrawide [image]")
+    @commands.command(name='ultrawide', descripton="Ultra widen an image.", usage="[image]")
     async def _ultrawide(self, ctx: ApolloContext, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
         with PILImage.open(image) as image:
             new_image = image.resize((image.height * 4, image.width))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
-    @commands.command(name='squish', descripton="Squish an image.", usage="squish [image]")
+    @commands.command(name='squish', descripton="Squish an image.", usage="[image]")
     async def _squish(self, ctx: ApolloContext, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
         with PILImage.open(image) as image:
             new_image = image.resize((image.height, image.width * 2))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
-    @commands.command(name='ultrasquish', descripton="Ultrasquish an image.", usage="ultrasquish [image]")
+    @commands.command(name='ultrasquish', descripton="Ultrasquish an image.", usage="[image]")
     async def _ultrasquish(self, ctx: ApolloContext, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
         with PILImage.open(image) as image:
             new_image = image.resize((image.height, image.width * 4))
         await ctx.reply(file=fileFromBytes(ctx, new_image), can_delete=True)
 
-    @commands.command(name='swirl', description="Swirl an image.", usage="swirl [image]")
+    @commands.command(name='swirl', description="Swirl an image.", usage="[image]")
     async def _swirl(self, ctx: commands.Context, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
         with WandImage(blob=image) as image:
@@ -93,7 +93,7 @@ class Image(commands.Cog):
         file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')
         await ctx.reply(file=file, can_delete=True)
 
-    @commands.command(name='blur', description="Blur an image.", usage="blur [image]")
+    @commands.command(name='blur', description="Blur an image.", usage="[image]")
     async def _blur(self, ctx: commands.Context, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
         with WandImage(blob=image) as image:
@@ -102,7 +102,7 @@ class Image(commands.Cog):
         file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')
         await ctx.reply(file=file, can_delete=True)
 
-    @commands.command(name='sharpen', description="Sharpen an image.", usage="sharpen [image]")
+    @commands.command(name='sharpen', description="Sharpen an image.", usage="[image]")
     async def _sharpen(self, ctx: commands.Context, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
         with WandImage(blob=image) as image:
@@ -111,7 +111,7 @@ class Image(commands.Cog):
         file = discord.File(BytesIO(buffer), f'{ctx.command.name}.png')
         await ctx.reply(file=file, can_delete=True)
 
-    @commands.command(name='eigishf', descripton="Eigishf meme.", usage="eigishf [image]")
+    @commands.command(name='eigishf', descripton="Eigishf meme.", usage="[image]")
     async def _eigishf(self, ctx: ApolloContext, image: Optional[ImageConverter]):
         image = await urlToBytes(ctx, image)
         image = PILImage.open(image).convert("RGBA")
@@ -121,7 +121,7 @@ class Image(commands.Cog):
         image.close()
         await ctx.reply(file=fileFromBytes(ctx, final), can_delete=True)
 
-    @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="minecraft [image]",
+    @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="[image]",
                       aliases=['mc'])
     @commands.cooldown(1, 20, commands.BucketType.guild)
     async def _minecraft(self, ctx: ApolloContext, image: Optional[ImageConverter], quality: int = 64) -> None:

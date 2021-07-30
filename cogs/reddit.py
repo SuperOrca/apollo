@@ -26,7 +26,7 @@ class Reddit(commands.Cog):
         await view.start(ctx)
 
     @commands.command(name='reddit', description="Shows a random image from a subreddit.", aliases=['r'],
-                      usage="reddit <subreddit>")
+                      usage="<subreddit>")
     async def _reddit(self, ctx: ApolloContext, subreddit) -> None:
         view = await getpost(self.bot, ctx.channel, subreddit)
         await view.start(ctx)

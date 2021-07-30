@@ -10,7 +10,7 @@ class ApolloHelp(commands.HelpCommand):
             'name': "help",
             'aliases': ["helps", "?"],
             'cooldown': commands.CooldownMapping.from_cooldown(1, 3, commands.BucketType.user)
-        }, **options)
+        }, verify_checks=False, **options)
 
     async def send_bot_help(self, mapping: dict):
         prefix = await self.context.bot.get_guild_prefix(self.context.message)
@@ -40,7 +40,7 @@ Total Commands: `{len(valid_commands)}`
 
     async def send_command_help(self, command: commands.Command):
         embed = discord.Embed(
-            title=f"**`{command.usage if command.usage is not None else command.name}`**",
+            title=f"**`{command.name + command.usage if command.usage is not None else command.name}`**",
             description=command.description, color=discord.Color.blurple())
         embed.add_field(
             name="Module", value=command.cog_name)

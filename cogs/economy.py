@@ -24,7 +24,7 @@ class Economy(commands.Cog):
         else:
             return True
 
-    @commands.command(description="Get the balance of a member.", aliases=['bal'], usage="balance [member]")
+    @commands.command(description="Get the balance of a member.", aliases=['bal'], usage="[member]")
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def balance(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
@@ -35,14 +35,14 @@ class Economy(commands.Cog):
         embed.set_author(name=f"{member}'s Account", icon_url=member.avatar.url)
         await ctx.reply(embed=embed)
 
-    @commands.command(description="Withdraw money from your bank.", usage="withdraw <money>")
+    @commands.command(description="Withdraw money from your bank.", usage="<money>")
     async def withdraw(self, ctx: ApolloContext, money: int):
         acc = await Account.fetch(self.bot, ctx.author)
         await acc.withdraw(money)
         await ctx.reply(
             embed=discord.Embed(description=f"You withdrew `${money}` from your bank.", color=discord.Color.green()))
 
-    @commands.command(description="Deposit money in your bank.", aliases=['dep'], usage="deposit <money>")
+    @commands.command(description="Deposit money in your bank.", aliases=['dep'], usage="<money>")
     async def deposit(self, ctx: ApolloContext, money: int):
         acc = await Account.fetch(self.bot, ctx.author)
         await acc.deposit(money)
@@ -61,6 +61,8 @@ class Economy(commands.Cog):
         else:
             await ctx.reply(
                 embed=discord.Embed(description="Sorry, I have no cash today. :(", color=discord.Color.green()))
+
+    # TODO more commands
 
 
 def setup(bot):

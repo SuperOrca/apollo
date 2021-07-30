@@ -46,24 +46,24 @@ class Fun(commands.Cog):
         else:
             return True
 
-    @commands.command(name='8ball', description="Answers a yes/no question.", usage="8ball <question>")
+    @commands.command(name='8ball', description="Answers a yes/no question.", usage="<question>")
     async def _8ball(self, ctx: ApolloContext, *, question: commands.clean_content) -> None:
         await ctx.reply(embed=discord.Embed(description=f"`Q:` {question}\n`A:` {choice(_8ball_responses)}",
                                             color=discord.Color.purple()))
 
-    @commands.command(name='pp', description="Shows pp size of member.", usage="pp [member]")
+    @commands.command(name='pp', description="Shows pp size of member.", usage="[member]")
     async def _pp(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
         await ctx.reply(embed=discord.Embed(title=f"{member.name}'s pp size",
                                             description=f"8{'=' * randint(1, 10)}D", color=discord.Color.purple()))
 
-    @commands.command(name='gayrate', description="Shows gay of member.", usage="gayrate [member]")
+    @commands.command(name='gayrate', description="Shows gay of member.", usage="[member]")
     async def _gayrate(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
         await ctx.reply(embed=discord.Embed(description=f":rainbow: **{member.name}** is {randint(1, 100)}% gay",
                                             color=discord.Color.purple()))
 
-    @commands.command(name='roast', description="what u think it does", usage="roast [member]")
+    @commands.command(name='roast', description="what u think it does", usage="[member]")
     async def _roast(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
         await ctx.reply(f"**{member.name},** " + await self.bot.dagpi.roast())

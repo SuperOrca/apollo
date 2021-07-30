@@ -25,7 +25,7 @@ class Utility(commands.Cog):
         else:
             return True
 
-    @commands.command(name='pypi', description="Shows details of a python package.", usage="pypi <package>")
+    @commands.command(name='pypi', description="Shows details of a python package.", usage="<package>")
     async def _pypi(self, ctx: ApolloContext, package: commands.clean_content) -> None:
         data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
 
@@ -52,7 +52,7 @@ class Utility(commands.Cog):
         embed.set_thumbnail(url="attachment://pypi.png")
         await ctx.reply(embed=embed, file=f)
 
-    @commands.command(name='npm', description="Shows details of a node package.", usage="npm <package>")
+    @commands.command(name='npm', description="Shows details of a node package.", usage="<package>")
     async def _npm(self, ctx: ApolloContext, package: commands.clean_content):
         data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
         if 'CODE' in data or 'collected' not in data:
@@ -73,7 +73,7 @@ class Utility(commands.Cog):
         embed.set_thumbnail(url="attachment://npm.png")
         await ctx.reply(embed=embed, file=f)
 
-    @commands.command(name='deno', description="Shows details of a deno package.", usage="deno <package>")
+    @commands.command(name='deno', description="Shows details of a deno package.", usage="<package>")
     async def _deno(self, ctx: ApolloContext, package: commands.clean_content) -> None:
         data = await (await self.bot.session.get(f"https://api.deno.land/modules/{package}")).json()
         if data["success"]:
@@ -90,14 +90,14 @@ class Utility(commands.Cog):
         else:
             raise commands.BadArgument("Invalid package.")
 
-    @commands.command(name='txt', description="Text to file.", usage="txt <text>")
+    @commands.command(name='txt', description="Text to file.", usage="<text>")
     async def _txt(self, ctx: ApolloContext, *, text: str) -> None:
         file = io.StringIO()
         file.write(text)
         file.seek(0)
         await ctx.reply(file=discord.File(file, 'output.txt'))
 
-    @commands.command(name='tts', description="Text to speech.", usage="tts <text>", aliases=['texttospeech'])
+    @commands.command(name='tts', description="Text to speech.", usage="<text>", aliases=['texttospeech'])
     async def _tts(self, ctx: ApolloContext, *, text: commands.clean_content) -> None:
         if len(text) > 1000:
             raise commands.BadArgument(
@@ -108,12 +108,12 @@ class Utility(commands.Cog):
         buffer.seek(0)
         await ctx.reply(file=discord.File(buffer, f"{text}.mp3"))
 
-    @commands.command(name='execute', description="Run code.", usage="execute <language> <code>")
+    @commands.command(name='execute', description="Run code.", usage="<language> <code>")
     async def _execute(self, ctx: ApolloContext, language: commands.clean_content, *, code: codeblock_converter) -> None:
         output = await self.bot.tio.execute(code.content, language=language)
         await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
 
-    @commands.command(name='avatar', description="View the avatar of a member.", usage="avatar [member]")
+    @commands.command(name='avatar', description="View the avatar of a member.", usage="[member]")
     async def _avatar(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
         member = member or ctx.author
         formats = [f"[`PNG`]({member.avatar.replace(format='png').url})"]
@@ -131,7 +131,7 @@ class Utility(commands.Cog):
         embed.set_image(url=member.avatar.url)
         await ctx.reply(embed=embed)
 
-    @commands.command(name='rawmsg', description="Get the raw json of a message.", usage="rawmsg [message]")
+    @commands.command(name='rawmsg', description="Get the raw json of a message.", usage="[message]")
     async def _rawmsg(self, ctx: ApolloContext, message: Optional[commands.MessageConverter] = None) -> None:
         message = message or ctx.message.reference
 

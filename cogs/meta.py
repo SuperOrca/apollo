@@ -99,7 +99,7 @@ class Meta(commands.Cog):
             embed=discord.Embed(title="Apollo Source", description="View the bot source [here](https://github.com/SuperOrca/apollo).",
                                 color=discord.Color.blurple()))
 
-    @commands.command(name='prefix', description="Change the bot prefix.", usage="prefix [prefix]")
+    @commands.command(name='prefix', description="Change the bot prefix.", usage="[prefix]")
     async def _prefix(self, ctx: ApolloContext, prefix: Optional[PrefixConverter] = None) -> None:
         if ctx.author.guild_permissions.administrator and prefix:
             await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)",

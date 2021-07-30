@@ -25,7 +25,7 @@ class Moderation(commands.Cog):
             return True
 
     @commands.command(name='purge', description="Clean up messages in a channel.", aliases=['clear'],
-                      usage="purge <limit> [channel]")
+                      usage="<limit> [channel]")
     @commands.has_guild_permissions(manage_messages=True)
     @commands.bot_has_guild_permissions(manage_messages=True)
     async def _purge(self, ctx: ApolloContext, limit: int, channel: Optional[commands.TextChannelConverter] = None) -> None:
@@ -39,7 +39,7 @@ class Moderation(commands.Cog):
                        embed=discord.Embed(description=f"Cleared `{len(msgs)}` messages.",
                                            color=discord.Color.dark_red()))
 
-    @commands.command(name='ban', description="Ban a member.", usage="ban <member> [reason]")
+    @commands.command(name='ban', description="Ban a member.", usage="<member> [reason]")
     @commands.has_guild_permissions(ban_members=True)
     @commands.bot_has_guild_permissions(ban_members=True)
     async def _ban(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: Optional[commands.clean_content] = None) -> None:
@@ -56,7 +56,7 @@ class Moderation(commands.Cog):
             embed=discord.Embed(description=f"Banned {member.mention} for `{reason}`. (by {ctx.author.mention})",
                                 color=discord.Color.dark_red()))
 
-    @commands.command(name='kick', description="Kick a member.", usage="kick <member> [reason]")
+    @commands.command(name='kick', description="Kick a member.", usage="<member> [reason]")
     @commands.has_guild_permissions(kick_members=True)
     @commands.bot_has_guild_permissions(kick_members=True)
     async def _kick(self, ctx: ApolloContext, member: commands.MemberConverter, *, reason: Optional[commands.clean_content] = None) -> None:
@@ -73,7 +73,7 @@ class Moderation(commands.Cog):
             embed=discord.Embed(description=f"Kicked {member.mention} for `{reason}`. (by {ctx.author.mention})",
                                 color=discord.Color.dark_red()))
 
-    @commands.command(name='slowmode', description="Edit slowmode of channel.", usage="slowmode <seconds>",
+    @commands.command(name='slowmode', description="Edit slowmode of channel.", usage="<seconds>",
                       aliases=['sm'])
     @commands.has_guild_permissions(manage_messages=True)
     @commands.bot_has_guild_permissions(manage_messages=True)
@@ -87,7 +87,7 @@ class Moderation(commands.Cog):
         await ctx.reply(embed=discord.Embed(
             description=f"Set slowmode of {channel.mention} to `{seconds}` seconds.", color=discord.Color.dark_red()))
 
-    @commands.command(name='unban', description="Unban a user.", usage="unban <user>")
+    @commands.command(name='unban', description="Unban a user.", usage="<user>")
     @commands.has_guild_permissions(ban_members=True)
     @commands.bot_has_guild_permissions(ban_members=True)
     async def _unban(self, ctx: ApolloContext, user: commands.UserConverter) -> None:
@@ -97,7 +97,7 @@ class Moderation(commands.Cog):
                                             color=discord.Color.dark_red()))
 
     @commands.command(name='setnick', description="Set nick of member. Set to 'reset' to reset.",
-                      usage="nick <member> <nick>")
+                      usage="<member> <nick>")
     @commands.has_guild_permissions(manage_nicknames=True)
     @commands.bot_has_guild_permissions(manage_nicknames=True)
     async def _setnick(self, ctx: ApolloContext, member: commands.MemberConverter, nick: commands.clean_content):
