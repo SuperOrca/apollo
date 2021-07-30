@@ -1,7 +1,6 @@
 from typing import Optional
 from inspect import Parameter
 
-import discord
 from discord.ext import commands
 
 from utils.context import ApolloContext

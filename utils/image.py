@@ -1,5 +1,4 @@
 import os
-import re
 from io import BytesIO
 
 from discord.ext import commands

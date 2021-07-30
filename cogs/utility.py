@@ -4,7 +4,6 @@ from typing import Optional
 
 import discord
 from discord.ext import commands
-from discord.message import MessageReference
 
 from jishaku.codeblocks import codeblock_converter
 from utils.context import ApolloContext
