@@ -111,6 +111,7 @@ class Apollo(commands.AutoShardedBot):
             self.blacklist = json.load(f)
         self.add_check(self.is_blacklisted)
         self.before_invoke(self.before_invoke_)
+        self._BotBase__cogs  = commands.core._CaseInsensitiveDict()
 
     async def is_blacklisted(self, ctx: ApolloContext) -> bool:
         return ctx.author.id not in self.blacklist
