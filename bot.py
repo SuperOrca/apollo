@@ -127,7 +127,7 @@ class Apollo(commands.AutoShardedBot):
 				prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id})
 			except AttributeError:
 				prefix = getenv('DEFAULT_PREFIX')
-		self.cache["prefix"][message.guild.id] = prefix
+		self.cache["prefixes"][message.guild.id] = prefix
 		return prefix
 
 	async def before_invoke_(self, ctx: ApolloContext) -> None:
