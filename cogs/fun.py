@@ -85,6 +85,7 @@ class Fun(commands.Cog):
 		await ctx.reply(embed=discord.Embed(description=joke, color=discord.Color.purple()))
 
 	@commands.command(name='wtp', description="Whose that pokemon!")
+	@commands.cooldown(1, 15, commands.BucketType.user)
 	async def _wtp(self, ctx: ApolloContext):
 		wtp = await self.bot.dagpi.wtp()
 		embed = discord.Embed(title='Whose that Pokemon?',

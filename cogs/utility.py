@@ -114,7 +114,7 @@ class Utility(commands.Cog):
 	async def _execute(self, ctx: ApolloContext, language: commands.clean_content, *, code: codeblock_converter) -> None:
 		try:
 			output = await self.bot.tio.execute(code.content, language=language)
-			await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
+			await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:500]}\n```", color=0x2F3136))
 		except LanguageNotFound as e:
 			raise commands.BadArgument(e)
 
