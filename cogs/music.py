@@ -386,7 +386,7 @@ class Music(commands.Cog):
 		ctx.voice_state.loop = not ctx.voice_state.loop
 		await ctx.tick()
 
-	@commands.command(name='play')
+	@commands.command(name='play', description="Plays a song.", aliases=['p'])
 	async def _play(self, ctx: ApolloContext, *, search: str):
 		if not ctx.voice_state.voice:
 			await ctx.invoke(self._join)
