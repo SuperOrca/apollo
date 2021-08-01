@@ -135,7 +135,7 @@ class Apollo(commands.AutoShardedBot):
 			print("fetching from cache")
 			prefix = self.cache["prefixes"].get(message.guild.id)
 		print(prefix)
-		return prefix
+		return prefix[1]
 
 	async def before_invoke_(self, ctx: ApolloContext) -> None:
 		await ctx.trigger_typing()
