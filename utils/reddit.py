@@ -43,7 +43,10 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
             super().__init__(timeout=120)
 
         async def interaction_check(self, interaction: discord.Interaction):
-            return self.ctx.author == interaction.user
+            if not self.ctx.author == interaction.user:
+                await interaction.response.send_message(f"This view is owned by {self.ctx.author.mention}. You make your own view by using the `{self.ctx.command}` command.")
+                return False
+            return True
 
         @ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple)
         async def previous(self, button: ui.Button, interaction: discord.Interaction):
