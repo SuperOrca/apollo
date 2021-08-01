@@ -17,11 +17,11 @@ ENABLED_SYMBOLS = ("true", "t", "yes", "y", "on", "1")
 
 
 def enabled(flag: str) -> bool:
-    """
-    Returns whether an environment flag is enabled.
-    """
+	"""
+	Returns whether an environment flag is enabled.
+	"""
 
-    return os.getenv(flag, "").lower() in ENABLED_SYMBOLS
+	return os.getenv(flag, "").lower() in ENABLED_SYMBOLS
 
 
 # Flag to indicate the Jishaku base command group should be hidden

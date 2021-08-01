@@ -17,7 +17,7 @@ from jishaku.features.baseclass import Feature  # noqa: F401
 from jishaku.meta import *  # noqa: F401
 
 __all__ = (
-    'Jishaku',
-    'Feature',
-    'setup'
+	'Jishaku',
+	'Feature',
+	'setup'
 )
