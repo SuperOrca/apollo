@@ -47,9 +47,14 @@ class Meta(commands.Cog):
 		embed.add_field(name="No Permissions", value=f"[click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions.none())})", inline=True)
 		await ctx.reply(embed=embed)
 
-	@commands.command(name='discordbotlist', description="Shows the bot invite.", aliases=['dbl'])
+	@commands.command(name='discordbotlist', description="Shows the discordbotlist profile.", aliases=['dbl'])
 	async def _discordbotlist(self, ctx: ApolloContext) -> None:
 		embed = discord.Embed(title="Apollo Bot List", description="Click [here](https://discordbotlist.com/bots/apollo-5670) for the bot list.", color=discord.Color.blurple())
+		await ctx.reply(embed=embed)
+
+	@commands.command(name='discordbotsgg', description="Shows the discordbotsgg profile.", aliases=['dbgg'])
+	async def _discordbotlist(self, ctx: ApolloContext) -> None:
+		embed = discord.Embed(title="Apollo Bot List", description="Click [here](https://discord.bots.gg/bots/847566539607769089) for the bot list.", color=discord.Color.blurple())
 		await ctx.reply(embed=embed)
 
 	@commands.command(name='uptime', description="Shows the bot uptime.")
