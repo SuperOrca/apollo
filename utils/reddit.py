@@ -8,7 +8,7 @@ from utils.context import ApolloContext
 from utils.metrics import isImage
 
 
-async def getpost(bot, channel, subreddit) -> discord.Embed:
+async def getpost(bot, ctx, subreddit) -> discord.Embed:
 	"""A method that fetches a post from a subreddit and returns an embed with a view."""
 	async def post():
 		embed = None
@@ -19,7 +19,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
 				posts = data[0]['data']['children']
 				num = (len(posts) - 1)
 				post = posts[random.randint(0, num)]['data']
-				if post['over_18'] and not channel.nsfw:
+				if post['over_18'] and not ctx.channel.nsfw:
 					embed = None
 				elif not isImage(post['url']):
 					embed = None
@@ -76,7 +76,7 @@ async def getpost(bot, channel, subreddit) -> discord.Embed:
 				await interaction.message.edit(embed=embed)
 
 		@classmethod
-		async def start(cls, ctx: ApolloContext):
+		async def start(cls):
 			cls.ctx = ctx
 			cls.log = []
 			cls.num = 0

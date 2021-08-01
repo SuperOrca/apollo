@@ -117,6 +117,7 @@ class Apollo(commands.AutoShardedBot):
 	def init_cache(self):
 		self.cache = {}
 		self.cache["prefixes"] = {}
+		self.cache["economy"] = {}
 
 	async def is_blacklisted(self, ctx: ApolloContext) -> bool:
 		return ctx.author.id not in self.blacklist

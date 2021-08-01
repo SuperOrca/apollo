@@ -33,6 +33,7 @@ class Account:
 		await self.commit()
 
 	async def commit(self):
+		self.bot.cache["economy"][self.member.id] = (self.wallet, self.bank, self.bankcap, self.multi, self.daily)
 		await self.bot.db.execute(
 			"UPDATE economy SET wallet = :wallet, bank = :bank, bankcap = :bankcap, multi = :multi, daily = :daily",
 			values={
@@ -49,16 +50,19 @@ class Account:
 		if member.bot:
 			raise commands.BadArgument(
 				"You cannot use this command with a bot.")
-		data = await bot.db.fetch_one("SELECT * FROM economy WHERE id = :id", values={"id": member.id})
-		if data is None:
-			bot.log.info(f"Creating new account for {member} ({member.id}).")
-			await bot.db.execute("INSERT INTO economy VALUES (:id, :wallet, :bank, :bankcap, :multi, :daily)", values={
-				"id": member.id,
-				"wallet": 0,
-				"bank": 0,
-				"bankcap": 500,
-				"multi": 0,
-				"daily": None
-			})
-			data = (member.id, 0, 0, 500, 0, None)
+		if not bot.cache["economy"].get(member.id):
+			data = await bot.db.fetch_one("SELECT * FROM economy WHERE id = :id", values={"id": member.id})
+			if data is None:
+				bot.log.info(f"Creating new account for {member} ({member.id}).")
+				await bot.db.execute("INSERT INTO economy VALUES (:id, :wallet, :bank, :bankcap, :multi, :daily)", values={
+					"id": member.id,
+					"wallet": 0,
+					"bank": 0,
+					"bankcap": 500,
+					"multi": 0,
+					"daily": None
+				})
+				data = (member.id, 0, 0, 500, 0, None)
+		else:
+			data = bot.cache["economy"].get(member.id)
 		return cls(bot, member, data)
