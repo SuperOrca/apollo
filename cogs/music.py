@@ -208,12 +208,12 @@ class Music(commands.Cog):
 
 		await ctx.reply(embed=discord.Embed(description=f'Connected to: **{channel}**', color=discord.Color.dark_green()))
 
-	@commands.command(name='play', description="Play a song.", aliases=['sing'])
+	@commands.command(name='play', description="Play a song.", aliases=['sing', 'p'])
 	async def _play(self, ctx: ApolloContext, *, search: commands.clean_content):
 		vc = ctx.voice_client
 
 		if not vc:
-			await ctx.invoke(self.connect_)
+			await ctx.invoke(self._connect)
 
 		player = self.get_player(ctx)
 
