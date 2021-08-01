@@ -160,7 +160,7 @@ class Apollo(commands.AutoShardedBot):
 		self.log.info("Bot ready!")
 
 	async def on_message(self, message: discord.Message) -> None:
-		if message.author.bot or isinstance(message.channel, (discord.DMChannel, discord.GroupChannel)):
+		if message.author.bot or not message.guild:
 			return
 		if message.content.startswith('jsk') and message.author.id == int(getenv('OWNER_ID')):
 			message.content = self.user.mention + " " + message.content

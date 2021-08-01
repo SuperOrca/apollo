@@ -15,13 +15,13 @@ class PrefixConverter(commands.clean_content):
 		self.escape_markdown = True
 
 		if not (argument := (await super().convert(ctx=ctx, argument=argument)).strip()):
-			raise commands.BadArgument
+			raise commands.CommandError
 
 		if '`' in argument:
-			raise commands.BadArgument(
+			raise commands.CommandError(
 				'Your prefix can not contain backtick characters.')
 		if len(argument) > 15:
-			raise commands.BadArgument(
+			raise commands.CommandError(
 				'Your prefix can not be more than 15 characters.')
 
 		return argument

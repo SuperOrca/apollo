@@ -32,7 +32,7 @@ class Utility(commands.Cog):
 		data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
 
 		if data.status != 200:
-			raise commands.BadArgument("Invalid package.")
+			raise commands.CommandError("Invalid package.")
 
 		data = (await data.json())['info']
 		embed = discord.Embed(
@@ -58,7 +58,7 @@ class Utility(commands.Cog):
 	async def _npm(self, ctx: ApolloContext, package: commands.clean_content):
 		data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
 		if 'CODE' in data or 'collected' not in data:
-			raise commands.BadArgument("Invalid package.")
+			raise commands.CommandError("Invalid package.")
 
 		data = data['collected']['metadata']
 		embed = discord.Embed(title=data['name'], description=data.get(
@@ -90,7 +90,7 @@ class Utility(commands.Cog):
 			embed.set_thumbnail(url="attachment://deno.png")
 			await ctx.reply(embed=embed, file=f)
 		else:
-			raise commands.BadArgument("Invalid package.")
+			raise commands.CommandError("Invalid package.")
 
 	@commands.command(name='txt', description="Text to file.", usage="<text>")
 	async def _txt(self, ctx: ApolloContext, *, text: str) -> None:
@@ -102,7 +102,7 @@ class Utility(commands.Cog):
 	@commands.command(name='tts', description="Text to speech.", usage="<text>", aliases=['texttospeech'])
 	async def _tts(self, ctx: ApolloContext, *, text: commands.clean_content) -> None:
 		if len(text) > 1000:
-			raise commands.BadArgument(
+			raise commands.CommandError(
 				"The text for text to speech can not be over 200 characters.")
 
 		buffer = io.BytesIO()
@@ -116,7 +116,7 @@ class Utility(commands.Cog):
 			output = await self.bot.tio.execute(code.content, language=language)
 			await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:500]}\n```", color=0x2F3136))
 		except LanguageNotFound as e:
-			raise commands.BadArgument(e)
+			raise commands.CommandError(e)
 
 	@commands.command(name='avatar', description="View the avatar of a member.", usage="[member]")
 	async def _avatar(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
@@ -141,7 +141,7 @@ class Utility(commands.Cog):
 		message = message or ctx.message.reference
 
 		if not message:
-			raise commands.BadArgument(
+			raise commands.CommandError(
 				"You didn't reply or specify a message.")
 
 		channel = message.channel_id if isinstance(

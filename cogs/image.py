@@ -124,12 +124,12 @@ class Image(commands.Cog):
 	@commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="[image]",
 					  aliases=['mc'])
 	@commands.cooldown(1, 20, commands.BucketType.guild)
-	async def _minecraft(self, ctx: ApolloContext, image: Optional[ImageConverter], quality: int = 64) -> None:
+	async def _minecraft(self, ctx: ApolloContext, image: Optional[ImageConverter], quality: Optional[int] = 64) -> None:
 		"""
 		Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
 		"""
 		if 128 < quality or quality < 1:
-			raise commands.BadArgument("Quality must be between 1 and 128.")
+			raise commands.CommandError("Quality must be between 1 and 128.")
 		image = await urlToBytes(ctx, image)
 		file = discord.File(await process_minecraft(self.bot, image, quality), f"{ctx.command.name}.png")
 		await ctx.reply(file=file, can_delete=True)

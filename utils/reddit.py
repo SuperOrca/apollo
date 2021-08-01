@@ -34,7 +34,7 @@ async def getpost(bot, ctx, subreddit) -> discord.Embed:
 				embed = None
 			i += 1
 			if i >= 5:
-				raise commands.BadArgument(
+				raise commands.CommandError(
 					f"Could not find a image from `{subreddit}`.")
 		return embed
 
