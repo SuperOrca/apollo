@@ -291,11 +291,10 @@ class Music(commands.Cog):
 		ctx.voice_state.voice = await destination.connect()
 		await ctx.tick()
 
-	@commands.command(name='leave', description="Clears the queue and leaves the voice channel.", aliases=['disconnect', 'stop'])
+	@commands.command(name='leave', description="Clears the queue and leaves the voice channel.", aliases=['disconnect', 'stop', 'dc'])
 	async def _leave(self, ctx: ApolloContext):
 		if not ctx.voice_state.voice:
 			raise commands.CommandError('Not connected to any voice channel.')
-			return
 
 		await ctx.voice_state.stop()
 		del self.voice_states[ctx.guild.id]
@@ -333,17 +332,6 @@ class Music(commands.Cog):
 			ctx.voice_state.voice.resume()
 			await ctx.tick()
 
-		await ctx.tick(False)
-
-	@commands.command(name='stop', description="Stops playing song and clears the queue.")
-	@commands.has_permissions(manage_guild=True)
-	async def _stop(self, ctx: ApolloContext):
-		ctx.voice_state.songs.clear()
-
-		if not ctx.voice_state.is_playing:
-			ctx.voice_state.voice.stop()
-			await ctx.tick()
-		
 		await ctx.tick(False)
 
 	@commands.command(name='skip', description="Skip a song.")
