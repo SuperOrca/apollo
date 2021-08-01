@@ -1,5 +1,6 @@
 import io
 import json
+import random
 from typing import Optional
 
 import discord
@@ -151,6 +152,10 @@ class Utility(commands.Cog):
         raw_message = await self.bot.http.get_message(channel, message)
         raw_message = json.dumps(raw_message, indent=4)
         await ctx.reply(f"```json\n{raw_message}\n```")
+
+    @commands.command(name='random', description="Shows a random number between 0 and 1.")
+    async def _random(self, ctx: ApolloContext):
+        await ctx.reply(str(random.random()))
 
     # TODO userinfo command
     # TODO serverinfo command

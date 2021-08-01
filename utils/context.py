@@ -10,7 +10,7 @@ class TrashView(ui.View):
 
     async def interaction_check(self, interaction: discord.Interaction):
         if not self.ctx.author == interaction.user:
-            await interaction.response.send_message(f"This view is owned by {self.ctx.author.mention}. You make your own view by using the `{self.ctx.command}` command.")
+            await interaction.response.send_message(f"This view is owned by {self.ctx.author.mention}. You make your own view by using the `{self.ctx.command}` command.", ephemeral=True)
             return False
         return True
 

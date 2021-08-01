@@ -64,6 +64,7 @@ class Apollo(commands.AutoShardedBot):
         self.owner_ids = (int(getenv('OWNER_ID')),)
         self.init_logging()
         self.init_constants()
+        self.init_cache()
 
     async def init(self) -> None:
         self.db = Database('sqlite:///bot.db')
@@ -111,17 +112,23 @@ class Apollo(commands.AutoShardedBot):
             self.blacklist = json.load(f)
         self.add_check(self.is_blacklisted)
         self.before_invoke(self.before_invoke_)
-        self._BotBase__cogs  = commands.core._CaseInsensitiveDict()
+        self._BotBase__cogs = commands.core._CaseInsensitiveDict()
+
+    def init_cache(self):
+        self.cache = {}
+        self.cahce["prefixes"] = {}
 
     async def is_blacklisted(self, ctx: ApolloContext) -> bool:
         return ctx.author.id not in self.blacklist
 
     async def get_guild_prefix(self, message: discord.Message) -> list:
-        try:
-            prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id})
-        except AttributeError:
-            prefix = None
-        return getenv('DEFAULT_PREFIX') if prefix is None else prefix[1]
+        if (prefix := self.cache["prefixes"].get(message.guild.id)) is None:
+            try:
+                prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id})
+            except AttributeError:
+                prefix = getenv('DEFAULT_PREFIX')
+        self.cache["prefix"][message.guild.id] = prefix
+        return prefix
 
     async def before_invoke_(self, ctx: ApolloContext) -> None:
         await ctx.trigger_typing()
@@ -178,6 +185,7 @@ class Apollo(commands.AutoShardedBot):
 
         self.db.execute("DELETE FROM prefixes WHERE id = :id",
                         values={"id": guild.id})
+        self.cache["prefixes"].pop(guild.id)
 
     @staticmethod
     async def send_error_embed(ctx: ApolloContext, content: str, **kwargs) -> None:
@@ -198,7 +206,7 @@ class Apollo(commands.AutoShardedBot):
             return
         if isinstance(error, _input):
             m = str(error).replace('"', '`')
-        
+
         if isinstance(error, commands.CommandNotFound):
             return await ctx.tick(False)
         if isinstance(error, commands.MissingRequiredArgument):

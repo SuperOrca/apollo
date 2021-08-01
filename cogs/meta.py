@@ -104,6 +104,7 @@ class Meta(commands.Cog):
         if ctx.author.guild_permissions.administrator and prefix:
             await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)",
                                       values={"id": ctx.guild.id, "prefix": prefix})
+            self.bot.cache["prefixes"][ctx.guild.id] = prefix
             await ctx.reply(embed=discord.Embed(title="Apollo Prefix", description=f"Set the server prefix to `{prefix}`.",
                                                 color=discord.Color.blurple()))
         else:
