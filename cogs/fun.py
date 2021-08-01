@@ -87,15 +87,20 @@ class Fun(commands.Cog):
     async def _wtp(self, ctx: ApolloContext):
         wtp = await self.bot.dagpi.wtp()
         embed = discord.Embed(title='Whose that Pokemon?',
-                              description=f"Abilties: {', '.join(wtp.abilities)}")
+                              description=f"Abilties: {', '.join(wtp.abilities)}", color=discord.Color.purple())
         embed.set_image(url=wtp.question)
         await ctx.send(embed=embed)
         message = await self.bot.wait_for('message', timeout=10, check=lambda m: m.channel == ctx.channel and m.content.lower() == wtp.name.lower())
-        embed = discord.Embed(
-            title=f"{message.author.name} got the Pokemon!", description=f"It was a **{wtp.name}**.")
-        embed.set_image(url=wtp.answer)
-        await ctx.send(embed=embed)
-
+        try:
+            embed = discord.Embed(
+                title=f"{message.author.name} got the Pokemon!", description=f"It was a **{wtp.name}**.", color=discord.Color.purple())
+            embed.set_image(url=wtp.answer)
+            await ctx.send(embed=embed)
+        except TimeoutError:
+            embed = discord.Embed(
+                title=f"Nobody got the Pokemon!", description=f"It was a **{wtp.name}**.", color=discord.Color.purple())
+            embed.set_image(url=wtp.answer)
+            await ctx.send(embed=embed)
 
 def setup(bot) -> None:
     bot.add_cog(Fun(bot))
