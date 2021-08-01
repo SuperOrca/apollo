@@ -91,8 +91,8 @@ class Fun(commands.Cog):
                               description=f"**Abilties:** {', '.join(wtp.abilities)}", color=discord.Color.purple())
         embed.set_image(url=wtp.question)
         await ctx.send(embed=embed)
-        message = await self.bot.wait_for('message', timeout=10, check=lambda m: m.channel == ctx.channel and m.content.lower() == wtp.name.lower())
         try:
+            message = await self.bot.wait_for('message', timeout=10, check=lambda m: m.channel == ctx.channel and m.content.lower() == wtp.name.lower())
             embed = discord.Embed(
                 title=f"{message.author.name} got the Pokemon!", description=f"It was a **{wtp.name}**.", color=discord.Color.purple())
             embed.set_image(url=wtp.answer)
