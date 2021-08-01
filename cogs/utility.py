@@ -4,6 +4,7 @@ from typing import Optional
 
 import discord
 from discord.ext import commands
+from async_tio import LanguageNotFound
 
 from jishaku.codeblocks import codeblock_converter
 from utils.context import ApolloContext
@@ -110,8 +111,11 @@ class Utility(commands.Cog):
 
     @commands.command(name='execute', description="Run code.", usage="<language> <code>")
     async def _execute(self, ctx: ApolloContext, language: commands.clean_content, *, code: codeblock_converter) -> None:
-        output = await self.bot.tio.execute(code.content, language=language)
-        await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
+        try:
+            output = await self.bot.tio.execute(code.content, language=language)
+            await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:200]}\n```", color=0x2F3136))
+        except LanguageNotFound as e:
+            raise commands.BadArgument(e)
 
     @commands.command(name='avatar', description="View the avatar of a member.", usage="[member]")
     async def _avatar(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
@@ -148,8 +152,8 @@ class Utility(commands.Cog):
         raw_message = json.dumps(raw_message, indent=4)
         await ctx.reply(f"```json\n{raw_message}\n```")
 
-        # TODO userinfo command
-        # TODO serverinfo command
+    # TODO userinfo command
+    # TODO serverinfo command
 
 
 def setup(bot) -> None:
