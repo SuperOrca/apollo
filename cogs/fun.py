@@ -68,6 +68,34 @@ class Fun(commands.Cog):
         member = member or ctx.author
         await ctx.reply(f"**{member.name},** " + await self.bot.dagpi.roast())
 
+    @commands.command(name='fact', description="Shows a random fact.")
+    async def _fact(self, ctx: ApolloContext):
+        fact = await self.bot.dagpi.fact()
+        await ctx.reply(embed=discord.Embed(description=fact, color=discord.Color.purple()))
+
+    @commands.command(name='yomama', description="Shows a random yomama joke.")
+    async def _yomama(self, ctx: ApolloContext):
+        joke = await self.bot.dagpi.yomama()
+        await ctx.reply(embed=discord.Embed(description=joke, color=discord.Color.purple()))
+
+    @commands.command(name='joke', description="Shows a random yomama joke.")
+    async def _joke(self, ctx: ApolloContext):
+        joke = await self.bot.dagpi.joke()
+        await ctx.reply(embed=discord.Embed(description=joke, color=discord.Color.purple()))
+
+    @commands.command(name='wtp', description="Whose that pokemon!")
+    async def _wtp(self, ctx: ApolloContext):
+        wtp = await self.bot.dagpi.wtp()
+        embed = discord.Embed(title='Whose that Pokemon?',
+                              description=f"Abilties: {', '.join(wtp.abilties)}")
+        embed.set_image(url=wtp.question)
+        await ctx.send(embed=embed)
+        message = await self.bot.wait_for('message', timeout=10, check=lambda m: m.channel == ctx.channel and m.content.lower() == wtp.name.lower())
+        embed = discord.Embed(
+            title=f"{message.author.name} got the Pokemon!", description=f"It was a **{wtp.name}**.")
+        embed.set_image(url=wtp.answer)
+        await ctx.send(embed=embed)
+
 
 def setup(bot) -> None:
     bot.add_cog(Fun(bot))
