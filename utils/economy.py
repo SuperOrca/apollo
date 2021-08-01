@@ -63,6 +63,7 @@ class Account:
 					"daily": None
 				})
 				data = (member.id, 0, 0, 500, 0, None)
+			bot.cache["economy"][member.id] = data
 		else:
 			data = bot.cache["economy"].get(member.id)
 		return cls(bot, member, data)
