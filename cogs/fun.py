@@ -87,7 +87,7 @@ class Fun(commands.Cog):
     async def _wtp(self, ctx: ApolloContext):
         wtp = await self.bot.dagpi.wtp()
         embed = discord.Embed(title='Whose that Pokemon?',
-                              description=f"Abilties: {', '.join(wtp.abilties)}")
+                              description=f"Abilties: {', '.join(wtp.abilities)}")
         embed.set_image(url=wtp.question)
         await ctx.send(embed=embed)
         message = await self.bot.wait_for('message', timeout=10, check=lambda m: m.channel == ctx.channel and m.content.lower() == wtp.name.lower())
