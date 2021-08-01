@@ -122,12 +122,14 @@ class Apollo(commands.AutoShardedBot):
 		return ctx.author.id not in self.blacklist
 
 	async def get_guild_prefix(self, message: discord.Message) -> list:
-		if (prefix := self.cache["prefixes"].get(message.guild.id)) is None:
+		if self.cache["prefixes"].get(message.guild.id, None) is None:
 			try:
 				prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id})
 			except AttributeError:
 				prefix = getenv('DEFAULT_PREFIX')
-		self.cache["prefixes"][message.guild.id] = prefix
+			self.cache["prefixes"][message.guild.id] = prefix
+		else:
+			prefix = self.cache["prefixes"].get(message.guild.id)
 		return prefix
 
 	async def before_invoke_(self, ctx: ApolloContext) -> None:
