@@ -124,12 +124,17 @@ class Apollo(commands.AutoShardedBot):
 	async def get_guild_prefix(self, message: discord.Message) -> list:
 		if self.cache["prefixes"].get(message.guild.id, None) is None:
 			try:
+				print("fetching from db")
 				prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id})
 			except AttributeError:
+				print("fetching default prefix")
 				prefix = getenv('DEFAULT_PREFIX')
+			print("setting cache")
 			self.cache["prefixes"][message.guild.id] = prefix
 		else:
+			print("fetching from cache")
 			prefix = self.cache["prefixes"].get(message.guild.id)
+		print(prefix)
 		return prefix
 
 	async def before_invoke_(self, ctx: ApolloContext) -> None:
