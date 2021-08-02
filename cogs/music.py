@@ -180,7 +180,6 @@ class VoiceState:
 
         self._loop = False
         self._volume = 0.5
-        self.skip_votes = set()
 
         self.audio_player = bot.loop.create_task(self.audio_player_task())
 
@@ -232,8 +231,6 @@ class VoiceState:
         self.next.set()
 
     def skip(self):
-        self.skip_votes.clear()
-
         if self.is_playing:
             self.voice.stop()
 
@@ -333,7 +330,7 @@ class Music(commands.Cog):
 
         await ctx.tick(False)
 
-    @commands.command(name='skip', description="Skip a song.")
+    @commands.command(name='skip', description="Skip a song.", aliases=['s'])
     async def _skip(self, ctx: ApolloContext):
         if not ctx.voice_state.is_playing:
             raise commands.CommandError('Not playing any music right now...')
