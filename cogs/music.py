@@ -275,7 +275,7 @@ class Music(commands.Cog):
     async def cog_before_invoke(self, ctx: ApolloContext):
         ctx.voice_state = self.get_voice_state(ctx)
 
-    @commands.command(name='join', description="Joins a voice channel.")
+    @commands.command(name='join', description="Joins a voice channel.", aliases=['connect'])
     async def _join(self, ctx: ApolloContext):
         destination = ctx.author.voice.channel
         if ctx.voice_state.voice:
@@ -285,19 +285,18 @@ class Music(commands.Cog):
         ctx.voice_state.voice = await destination.connect()
         await ctx.tick()
 
-    @commands.command(name='summon', description="Summons the bot to a voice channel.")
-    @commands.has_permissions(manage_guild=True)
-    async def _summon(self, ctx: ApolloContext, *, channel: Optional[commands.VoiceChannelConverter] = None):
-        if not channel and not ctx.author.voice:
-            raise Error('You are neither connected to a voice channel nor specified a channel to join.')
+    # @commands.command(name='summon', description="Summons the bot to a voice channel.")
+    # async def _summon(self, ctx: ApolloContext, *, channel: Optional[commands.VoiceChannelConverter] = None):
+    #     if not channel and not ctx.author.voice:
+    #         raise Error('You are neither connected to a voice channel nor specified a channel to join.')
 
-        destination = channel or ctx.author.voice.channel
-        if ctx.voice_state.voice:
-            await ctx.voice_state.voice.move_to(destination)
-            return
+    #     destination = channel or ctx.author.voice.channel
+    #     if ctx.voice_state.voice:
+    #         await ctx.voice_state.voice.move_to(destination)
+    #         return
 
-        ctx.voice_state.voice = await destination.connect()
-        await ctx.tick()
+    #     ctx.voice_state.voice = await destination.connect()
+    #     await ctx.tick()
 
     @commands.command(name='leave', description="Clears the queue and leaves the voice channel.",
                       aliases=['disconnect', 'stop', 'dc'])
@@ -309,23 +308,22 @@ class Music(commands.Cog):
         del self.voice_states[ctx.guild.id]
         await ctx.tick()
 
-    @commands.command(name='volume', description="Sets the volume of the player.")
-    async def _volume(self, ctx: ApolloContext, *, volume: int):
-        if not ctx.voice_state.is_playing:
-            raise Error('Nothing being played at the moment.')
+    # @commands.command(name='volume', description="Sets the volume of the player.")
+    # async def _volume(self, ctx: ApolloContext, *, volume: int):
+    #     if not ctx.voice_state.is_playing:
+    #         raise Error('Nothing being played at the moment.')
 
-        if 0 > volume > 100:
-            raise Error('Volume must be between 0 and 100')
+    #     if 0 > volume > 100:
+    #         raise Error('Volume must be between 0 and 100')
 
-        ctx.voice_state.volume = volume / 100
-        await ctx.tick()
+    #     ctx.voice_state.volume = volume / 100
+    #     await ctx.tick()
 
     @commands.command(name='now', description="Displays the currently playing song.", aliases=['current', 'playing', 'np'])
     async def _now(self, ctx: ApolloContext):
         await ctx.reply(embed=ctx.voice_state.current.create_embed())
 
     @commands.command(name='pause', description="Pauses the currently playing song.")
-    @commands.has_permissions(manage_guild=True)
     async def _pause(self, ctx: ApolloContext):
         if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
             ctx.voice_state.voice.pause()
@@ -333,8 +331,7 @@ class Music(commands.Cog):
 
         await ctx.tick(False)
 
-    @commands.command(name='resume', description="Resumes a currently paused song.")
-    @commands.has_permissions(manage_guild=True)
+    @commands.command(name='resume', description="Resumes a currently paused song.", aliases=['unpause'])
     async def _resume(self, ctx: ApolloContext):
         if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
             ctx.voice_state.voice.resume()
@@ -350,8 +347,8 @@ class Music(commands.Cog):
         ctx.voice_state.skip()
         await ctx.tick()
 
-    @commands.command(name='queue', description="Shows the player's queue.")
-    async def _queue(self, ctx: ApolloContext, *, page: int = 1):
+    @commands.command(name='queue', description="Shows the player's queue.", aliases=['q'])
+    async def _queue(self, ctx: ApolloContext, *, page: Optional[int] = 1):
         if len(ctx.voice_state.songs) == 0:
             raise Error('Empty queue.')
 
@@ -363,14 +360,15 @@ class Music(commands.Cog):
 
         queue = ''
         for i, song in enumerate(ctx.voice_state.songs[start:end], start=start):
-            queue += '`{0}.` [**{1.source.title}**]({1.source.url})\n'.format(
+            queue += '**{0}.** [{1.source.title}]({1.source.url}) | {1.source.requester.mention}\n'.format(
                 i + 1, song)
-
-        embed = (Embed(description='**{} tracks:**\n\n{}'.format(len(ctx.voice_state.songs), queue))
+        
+        # **{} tracks:**\n\n || .format(len(ctx.voice_state.songs))
+        embed = (Embed(description=queue)
                  .set_footer(text='Viewing page {}/{}'.format(page, pages)))
         await ctx.reply(embed=embed)
 
-    @commands.command(name='shuffle', description="Shuffles the queue.")
+    @commands.command(name='shuffle', description="Shuffles the queue.", aliases=['sh'])
     async def _shuffle(self, ctx: ApolloContext):
         if len(ctx.voice_state.songs) == 0:
             raise Error('Empty queue.')
@@ -378,7 +376,7 @@ class Music(commands.Cog):
         ctx.voice_state.songs.shuffle()
         await ctx.tick()
 
-    @commands.command(name='remove', description="Removes a song from the queue at a given index.")
+    @commands.command(name='remove', description="Removes a song from the queue at a given index.", aliases=['rm'])
     async def _remove(self, ctx: ApolloContext, index: int):
         if len(ctx.voice_state.songs) == 0:
             raise Error('Empty queue.')
