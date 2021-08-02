@@ -65,7 +65,6 @@ class Apollo(commands.AutoShardedBot):
         self.owner_ids = (int(getenv('OWNER_ID')),)
         self.init_logging()
         self.init_constants()
-        self.init_cache()
 
     async def init(self) -> None:
         self.db = Database('sqlite:///bot.db')
@@ -92,6 +91,7 @@ class Apollo(commands.AutoShardedBot):
             getenv('DAGPI'), session=self.session, loop=self.loop)
         self.tts = aiogTTS()
         self.psutil_process = psutil.Process()
+        self.init_cache()
 
     def init_logging(self):
         coloredlogs.install()
@@ -125,8 +125,7 @@ class Apollo(commands.AutoShardedBot):
 
     async def get_guild_prefix(self, message: discord.Message) -> list:
         try:
-            prefix = self.cache["prefixes"].get(message.guild.id, (
-                await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id}))[1])
+            prefix = self.cache["prefixes"].get(message.guild.id, (await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id}))[1])
         except AttributeError:
             prefix = getenv('DEFAULT_PREFIX')
         self.cache["prefixes"][message.guild.id] = prefix
@@ -148,7 +147,6 @@ class Apollo(commands.AutoShardedBot):
                     type(e), e, e.__traceback__, file=sys.stderr)
 
     async def on_ready(self) -> None:
-        await self.wait_until_ready()
         self.log.info("Running setup...")
         await self.init()
         if not hasattr(self, 'uptime'):
