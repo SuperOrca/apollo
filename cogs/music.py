@@ -136,7 +136,7 @@ class Song:
         self.requester = source.requester
 
     def create_embed(self):
-        embed = Embed(f"[{self.source.title}]({self.source.url})", description=f"""
+        embed = Embed(title=f"[{self.source.title}]({self.source.url})", description=f"""
 		**Requester**: {self.requester.mention}
 		**Duration**: {self.source.duration}
 		**Artist**: [{self.source.uploader}]({self.source.uploader_url})
@@ -307,7 +307,7 @@ class Music(commands.Cog):
         ctx.voice_state.volume = volume / 100
         await ctx.tick()
 
-    @commands.command(name='now', description="Displays the currently playing song.", aliases=['current', 'playing'])
+    @commands.command(name='now', description="Displays the currently playing song.", aliases=['current', 'playing', 'np'])
     async def _now(self, ctx: ApolloContext):
         # TODO work on embed
         await ctx.reply(embed=ctx.voice_state.current.create_embed())
