@@ -148,6 +148,7 @@ class Apollo(commands.AutoShardedBot):
                     type(e), e, e.__traceback__, file=sys.stderr)
 
     async def on_ready(self) -> None:
+        await self.wait_until_ready()
         self.log.info("Running setup...")
         await self.init()
         if not hasattr(self, 'uptime'):
