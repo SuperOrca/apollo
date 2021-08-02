@@ -7,7 +7,7 @@ from discord.ext import commands
 from utils.context import ApolloContext
 from utils.metrics import Embed
 
-_8ball_responses = [
+_8ball_responses = (
     "It is certain",
     "It is decidedly so",
     "Without a doubt",
@@ -28,7 +28,7 @@ _8ball_responses = [
     "My sources say no",
     "Outlook not so good",
     "Very doubtful"
-]
+)
 
 
 class Fun(commands.Cog):
@@ -49,7 +49,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='8ball', description="Answers a yes/no question.", usage="<question>")
     async def _8ball(self, ctx: ApolloContext, *, question: commands.clean_content) -> None:
-        await ctx.reply(embed=Embed(description=f"`Q:` {question}\n`A:` {choice(_8ball_responses)}", ))
+        await ctx.reply(embed=Embed(description=f"**Question**: {question}\n**Answer**: {choice(_8ball_responses)}"))
 
     @commands.command(name='pp', description="Shows pp size of member.", usage="[member]")
     async def _pp(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
