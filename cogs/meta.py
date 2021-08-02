@@ -87,7 +87,8 @@ class Meta(commands.Cog):
         owner = self.bot.get_user(self.bot.owner_ids[0])
         dpy = pkg_resources.get_distribution('discord.py').version
         embed = Embed(
-            title="Apollo Info", description=self.bot.description, description=f"""
+            title="Apollo Info", description=f"""
+            **Description:** {self.bot.description}
 			**Version**: {self.bot.__version__}
 			**Owner**: {owner}
 			**Members**: {sum([guild.member_count for guild in self.bot.guilds]):,}
