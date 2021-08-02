@@ -3,14 +3,15 @@ from functools import wraps
 
 
 def asyncexe():
-	"""Make synchronous functions asynchronous."""
-	def decorator(func):
-		@wraps(func)
-		def wrapper(*args, **kwargs):
-			partial = partial(func, *args, **kwargs)
-			loop = asyncio.get_event_loop()
-			return loop.run_in_executor(None, partial)
+    """Make synchronous functions asynchronous."""
 
-		return wrapper
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            partial = partial(func, *args, **kwargs)
+            loop = asyncio.get_event_loop()
+            return loop.run_in_executor(None, partial)
 
-	return decorator
+        return wrapper
+
+    return decorator
