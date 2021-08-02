@@ -75,9 +75,9 @@ class Meta(commands.Cog):
         await self.bot.db.execute("SELECT 1")
         database = (count() - database) * 1000
         embed = Embed(title="Apollo Ping", description=f"""
-		**Websocket**: `{(self.bot.latency * 1000):.2f}`
-		**Typing**: `{typing:.2f}`
-		**Database:** `{database:.2f}`
+		**Websocket**: {(self.bot.latency * 1000):.2f}ms
+		**Typing**: {typing:.2f}ms
+		**Database:** {database:.2f}ms
 		""")
         embed.set_thumbnail(url=self.bot.user.avatar.url)
         await m.edit(content=None, embed=embed)
