@@ -1,6 +1,7 @@
 import time
 
 import discord
+from discord.ext import commands
 
 
 def isImage(url):
@@ -17,7 +18,7 @@ def isImage(url):
 def Embed(*args, **kwargs):
     return discord.Embed(*args, **kwargs, color=0x2761f3, timestamp=discord.utils.utcnow())
 
-class Error(Exception):
+class Error(commands.BadArgument):
     ...
 
 class Timer:
