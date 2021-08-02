@@ -1,11 +1,14 @@
 import datetime
 import time
-from typing import Any, Union
+from typing import Any, TypeVar, Union
 
 import discord
 from discord.colour import Colour
-from discord.embeds import MaybeEmpty, _EmptyEmbed
+from discord.embeds import _EmptyEmbed
 from discord.types.embed import EmbedType
+
+T = TypeVar('T')
+MaybeEmpty = Union[T, _EmptyEmbed]
 
 
 def isImage(url):
