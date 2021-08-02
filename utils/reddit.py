@@ -48,7 +48,7 @@ async def getpost(bot, ctx, subreddit) -> discord.Embed:
                 return False
             return True
 
-        @ui.button(emoji='⬅️', style=discord.ButtonStyle.primary)
+        @ui.button(emoji='⬅️', style=discord.ButtonStyle.secondary)
         async def previous(self, button: ui.Button, interaction: discord.Interaction):
             if self.num > 0:
                 self.num -= 1
@@ -56,13 +56,13 @@ async def getpost(bot, ctx, subreddit) -> discord.Embed:
             else:
                 await interaction.response.send_message("Cannot go to previous.", ephemeral=True)
 
-        @ui.button(emoji='⏹️', style=discord.ButtonStyle.primary)
+        @ui.button(emoji='⏹️', style=discord.ButtonStyle.secondary)
         async def on_stop(self, button: ui.Button, interaction: discord.Interaction):
             await self.ctx.tick()
-            await interaction.message.edit(view=None)
             self.stop()
+            await interaction.message.delete()
 
-        @ui.button(emoji='➡️', style=discord.ButtonStyle.primary)
+        @ui.button(emoji='➡️', style=discord.ButtonStyle.secondary)
         async def forwards(self, button: ui.Button, interaction: discord.Interaction):
             self.num += 1
             try:
