@@ -56,7 +56,7 @@ class Meta(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command(name='discordbotsgg', description="Shows the discordbotsgg profile.", aliases=['dbgg'])
-    async def _discordbotlist(self, ctx: ApolloContext) -> None:
+    async def _discordbotsgg(self, ctx: ApolloContext) -> None:
         embed = Embed(title="Apollo Bot List",
                       description="Click [here](https://discord.bots.gg/bots/847566539607769089) for the bot list.")
         await ctx.reply(embed=embed)
