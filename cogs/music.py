@@ -136,12 +136,12 @@ class Song:
         self.requester = source.requester
 
     def create_embed(self):
-        embed = Embed(title=f"[{self.source.title}]({self.source.url})", description=f"""
+        embed = Embed(title=f"{self.source.title}", url=self.source.url, description=f"""
 		**Requester**: {self.requester.mention}
 		**Duration**: {self.source.duration}
 		**Artist**: [{self.source.uploader}]({self.source.uploader_url})
 		""")
-        embed.set_image(url=self.source.thumbnail)
+        embed.set_thumbnail(url=self.source.thumbnail)
         return embed
 
 
@@ -220,7 +220,8 @@ class VoiceState:
 
             self.current.source.volume = self._volume
             self.voice.play(self.current.source, after=self.play_next_song)
-            await self.current.source.channel.send(embed=self.current.create_embed())
+            # TODO when song ends now playing message
+            # await self.current.source.channel.send(embed=self.current.create_embed())
 
             await self.next.wait()
 
@@ -309,7 +310,6 @@ class Music(commands.Cog):
 
     @commands.command(name='now', description="Displays the currently playing song.", aliases=['current', 'playing', 'np'])
     async def _now(self, ctx: ApolloContext):
-        # TODO work on embed
         await ctx.reply(embed=ctx.voice_state.current.create_embed())
 
     @commands.command(name='pause', description="Pauses the currently playing song.")
