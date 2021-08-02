@@ -67,6 +67,7 @@ class Apollo(commands.AutoShardedBot):
         self.init_constants()
 
     async def init(self) -> None:
+        self.init_cache()
         self.db = Database('sqlite:///bot.db')
         await self.db.connect()
         await self.db.execute(
@@ -91,7 +92,6 @@ class Apollo(commands.AutoShardedBot):
             getenv('DAGPI'), session=self.session, loop=self.loop)
         self.tts = aiogTTS()
         self.psutil_process = psutil.Process()
-        self.init_cache()
 
     def init_logging(self):
         coloredlogs.install()
@@ -128,7 +128,10 @@ class Apollo(commands.AutoShardedBot):
             prefix = self.cache["prefixes"].get(message.guild.id, (await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id}))[1])
         except AttributeError:
             prefix = getenv('DEFAULT_PREFIX')
-        self.cache["prefixes"][message.guild.id] = prefix
+        try:
+            self.cache["prefixes"][message.guild.id] = prefix
+        except AttributeError:
+            ...
         return prefix
 
     async def before_invoke_(self, ctx: ApolloContext) -> None:
