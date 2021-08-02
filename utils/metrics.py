@@ -14,8 +14,8 @@ def isImage(url):
     )
 
 
-class Embed(discord.Embed):
-    color = 0x515b72
+def Embed(*args, **kwargs):
+    return discord.Embed(*args, **kwargs, color=0x515b72)
 
 
 class Timer:
