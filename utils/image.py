@@ -1,5 +1,6 @@
 import os
 from io import BytesIO
+from utils.metrics import Error
 
 import aiofile
 import discord
@@ -23,7 +24,7 @@ async def urlToBytes(ctx, url) -> BytesIO:
     response = await ctx.bot.session.get(url)
     byte = await response.read()
     if byte.__sizeof__() > 10 * (2 ** 20):
-        raise commands.CommandError("Exceeded 10MB.")
+        raise Error("Exceeded 10MB.")
     blob = BytesIO(byte)
     blob.seek(0)
     return blob

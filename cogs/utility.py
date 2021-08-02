@@ -9,7 +9,7 @@ from discord.ext import commands
 
 from jishaku.codeblocks import codeblock_converter
 from utils.context import ApolloContext
-from utils.metrics import Embed
+from utils.metrics import Embed, Error
 
 
 class Utility(commands.Cog):
@@ -33,7 +33,7 @@ class Utility(commands.Cog):
         data = await self.bot.session.get(f"https://pypi.org/pypi/{package}/json")
 
         if data.status != 200:
-            raise commands.CommandError("Invalid package.")
+            raise Error("Invalid package.")
 
         data = (await data.json())['info']
         embed = Embed(
@@ -58,7 +58,7 @@ class Utility(commands.Cog):
     async def _npm(self, ctx: ApolloContext, package: commands.clean_content):
         data = await (await self.bot.session.get(f"https://api.npms.io/v2/package/{package}")).json()
         if 'CODE' in data or 'collected' not in data:
-            raise commands.CommandError("Invalid package.")
+            raise Error("Invalid package.")
 
         data = data['collected']['metadata']
         embed = Embed(title=data['name'], description=data.get(
@@ -90,7 +90,7 @@ class Utility(commands.Cog):
             embed.set_thumbnail(url="attachment://deno.png")
             await ctx.reply(embed=embed, file=f)
         else:
-            raise commands.CommandError("Invalid package.")
+            raise Error("Invalid package.")
 
     @commands.command(name='txt', description="Text to file.", usage="<text>")
     async def _txt(self, ctx: ApolloContext, *, text: str) -> None:
@@ -102,7 +102,7 @@ class Utility(commands.Cog):
     @commands.command(name='tts', description="Text to speech.", usage="<text>", aliases=['texttospeech'])
     async def _tts(self, ctx: ApolloContext, *, text: commands.clean_content) -> None:
         if len(text) > 1000:
-            raise commands.CommandError(
+            raise Error(
                 "The text for text to speech can not be over 200 characters.")
 
         buffer = io.BytesIO()
@@ -117,7 +117,7 @@ class Utility(commands.Cog):
             output = await self.bot.tio.execute(code.content, language=language)
             await ctx.reply(embed=Embed(description=f"```\n{str(output)[:500]}\n```"))
         except LanguageNotFound as e:
-            raise commands.CommandError(e)
+            raise Error(e)
 
     @commands.command(name='avatar', description="View the avatar of a member.", usage="[member]")
     async def _avatar(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
@@ -142,7 +142,7 @@ class Utility(commands.Cog):
         message = message or ctx.message.reference
 
         if not message:
-            raise commands.CommandError(
+            raise Error(
                 "You didn't reply or specify a message.")
 
         channel = message.channel_id if isinstance(

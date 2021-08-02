@@ -1,6 +1,7 @@
 from inspect import Parameter
 from io import BytesIO
 from typing import Optional
+from utils.metrics import Error
 
 import discord
 from PIL import Image as PILImage
@@ -129,7 +130,7 @@ class Image(commands.Cog):
         Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
         """
         if 128 < quality or quality < 1:
-            raise commands.CommandError("Quality must be between 1 and 128.")
+            raise Error("Quality must be between 1 and 128.")
         image = await urlToBytes(ctx, image)
         file = discord.File(await process_minecraft(self.bot, image, quality), f"{ctx.command.name}.png")
         await ctx.reply(file=file, can_delete=True)

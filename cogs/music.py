@@ -11,7 +11,7 @@ from async_timeout import timeout
 from discord.ext import commands
 
 from utils.context import ApolloContext
-from utils.metrics import Embed
+from utils.metrics import Embed, Error
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -75,7 +75,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         data = await loop.run_in_executor(None, partial)
 
         if data is None:
-            raise commands.CommandError('Couldn\'t find anything that matches `{}`'.format(search))
+            raise Error('Couldn\'t find anything that matches `{}`'.format(search))
 
         if 'entries' not in data:
             process_info = data
@@ -87,7 +87,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
                     break
 
             if process_info is None:
-                raise commands.CommandError('Couldn\'t find anything that matches `{}`'.format(search))
+                raise Error('Couldn\'t find anything that matches `{}`'.format(search))
 
         webpage_url = process_info['webpage_url']
         partial = functools.partial(
@@ -95,7 +95,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         processed_info = await loop.run_in_executor(None, partial)
 
         if processed_info is None:
-            raise commands.CommandError('Couldn\'t fetch `{}`'.format(webpage_url))
+            raise Error('Couldn\'t fetch `{}`'.format(webpage_url))
 
         if 'entries' not in processed_info:
             info = processed_info
@@ -105,7 +105,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
                 try:
                     info = processed_info['entries'].pop(0)
                 except IndexError:
-                    raise commands.CommandError('Couldn\'t retrieve any matches for `{}`'.format(webpage_url))
+                    raise Error('Couldn\'t retrieve any matches for `{}`'.format(webpage_url))
 
         return cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS), data=info)
 
@@ -227,7 +227,7 @@ class VoiceState:
 
     def play_next_song(self, error=None):
         if error:
-            raise commands.CommandError(str(error))
+            raise Error(str(error))
 
         self.next.set()
 
@@ -277,7 +277,7 @@ class Music(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def _summon(self, ctx: ApolloContext, *, channel: Optional[commands.VoiceChannelConverter] = None):
         if not channel and not ctx.author.voice:
-            raise commands.CommandError('You are neither connected to a voice channel nor specified a channel to join.')
+            raise Error('You are neither connected to a voice channel nor specified a channel to join.')
 
         destination = channel or ctx.author.voice.channel
         if ctx.voice_state.voice:
@@ -291,7 +291,7 @@ class Music(commands.Cog):
                       aliases=['disconnect', 'stop', 'dc'])
     async def _leave(self, ctx: ApolloContext):
         if not ctx.voice_state.voice:
-            raise commands.CommandError('Not connected to any voice channel.')
+            raise Error('Not connected to any voice channel.')
 
         await ctx.voice_state.stop()
         del self.voice_states[ctx.guild.id]
@@ -300,10 +300,10 @@ class Music(commands.Cog):
     @commands.command(name='volume', description="Sets the volume of the player.")
     async def _volume(self, ctx: ApolloContext, *, volume: int):
         if not ctx.voice_state.is_playing:
-            raise commands.CommandError('Nothing being played at the moment.')
+            raise Error('Nothing being played at the moment.')
 
         if 0 > volume > 100:
-            raise commands.CommandError('Volume must be between 0 and 100')
+            raise Error('Volume must be between 0 and 100')
 
         ctx.voice_state.volume = volume / 100
         await ctx.tick()
@@ -333,7 +333,7 @@ class Music(commands.Cog):
     @commands.command(name='skip', description="Skip a song.", aliases=['s'])
     async def _skip(self, ctx: ApolloContext):
         if not ctx.voice_state.is_playing:
-            raise commands.CommandError('Not playing any music right now...')
+            raise Error('Not playing any music right now...')
 
         ctx.voice_state.skip()
         await ctx.tick()
@@ -341,7 +341,7 @@ class Music(commands.Cog):
     @commands.command(name='queue', description="Shows the player's queue.")
     async def _queue(self, ctx: ApolloContext, *, page: int = 1):
         if len(ctx.voice_state.songs) == 0:
-            raise commands.CommandError('Empty queue.')
+            raise Error('Empty queue.')
 
         items_per_page = 10
         pages = math.ceil(len(ctx.voice_state.songs) / items_per_page)
@@ -361,7 +361,7 @@ class Music(commands.Cog):
     @commands.command(name='shuffle', description="Shuffles the queue.")
     async def _shuffle(self, ctx: ApolloContext):
         if len(ctx.voice_state.songs) == 0:
-            raise commands.CommandError('Empty queue.')
+            raise Error('Empty queue.')
 
         ctx.voice_state.songs.shuffle()
         await ctx.tick()
@@ -369,7 +369,7 @@ class Music(commands.Cog):
     @commands.command(name='remove', description="Removes a song from the queue at a given index.")
     async def _remove(self, ctx: ApolloContext, index: int):
         if len(ctx.voice_state.songs) == 0:
-            raise commands.CommandError('Empty queue.')
+            raise Error('Empty queue.')
 
         ctx.voice_state.songs.remove(index - 1)
         await ctx.tick()
@@ -377,7 +377,7 @@ class Music(commands.Cog):
     @commands.command(name='loop', description="Loops the currently playing song.")
     async def _loop(self, ctx: ApolloContext):
         if not ctx.voice_state.is_playing:
-            raise commands.CommandError('Nothing being played at the moment.')
+            raise Error('Nothing being played at the moment.')
 
         ctx.voice_state.loop = not ctx.voice_state.loop
         await ctx.tick()
@@ -397,12 +397,12 @@ class Music(commands.Cog):
     @_play.before_invoke
     async def ensure_voice_state(self, ctx: ApolloContext):
         if not ctx.author.voice or not ctx.author.voice.channel:
-            raise commands.CommandError(
+            raise Error(
                 'You are not connected to any voice channel.')
 
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise commands.CommandError(
+                raise Error(
                     'Bot is already in a voice channel.')
 
 

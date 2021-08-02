@@ -21,7 +21,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 from utils.context import ApolloContext
-from utils.metrics import Embed
+from utils.metrics import Embed, Error
 
 load_dotenv()
 
@@ -127,10 +127,8 @@ class Apollo(commands.AutoShardedBot):
             prefix = self.cache["prefixes"].get(message.guild.id, (await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id}))[1])
         except AttributeError:
             prefix = getenv('DEFAULT_PREFIX')
-        try:
+        if hasattr(self, "cache"):
             self.cache["prefixes"][message.guild.id] = prefix
-        except AttributeError:
-            ...
         return prefix
 
     async def before_invoke_(self, ctx: ApolloContext) -> None:
@@ -210,6 +208,8 @@ class Apollo(commands.AutoShardedBot):
         if isinstance(error, _input):
             m = str(error).replace('"', '`')
 
+        if isinstance(error, Error):
+            return await self.send_error_embed(str(error))
         if isinstance(error, commands.CommandNotFound):
             return await ctx.tick(False)
         if isinstance(error, commands.MissingRequiredArgument):

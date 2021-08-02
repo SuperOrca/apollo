@@ -13,6 +13,7 @@ Functions for managing and searching modules.
 
 import pathlib
 import typing
+from utils.metrics import Error
 
 import pkg_resources
 from braceexpand import UnbalancedBracesError, braceexpand
@@ -93,4 +94,4 @@ class ExtensionConverter(commands.Converter):  # pylint: disable=too-few-public-
 		try:
 			return resolve_extensions(ctx.bot, argument)
 		except UnbalancedBracesError as exc:
-			raise commands.CommandError(str(exc))
+			raise Error(str(exc))

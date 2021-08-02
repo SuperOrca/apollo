@@ -1,5 +1,6 @@
 import re
 from io import BytesIO
+from utils.metrics import Error
 
 import yarl
 from discord.ext import commands
@@ -14,13 +15,13 @@ class PrefixConverter(commands.clean_content):
         self.escape_markdown = True
 
         if not (argument := (await super().convert(ctx=ctx, argument=argument)).strip()):
-            raise commands.CommandError
+            raise Error
 
         if '`' in argument:
-            raise commands.CommandError(
+            raise Error(
                 'Your prefix can not contain backtick characters.')
         if len(argument) > 15:
-            raise commands.CommandError(
+            raise Error(
                 'Your prefix can not be more than 15 characters.')
 
         return argument

@@ -1,3 +1,4 @@
+from utils.metrics import Error
 import discord
 from discord.ext import commands
 
@@ -14,9 +15,9 @@ class Account:
 
     async def withdraw(self, money: int):
         if money <= 0:
-            raise commands.CommandError(f"You must withdraw at least `$1`.")
+            raise Error(f"You must withdraw at least `$1`.")
         if self.bank < money:
-            raise commands.CommandError(
+            raise Error(
                 f"You cannot withdraw more than `${self.bank:,}`.")
         self.bank -= money
         self.wallet += money
@@ -24,9 +25,9 @@ class Account:
 
     async def deposit(self, money: int):
         if money <= 0:
-            raise commands.CommandError(f"You must deposit at least `$1`.")
+            raise Error(f"You must deposit at least `$1`.")
         if self.wallet < money:
-            raise commands.CommandError(
+            raise Error(
                 f"You cannot deposit more than `${self.wallet:,}`.")
         self.wallet -= money
         self.bank += money
@@ -48,7 +49,7 @@ class Account:
     async def fetch(cls, bot: commands.Bot, member: discord.Member):
         """A method that fetches the account of a member."""
         if member.bot:
-            raise commands.CommandError(
+            raise Error(
                 "You cannot use this command with a bot.")
         if not bot.cache["economy"].get(member.id):
             data = await bot.db.fetch_one("SELECT * FROM economy WHERE id = :id", values={"id": member.id})

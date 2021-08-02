@@ -4,7 +4,7 @@ import discord
 from discord import ui
 from discord.ext import commands
 
-from utils.metrics import isImage, Embed
+from utils.metrics import Error, isImage, Embed
 
 
 async def getpost(bot, ctx, subreddit) -> discord.Embed:
@@ -32,7 +32,7 @@ async def getpost(bot, ctx, subreddit) -> discord.Embed:
                 embed = None
             i += 1
             if i >= 5:
-                raise commands.CommandError(
+                raise Error(
                     f"Could not find a image from `{subreddit}`.")
         return embed
 
