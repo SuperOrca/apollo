@@ -2,7 +2,7 @@ import json
 import logging
 import sys
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timedelta
 from os import getenv
 from pathlib import Path
 
@@ -12,6 +12,7 @@ import coloredlogs
 import discord
 import mystbin
 import psutil
+import humanize
 import traceback
 from aiogtts import aiogTTS
 from async_tio import Tio
@@ -20,7 +21,6 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 from utils.context import ApolloContext
-from utils.help import ApolloHelp
 from utils.metrics import Embed
 
 load_dotenv()
@@ -51,7 +51,6 @@ class Apollo(commands.AutoShardedBot):
         self.connector = aiohttp.TCPConnector(limit=200)
         super().__init__(
             command_prefix=self._get_prefix,
-            help_command=ApolloHelp(),
             case_insensitive=True,
             allowed_mentions=allowed_mentions,
             description=description,
@@ -220,7 +219,7 @@ class Apollo(commands.AutoShardedBot):
             m = f"You are not able to use `{ctx.command}`."
         if isinstance(error, commands.CommandOnCooldown):
             return await self.send_error_embed(ctx,
-                                               f"`{ctx.command}` is on cooldown for another `{error.retry_after:.1f} seconds`.")
+                                               f"`{ctx.command}` is on cooldown for another `{humanize.precisedelta(timedelta(seconds=error.retry_after))}`.")
         if isinstance(error, commands.BotMissingPermissions):
             return await self.send_error_embed(ctx,
                                                f"I am missing the `{', '.join([str(perm).replace('_', ' ').title() for perm in error.missing_permissions])}` permissions.")

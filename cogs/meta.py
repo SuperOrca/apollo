@@ -10,6 +10,7 @@ from discord.ext import commands, tasks
 from utils.context import ApolloContext
 from utils.converters import PrefixConverter
 from utils.metrics import Embed
+from utils.help import ApolloHelp
 
 
 class Meta(commands.Cog):
@@ -18,6 +19,12 @@ class Meta(commands.Cog):
         self._status.start()
         self._cd_type = commands.BucketType.user
         self._cd = commands.CooldownMapping.from_cooldown(1, 2., self._cd_type)
+        self._original_help_command = bot.help_command
+        bot.help_command = ApolloHelp()
+        bot.help_command.cog = self
+
+    def cog_unload(self):
+        self.bot.help_command = self._original_help_command
 
     async def cog_check(self, ctx: ApolloContext):
         bucket = self._cd.get_bucket(ctx.message)
