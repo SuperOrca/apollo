@@ -1,5 +1,6 @@
 import asyncio
 from typing import Optional
+from utils.metrics import Embed
 
 import discord
 from discord.ext import commands
@@ -36,8 +37,7 @@ class Moderation(commands.Cog):
 		msgs = await channel.purge(limit=limit)
 		await asyncio.sleep(1)
 		await ctx.send(can_delete=True,
-					   embed=discord.Embed(description=f"Cleared `{len(msgs)}` messages.",
-										   color=discord.Color.dark_red()))
+					   embed=Embed(description=f"Cleared `{len(msgs)}` messages."))
 
 	@commands.command(name='ban', description="Ban a member.", usage="<member> [reason]")
 	@commands.has_guild_permissions(ban_members=True)
@@ -46,15 +46,13 @@ class Moderation(commands.Cog):
 		check_hierarchy(ctx, member)
 		reason = reason or "no reason provided"
 		try:
-			await member.send(embed=discord.Embed(
-				description=f"You have been banned from `{ctx.guild.name}** for **{reason}` by {ctx.author.mention}.",
-				color=discord.Color.dark_red()))
+			await member.send(embed=Embed(
+				description=f"You have been banned from `{ctx.guild.name}** for **{reason}` by {ctx.author.mention}."))
 		except discord.HTTPException:
 			...
 		await member.ban(reason=reason)
 		await ctx.reply(
-			embed=discord.Embed(description=f"Banned {member.mention} for `{reason}`. (by {ctx.author.mention})",
-								color=discord.Color.dark_red()))
+			embed=Embed(description=f"Banned {member.mention} for `{reason}`. (by {ctx.author.mention})"))
 
 	@commands.command(name='kick', description="Kick a member.", usage="<member> [reason]")
 	@commands.has_guild_permissions(kick_members=True)
@@ -63,15 +61,13 @@ class Moderation(commands.Cog):
 		check_hierarchy(ctx, member)
 		reason = reason or "no reason provided"
 		try:
-			await member.send(embed=discord.Embed(
-				description=f"You have been kicked from `{ctx.guild.name}** for **{reason}` by {ctx.author.mention}.",
-				color=discord.Color.dark_red()))
+			await member.send(embed=Embed(
+				description=f"You have been kicked from `{ctx.guild.name}** for **{reason}` by {ctx.author.mention}."))
 		except discord.HTTPException:
 			...
 		await member.kick(reason=reason)
 		await ctx.reply(
-			embed=discord.Embed(description=f"Kicked {member.mention} for `{reason}`. (by {ctx.author.mention})",
-								color=discord.Color.dark_red()))
+			embed=Embed(description=f"Kicked {member.mention} for `{reason}`. (by {ctx.author.mention})"))
 
 	@commands.command(name='slowmode', description="Edit slowmode of channel.", usage="<seconds>",
 					  aliases=['sm'])
@@ -84,8 +80,8 @@ class Moderation(commands.Cog):
 
 		channel = channel or ctx.channel
 		await ctx.channel.edit(slowmode_delay=seconds)
-		await ctx.reply(embed=discord.Embed(
-			description=f"Set slowmode of {channel.mention} to `{seconds}` seconds.", color=discord.Color.dark_red()))
+		await ctx.reply(embed=Embed(
+			description=f"Set slowmode of {channel.mention} to `{seconds}` seconds."))
 
 	@commands.command(name='unban', description="Unban a user.", usage="<user>")
 	@commands.has_guild_permissions(ban_members=True)
@@ -93,8 +89,7 @@ class Moderation(commands.Cog):
 	async def _unban(self, ctx: ApolloContext, user: commands.UserConverter) -> None:
 		member = discord.Object(id=user.id)
 		await ctx.guild.unban(member)
-		await ctx.reply(embed=discord.Embed(description=f"Unbanned {user.mention} (by {ctx.author.mention}).",
-											color=discord.Color.dark_red()))
+		await ctx.reply(embed=Embed(description=f"Unbanned {user.mention} (by {ctx.author.mention})."))
 
 	@commands.command(name='setnick', description="Set nick of member. Set to 'reset' to reset.",
 					  usage="<member> <nick>")
@@ -106,8 +101,7 @@ class Moderation(commands.Cog):
 			await member.edit(nick=None)
 		else:
 			await member.edit(nick=nick)
-		await ctx.reply(embed=discord.Embed(description=f"Changed {member.mention} nickname to `{nick}`.",
-											color=discord.Color.dark_red()))
+		await ctx.reply(embed=Embed(description=f"Changed {member.mention} nickname to `{nick}`."))
 
 
 def setup(bot) -> None:

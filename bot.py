@@ -6,6 +6,7 @@ from collections import Counter
 from datetime import datetime
 from os import getenv
 from pathlib import Path
+from utils.metrics import Embed
 
 import aiohttp
 import asyncdagpi
@@ -190,8 +191,8 @@ class Apollo(commands.AutoShardedBot):
 	@staticmethod
 	async def send_error_embed(ctx: ApolloContext, content: str, **kwargs) -> None:
 		content = content.replace('"', "`")
-		embed = discord.Embed(
-			description=f"⚠ {content}", color=discord.Color.red())
+		embed = Embed(
+			description=f"⚠ {content}")
 		await ctx.reply(embed=embed)
 
 	async def on_command_error(self, ctx: ApolloContext, error) -> None:

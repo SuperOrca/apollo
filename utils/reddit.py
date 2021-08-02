@@ -5,7 +5,7 @@ from discord import ui
 from discord.ext import commands
 
 from utils.context import ApolloContext
-from utils.metrics import isImage
+from utils.metrics import isImage, Embed
 
 
 async def getpost(bot, ctx, subreddit) -> discord.Embed:
@@ -24,9 +24,7 @@ async def getpost(bot, ctx, subreddit) -> discord.Embed:
 				elif not isImage(post['url']):
 					embed = None
 				else:
-					embed = discord.Embed(title=post['title'],
-										  color=discord.Color.orange(),
-										  url=f"https://www.reddit.com{post['permalink']}")
+					embed = Embed(title=post['title'], url=f"https://www.reddit.com{post['permalink']}")
 					embed.set_image(url=post['url'])
 					embed.set_footer(
 						text=f"👍 {post['ups']} 💬 {post['num_comments']}")

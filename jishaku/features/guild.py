@@ -12,6 +12,7 @@ The jishaku guild-related commands.
 """
 
 import typing
+from utils.metrics import Embed
 
 import discord
 from discord.ext import commands
@@ -170,7 +171,7 @@ class GuildFeature(Feature):
 			"There may be other reasons that persist these permissions even if you change the things displayed."
 		)
 
-		embed = discord.Embed(color=0x00FF00, description=description)
+		embed = Embed(description=description)
 
 		allows = []
 		denies = []

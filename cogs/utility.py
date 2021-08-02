@@ -2,6 +2,7 @@ import io
 import json
 import random
 from typing import Optional
+from utils.metrics import Embed
 
 import discord
 from discord.ext import commands
@@ -35,9 +36,8 @@ class Utility(commands.Cog):
 			raise commands.CommandError("Invalid package.")
 
 		data = (await data.json())['info']
-		embed = discord.Embed(
-			title=data['name'], description=data.get('summary', ''), url=data.get('project_url', 'https://pypi.org/'),
-			color=0x2F3136)
+		embed = Embed(
+			title=data['name'], description=data.get('summary', ''), url=data.get('project_url', 'https://pypi.org/'))
 		if data['version'] != "":
 			embed.add_field(
 				name="Version", value=data.get('version', 'N/A'))
@@ -61,8 +61,8 @@ class Utility(commands.Cog):
 			raise commands.CommandError("Invalid package.")
 
 		data = data['collected']['metadata']
-		embed = discord.Embed(title=data['name'], description=data.get(
-			'description', ''), url=data['links']['npm'], color=0x2F3136)
+		embed = Embed(title=data['name'], description=data.get(
+			'description', ''), url=data['links']['npm'])
 		embed.add_field(name="Version", value=data['version'])
 		if 'license' in data:
 			embed.add_field(name="License", value=data['license'])
@@ -82,8 +82,8 @@ class Utility(commands.Cog):
 			data = data['data']
 			version = await (
 				await self.bot.session.get(f"https://cdn.deno.land/{data['name']}/meta/versions.json")).json()
-			embed = discord.Embed(title=data['name'], description=data['description'],
-								  url=f"https://deno.land/x/{data['name']}", color=0x2F3136)
+			embed = Embed(title=data['name'], description=data['description'],
+								  url=f"https://deno.land/x/{data['name']}")
 			embed.add_field(name="Version", value=version['latest'])
 			embed.add_field(name="Stars", value=f"{data['star_count']:,}")
 			f = discord.File('assets/deno_logo.png', 'deno.png')
@@ -114,7 +114,7 @@ class Utility(commands.Cog):
 	async def _execute(self, ctx: ApolloContext, language: commands.clean_content, *, code: codeblock_converter) -> None:
 		try:
 			output = await self.bot.tio.execute(code.content, language=language)
-			await ctx.reply(embed=discord.Embed(description=f"```\n{str(output)[:500]}\n```", color=0x2F3136))
+			await ctx.reply(embed=Embed(description=f"```\n{str(output)[:500]}\n```"))
 		except LanguageNotFound as e:
 			raise commands.CommandError(e)
 
@@ -131,8 +131,8 @@ class Utility(commands.Cog):
 		if member.avatar.is_animated():
 			formats.append(
 				f"[`GIF`]({member.avatar.replace(format='gif').url})")
-		embed = discord.Embed(title=f"{member.name}'s avatar", description=' | '.join(
-			formats), color=0x2F3136)
+		embed = Embed(title=f"{member.name}'s avatar", description=' | '.join(
+			formats))
 		embed.set_image(url=member.avatar.url)
 		await ctx.reply(embed=embed)
 

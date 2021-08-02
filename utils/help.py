@@ -1,3 +1,4 @@
+from utils.metrics import Embed
 import discord
 from discord.ext import commands
 
@@ -18,7 +19,7 @@ class ApolloHelp(commands.HelpCommand):
 		valid_commands = []
 		for module in modules:
 			valid_commands += module.get_commands()
-		embed = discord.Embed(title="Apollo Help", description=f"""
+		embed = Embed(title="Apollo Help", description=f"""
 Total Commands: `{len(valid_commands)}`
 ```diff
 - ⚠️ DO NOT TYPE THESE WHEN USING A COMMAND ⚠️
@@ -27,7 +28,7 @@ Total Commands: `{len(valid_commands)}`
 + Type {prefix}help [Command | Module] for more info on a command and/or module!
 ```
 `{prefix}invite` | `{prefix}info`
-""", color=discord.Color.blurple())
+""")
 		embed.add_field(
 			name=f":gear: Modules [{len(modules)}]",
 			value='\n'.join(
@@ -39,9 +40,9 @@ Total Commands: `{len(valid_commands)}`
 		await self.context.reply(embed=embed)
 
 	async def send_command_help(self, command: commands.Command):
-		embed = discord.Embed(
+		embed = Embed(
 			title=f"**`{command.name + command.usage if command.usage is not None else command.name}`**",
-			description=command.description, color=discord.Color.blurple())
+			description=command.description)
 		embed.add_field(
 			name="Module", value=command.cog_name)
 		if command.aliases != []:
@@ -59,7 +60,7 @@ Total Commands: `{len(valid_commands)}`
 
 	async def send_cog_help(self, cog: commands.Cog):
 		prefix = await self.context.bot.get_guild_prefix(self.context.message)
-		embed = discord.Embed(title=f"{cog.__class__.__name__} Help [{len(cog.get_commands())}]", description=f"""
+		embed = Embed(title=f"{cog.__class__.__name__} Help [{len(cog.get_commands())}]", description=f"""
 ```diff
 - ⚠️ DO NOT TYPE THESE WHEN USING A COMMAND ⚠️
 - <> | Required Argument
@@ -67,7 +68,7 @@ Total Commands: `{len(valid_commands)}`
 + Type {prefix}help [Command | Module] for more info on a command and/or module!
 ```
 > {', '.join(f'`{cmd.name}`' for cmd in cog.get_commands())}
-		""", color=discord.Color.blurple())
+		""")
 		await self.context.reply(embed=embed)
 
 	def command_not_found(self, string):

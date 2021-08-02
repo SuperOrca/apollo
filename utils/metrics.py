@@ -1,4 +1,11 @@
+import datetime
 import time
+from typing import Any, Union
+
+import discord
+from discord.colour import Colour
+from discord.embeds import MaybeEmpty, _EmptyEmbed
+from discord.types.embed import EmbedType
 
 
 def isImage(url):
@@ -10,6 +17,11 @@ def isImage(url):
 		or url.endswith("jpeg")
 		or url.endswith("webp")
 	)
+
+class Embed(discord.Embed):
+	def __init__(self, *, colour: Union[int, Colour, _EmptyEmbed], color: Union[int, Colour, _EmptyEmbed], title: MaybeEmpty[Any], type: EmbedType, url: MaybeEmpty[Any], description: MaybeEmpty[Any], timestamp: datetime.datetime):
+		self.color = 0x515b72
+		super().__init__(colour=colour, color=color, title=title, type=type, url=url, description=description, timestamp=timestamp)
 
 
 class Timer:

@@ -12,6 +12,7 @@ Paginator-related tools and interfaces for Jishaku.
 """
 
 import asyncio
+from utils.metrics import Embed
 
 import discord
 from discord.ext import commands
@@ -351,7 +352,7 @@ class PaginatorEmbedInterface(PaginatorInterface):
 	"""
 
 	def __init__(self, *args, **kwargs):
-		self._embed = kwargs.pop('embed', None) or discord.Embed()
+		self._embed = kwargs.pop('embed', None) or Embed()
 		super().__init__(*args, **kwargs)
 
 	@property

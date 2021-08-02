@@ -14,6 +14,7 @@ The jishaku root command.
 import math
 import sys
 import typing
+from utils.metrics import Embed
 
 import discord
 from discord.ext import commands
@@ -146,7 +147,7 @@ class RootCommand(Feature):
 		summary.append(
 			f"Average websocket latency: `{round(self.bot.latency * 1000, 2)}ms`")
 
-		await ctx.reply(embed=discord.Embed(description="\n".join(summary), color=discord.Color.dark_purple()))
+		await ctx.reply(embed=Embed(description="\n".join(summary)))
 
 	# pylint: disable=no-member
 	@Feature.Command(parent="jsk", name="hide")

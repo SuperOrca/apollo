@@ -1,6 +1,7 @@
 from datetime import datetime
 from time import time as count
 from typing import Optional
+from utils.metrics import Embed
 
 import discord
 import humanize
@@ -42,7 +43,7 @@ class Meta(commands.Cog):
 
 	@commands.command(name='invite', description="Shows the bot invite.")
 	async def _invite(self, ctx: ApolloContext) -> None:
-		embed = discord.Embed(title="Apollo Invite", color=discord.Color.blurple(), description=f"""
+		embed = Embed(title="Apollo Invite", description=f"""
 		**Administrator**: [click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions(administrator=True))})
 		**No Permissions**: [click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions.none())})
 		""")
@@ -50,18 +51,17 @@ class Meta(commands.Cog):
 
 	@commands.command(name='discordbotlist', description="Shows the discordbotlist profile.", aliases=['dbl'])
 	async def _discordbotlist(self, ctx: ApolloContext) -> None:
-		embed = discord.Embed(title="Apollo Bot List", description="Click [here](https://discordbotlist.com/bots/apollo-5670) for the bot list.", color=discord.Color.blurple())
+		embed = Embed(title="Apollo Bot List", description="Click [here](https://discordbotlist.com/bots/apollo-5670) for the bot list.")
 		await ctx.reply(embed=embed)
 
 	@commands.command(name='discordbotsgg', description="Shows the discordbotsgg profile.", aliases=['dbgg'])
 	async def _discordbotlist(self, ctx: ApolloContext) -> None:
-		embed = discord.Embed(title="Apollo Bot List", description="Click [here](https://discord.bots.gg/bots/847566539607769089) for the bot list.", color=discord.Color.blurple())
+		embed = Embed(title="Apollo Bot List", description="Click [here](https://discord.bots.gg/bots/847566539607769089) for the bot list.")
 		await ctx.reply(embed=embed)
 
 	@commands.command(name='uptime', description="Shows the bot uptime.")
 	async def _uptime(self, ctx: ApolloContext) -> None:
-		await ctx.reply(embed=discord.Embed(title="Apollo Uptime", description=f"The bot has been online for `{self.get_uptime()}`.",
-											color=discord.Color.blurple()))
+		await ctx.reply(embed=Embed(title="Apollo Uptime", description=f"The bot has been online for `{self.get_uptime()}`."))
 
 	@commands.command(name='ping', description="Shows the bot ping.")
 	async def _ping(self, ctx: ApolloContext) -> None:
@@ -71,7 +71,7 @@ class Meta(commands.Cog):
 		database = count()
 		await self.bot.db.execute("SELECT 1")
 		database = (count() - database) * 1000
-		embed = discord.Embed(title="Apollo Ping", color=discord.Color.blurple(), description=f"""
+		embed = Embed(title="Apollo Ping", description=f"""
 		**Websocket**: `{(self.bot.latency * 1000):.2f}`
 		**Typing**: `{typing:.2f}`
 		**Database:** `{database:.2f}`
@@ -81,28 +81,23 @@ class Meta(commands.Cog):
 
 	@commands.command(name='info', description="Shows information about the bot.")
 	async def _info(self, ctx: ApolloContext) -> None:
-		embed = discord.Embed(
-			title="Apollo Info", description=self.bot.description, color=discord.Color.blurple())
-		embed.set_thumbnail(url=self.bot.user.avatar.with_static_format('png'))
-		embed.add_field(
-			name="Version", value=self.bot.__version__, inline=True)
-		owner = self.bot.get_user(331179093447933963)
-		embed.add_field(name="Owner", value=owner)
-		embed.add_field(
-			name="Members", value=f"{sum([guild.member_count for guild in self.bot.guilds]):,}", inline=True)
-		embed.add_field(
-			name="Guilds", value=f"{len(self.bot.guilds):,}", inline=True)
-		embed.add_field(
-			name="Uptime", value=f"{self.get_uptime(breif=True)}", inline=True)
+		owner = self.bot.get_user(self.bot.owner_ids[0])
 		dpy = pkg_resources.get_distribution('discord.py').version
-		embed.add_field(name="discord.py", value=f"v{dpy}")
+		embed = Embed(
+			title="Apollo Info", description=self.bot.description, description=f"""
+			**Version**: {self.bot.__version__}
+			**Owner**: {owner}
+			**Members**: {sum([guild.member_count for guild in self.bot.guilds]):,}
+			**Guilds**: {len(self.bot.guilds):,}
+			**Uptime**: {self.get_uptime(breif=True)}
+			**discord.py**: v{dpy}
+			""")
 		await ctx.reply(embed=embed)
 
 	@commands.command(name='source', description="Shows source of the bot.", aliases=['src', 'contribute', 'contrib'])
 	async def _source(self, ctx: ApolloContext) -> None:
 		await ctx.reply(
-			embed=discord.Embed(title="Apollo Source", description="View the bot source [here](https://github.com/SuperOrca/apollo).",
-								color=discord.Color.blurple()))
+			embed=Embed(title="Apollo Source", description="View the bot source [here](https://github.com/SuperOrca/apollo)."))
 
 	@commands.command(name='prefix', description="Change the bot prefix.", usage="[prefix]")
 	async def _prefix(self, ctx: ApolloContext, prefix: Optional[PrefixConverter] = None) -> None:
@@ -110,12 +105,10 @@ class Meta(commands.Cog):
 			await self.bot.db.execute("INSERT OR REPLACE INTO prefixes VALUES (:id, :prefix)",
 									  values={"id": ctx.guild.id, "prefix": prefix})
 			self.bot.cache["prefixes"][ctx.guild.id] = prefix
-			await ctx.reply(embed=discord.Embed(title="Apollo Prefix", description=f"Set the server prefix to `{prefix}`.",
-												color=discord.Color.blurple()))
+			await ctx.reply(embed=Embed(title="Apollo Prefix", description=f"Set the server prefix to `{prefix}`."))
 		else:
 			prefix = await self.bot.get_guild_prefix(ctx.message)
-			await ctx.reply(embed=discord.Embed(title="Apollo Prefix", description=f"The current server prefix is `{prefix}`.",
-												color=discord.Color.blurple()))
+			await ctx.reply(embed=Embed(title="Apollo Prefix", description=f"The current server prefix is `{prefix}`."))
 
 
 def setup(bot) -> None:

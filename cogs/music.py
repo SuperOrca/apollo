@@ -4,6 +4,7 @@ import itertools
 import math
 import random
 from typing import Optional
+from utils.metrics import Embed
 
 import discord
 import youtube_dl
@@ -134,11 +135,11 @@ class Song:
 		self.requester = source.requester
 
 	def create_embed(self):
-		embed = discord.Embed(f"[{self.source.title}]({self.source.url})", description=f"""
+		embed = Embed(f"[{self.source.title}]({self.source.url})", description=f"""
 		**Requester**: {self.requester.mention}
 		**Duration**: {self.source.duration}
 		**Artist**: [{self.source.uploader}]({self.source.uploader_url})
-		""", color=discord.Color.blue())
+		""")
 		embed.set_image(url=self.source.thumbnail)
 		return embed
 
@@ -354,7 +355,7 @@ class Music(commands.Cog):
 			queue += '`{0}.` [**{1.source.title}**]({1.source.url})\n'.format(
 				i + 1, song)
 
-		embed = (discord.Embed(description='**{} tracks:**\n\n{}'.format(len(ctx.voice_state.songs), queue))
+		embed = (Embed(description='**{} tracks:**\n\n{}'.format(len(ctx.voice_state.songs), queue))
 				 .set_footer(text='Viewing page {}/{}'.format(page, pages)))
 		await ctx.reply(embed=embed)
 
@@ -391,7 +392,7 @@ class Music(commands.Cog):
 		song = Song(source)
 
 		await ctx.voice_state.songs.put(song)
-		await ctx.reply(embed=discord.Embed(description=f"Queued [{source.title}]({source.url}) | By {ctx.author.mention}"))
+		await ctx.reply(embed=Embed(description=f"Queued [{source.title}]({source.url}) | {ctx.author.mention}"))
 
 	@_join.before_invoke
 	@_play.before_invoke

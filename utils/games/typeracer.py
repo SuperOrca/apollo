@@ -12,6 +12,7 @@ from discord.ext import commands
 from typing import Union, Optional
 from datetime import datetime as dt
 
+from utils.metrics import Embed
 
 class TypeRacer:
 
@@ -123,10 +124,8 @@ class TypeRacer:
 				break
 
 		desc = [format_line(i, x) for i, x in enumerate(winners, 1)]
-		embed = discord.Embed(
-			title="Typerace results",
-			color=0x2F3136,
-			timestamp=dt.utcnow()
+		embed = Embed(
+			title="Typerace results"
 		)
 		embed.add_field(name="Winners", value="\n".join(desc))
 
@@ -162,9 +161,8 @@ class TypeRacer:
 
 		buffer = await ctx.bot.loop.run_in_executor(None, self._tr_img, text, path_to_text_font)
 
-		embed = discord.Embed(
-			title=embed_title,
-			color=embed_color
+		embed = Embed(
+			title=embed_title
 		)
 		embed.set_image(url="attachment://tr.png")
 
