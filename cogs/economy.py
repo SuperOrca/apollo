@@ -29,9 +29,10 @@ class Economy(commands.Cog):
 	async def balance(self, ctx: ApolloContext, member: Optional[commands.UserConverter] = None):
 		member = member or ctx.author
 		acc = await Account.fetch(self.bot, member)
-		embed = discord.Embed(color=discord.Color.green())
-		embed.add_field(name="Wallet", value=f"${acc.wallet:,}", inline=True)
-		embed.add_field(name="Bank", value=f"${acc.bank:,}", inline=True)
+		embed = discord.Embed(color=discord.Color.green(), description=f"""
+		**Wallet**: ${acc.wallet:,}
+		**Bank**: ${acc.bank:,}
+		""")
 		embed.set_author(name=f"{member}'s Account", icon_url=member.avatar.url)
 		await ctx.reply(embed=embed)
 

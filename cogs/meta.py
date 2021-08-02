@@ -42,9 +42,10 @@ class Meta(commands.Cog):
 
 	@commands.command(name='invite', description="Shows the bot invite.")
 	async def _invite(self, ctx: ApolloContext) -> None:
-		embed = discord.Embed(title="Apollo Invite", color=discord.Color.blurple())
-		embed.add_field(name="Administrator", value=f"[click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions(administrator=True))})", inline=True)
-		embed.add_field(name="No Permissions", value=f"[click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions.none())})", inline=True)
+		embed = discord.Embed(title="Apollo Invite", color=discord.Color.blurple(), description=f"""
+		**Administrator**: [click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions(administrator=True))})
+		**No Permissions**: [click]({discord.utils.oauth_url(client_id=self.bot.user.id, permissions=discord.Permissions.none())})
+		""")
 		await ctx.reply(embed=embed)
 
 	@commands.command(name='discordbotlist', description="Shows the discordbotlist profile.", aliases=['dbl'])
@@ -70,12 +71,11 @@ class Meta(commands.Cog):
 		database = count()
 		await self.bot.db.execute("SELECT 1")
 		database = (count() - database) * 1000
-		embed = discord.Embed(title="Apollo Ping", color=discord.Color.blurple())
-		embed.add_field(name="Websocket",
-						value=f"```py\n{(self.bot.latency * 1000):.2f} ms\n```")
-		embed.add_field(name="Typing", value=f"```py\n{typing:.2f} ms\n```")
-		embed.add_field(name="Database",
-						value=f"```py\n{database:.2f} ms\n```")
+		embed = discord.Embed(title="Apollo Ping", color=discord.Color.blurple(), description=f"""
+		**Websocket**: `{(self.bot.latency * 1000):.2f}`
+		**Typing**: `{typing:.2f}`
+		**Database:** `{database:.2f}`
+		""")
 		embed.set_thumbnail(url=self.bot.user.avatar.url)
 		await m.edit(content=None, embed=embed)
 
