@@ -247,6 +247,18 @@ class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.voice_states = {}
+        self._cd_type = commands.BucketType.user
+        self._cd = commands.CooldownMapping.from_cooldown(
+            1, 3, self._cd_type)
+
+    async def cog_check(self, ctx: ApolloContext):
+        bucket = self._cd.get_bucket(ctx.message)
+        retry_after = bucket.update_rate_limit()
+        if retry_after:
+            raise commands.CommandOnCooldown(
+                self._cd, retry_after, self._cd_type)
+        else:
+            return True
 
     def get_voice_state(self, ctx: ApolloContext):
         state = self.voice_states.get(ctx.guild.id)
