@@ -80,7 +80,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
         data = await loop.run_in_executor(None, partial)
 
         if data is None:
-            raise Error('Couldn\'t find anything that matches `{}`'.format(search))
+            raise Error(
+                'Couldn\'t find anything that matches `{}`'.format(search))
 
         if 'entries' not in data:
             process_info = data
@@ -92,7 +93,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
                     break
 
             if process_info is None:
-                raise Error('Couldn\'t find anything that matches `{}`'.format(search))
+                raise Error(
+                    'Couldn\'t find anything that matches `{}`'.format(search))
 
         webpage_url = process_info['webpage_url']
         partial = functools.partial(
@@ -110,9 +112,10 @@ class YTDLSource(discord.PCMVolumeTransformer):
                 try:
                     info = processed_info['entries'].pop(0)
                 except IndexError:
-                    raise Error('Couldn\'t retrieve any matches for `{}`'.format(webpage_url))
+                    raise Error(
+                        'Couldn\'t retrieve any matches for `{}`'.format(webpage_url))
 
-        return cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS), data=info)
+        return (cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS), data=info),)
 
 
 class Song:
@@ -260,24 +263,23 @@ class Music(commands.Cog):
             self.bot.loop.create_task(state.stop())
 
     async def cog_before_invoke(self, ctx: ApolloContext):
+        if not ctx.author.voice or not ctx.author.voice.channel:
+            raise Error('You are not connected to any voice channel.')
+        if ctx.voice_client:
+            if ctx.voice_client.channel != ctx.author.voice.channel:
+                raise Error('Bot is already in a different voice channel.')
+
         ctx.voice_state = self.get_voice_state(ctx.guild)
 
     @commands.command(name='join', description="Joins a voice channel.", aliases=['connect'])
     async def _join(self, ctx: ApolloContext):
         destination = ctx.author.voice.channel
-        if ctx.voice_state.voice:
-            await ctx.tick(False)
-            return
-
         ctx.voice_state.voice = await destination.connect()
         await ctx.tick()
 
     @commands.command(name='leave', description="Clears the queue and leaves the voice channel.",
                       aliases=['disconnect', 'stop', 'dc'])
     async def _leave(self, ctx: ApolloContext):
-        if not ctx.voice_state.voice:
-            raise Error('Not connected to any voice channel.')
-
         await ctx.voice_state.stop()
         del self.voice_states[ctx.guild.id]
         await ctx.tick()
@@ -336,7 +338,7 @@ class Music(commands.Cog):
         for i, song in enumerate(ctx.voice_state.songs[start:end], start=start):
             queue += '**{0}.** [{1.source.title}]({1.source.url}) | {1.source.requester.mention}\n'.format(
                 i + 1, song)
-        
+
         # **{} tracks:**\n\n || .format(len(ctx.voice_state.songs))
         embed = (Embed(description=queue)
                  .set_footer(text='Viewing page {}/{}'.format(page, pages)))
@@ -373,13 +375,24 @@ class Music(commands.Cog):
 
         source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
 
-        if source.raw_duration > 3600:
-            raise Error("Song duration is greater than 1 hour.")
+        if len(source) > 1:
+            if sum([s.raw_duration for s in source]) > 36000:
+                raise Error("Playlist duration is greater than 10 hours.")
+        else:
+            if source[0].raw_duration > 3600:
+                raise Error("Song duration is greater than 1 hour.")
 
-        song = Song(source)
+        if (len(ctx.voice_state.songs) + len(source)) > 99:
+            raise Error("Cannot enqueue more than 99 songs.")
 
-        await ctx.voice_state.songs.put(song)
-        await ctx.reply(embed=Embed(description=f"Queued [{source.title}]({source.url}) | {ctx.author.mention}"))
+        for s in source:
+            song = Song(s)
+            await ctx.voice_state.songs.put(song)
+
+        if len(source) > 1:
+            await ctx.reply(embed=Embed(description=f"Queued `{len(source)}` songs | {ctx.author.mention}"))
+        else:
+            await ctx.reply(embed=Embed(description=f"Queued [{source.title}]({source.url}) | {ctx.author.mention}"))
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
@@ -389,19 +402,6 @@ class Music(commands.Cog):
                 if voice_state:
                     await voice_state.stop()
                     del self.voice_states[member.guild.id]
-
-    @_join.before_invoke
-    @_play.before_invoke
-    async def ensure_voice_state(self, ctx: ApolloContext):
-        if not ctx.author.voice or not ctx.author.voice.channel:
-            raise Error(
-                'You are not connected to any voice channel.')
-
-        if ctx.voice_client:
-            if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise Error(
-                    'Bot is already in a voice channel.')
-
 
 def setup(bot):
     bot.add_cog(Music(bot))
