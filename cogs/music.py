@@ -109,8 +109,15 @@ class YTDLSource(discord.PCMVolumeTransformer):
         else:
             webpage_url = data.get('webpage_url', data.get('url'))
             info = await cls.get_processed_info(cls, webpage_url, loop)
+
             if info is None:
                 raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
+
+            if len(info['entries']) < 1:
+                raise commands.UserInputError(
+                        'Couldn\'t find anything that matches `{}`'.format(search))
+            
+            info = info['entries'][0]
 
             output.append(cls(ctx, discord.FFmpegPCMAudio(info.get('webpage_url', info.get('url')), **cls.FFMPEG_OPTIONS), data=info))
 
