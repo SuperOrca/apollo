@@ -103,6 +103,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
         if processed_info is None:
             raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
 
+        print(process_info)
+        
         if 'entries' not in processed_info:
             info = processed_info
         else:
@@ -290,6 +292,8 @@ class Music(commands.Cog):
 
     @commands.command(name='volume', description="Sets the volume of the player.")
     async def _volume(self, ctx: ApolloContext, volume: int):
+        await self.ensure_voice_state(ctx)
+
         if not ctx.voice_state.is_playing:
             raise commands.UserInputError('Nothing being played at the moment.')
 
@@ -305,6 +309,8 @@ class Music(commands.Cog):
 
     @commands.command(name='pause', description="Pauses the currently playing song.")
     async def _pause(self, ctx: ApolloContext):
+        await self.ensure_voice_state(ctx)
+
         if ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
             ctx.voice_state.voice.pause()
             await ctx.tick()
@@ -314,6 +320,8 @@ class Music(commands.Cog):
 
     @commands.command(name='resume', description="Resumes a currently paused song.", aliases=['unpause'])
     async def _resume(self, ctx: ApolloContext):
+        await self.ensure_voice_state(ctx)
+
         if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
             ctx.voice_state.voice.resume()
             await ctx.tick()
@@ -323,6 +331,8 @@ class Music(commands.Cog):
 
     @commands.command(name='skip', description="Skip a song.", aliases=['s'])
     async def _skip(self, ctx: ApolloContext):
+        await self.ensure_voice_state(ctx)
+
         if not ctx.voice_state.is_playing:
             raise commands.UserInputError('Not playing any music right now...')
 
@@ -352,6 +362,8 @@ class Music(commands.Cog):
 
     @commands.command(name='shuffle', description="Shuffles the queue.", aliases=['sh'])
     async def _shuffle(self, ctx: ApolloContext):
+        await self.ensure_voice_state(ctx)
+        
         if len(ctx.voice_state.songs) == 0:
             raise commands.UserInputError('Empty queue.')
 
@@ -360,6 +372,8 @@ class Music(commands.Cog):
 
     @commands.command(name='remove', description="Removes a song from the queue at a given index.", aliases=['rm'])
     async def _remove(self, ctx: ApolloContext, index: int):
+        await self.ensure_voice_state(ctx)
+
         if len(ctx.voice_state.songs) == 0:
             raise commands.UserInputError('Empty queue.')
 
@@ -368,6 +382,8 @@ class Music(commands.Cog):
 
     @commands.command(name='loop', description="Loops the currently playing song.")
     async def _loop(self, ctx: ApolloContext):
+        await self.ensure_voice_state(ctx)
+        
         if not ctx.voice_state.is_playing:
             raise commands.UserInputError('Nothing being played at the moment.')
 
