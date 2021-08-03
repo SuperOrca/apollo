@@ -89,19 +89,21 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         output = []
         if 'entries' in data:
+            for entry in data['entries']:
+                if not entry:
+                    data['entries'].remove(entry)
+            if len(data['entries']) < 1:
+                raise commands.UserInputError(
+                        'Couldn\'t find anything that matches `{}`'.format(search))
+            print(data['entries'][0])
             webpage_url = data.get('webpage_url', data.get('url'))
             info = await cls.get_processed_info(cls, webpage_url, loop)
             if info is None:
                 raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
 
-            print(info['entries'][0])
             for entry in info['entries']:
                 output.append(cls(ctx, discord.FFmpegPCMAudio(entry.get('webpage_url', data.get('url')), **cls.FFMPEG_OPTIONS), data=info))
         else:
-            for entry in data['entries']:
-                if not entry:
-                    raise commands.UserInputError(
-                        'Couldn\'t find anything that matches `{}`'.format(search))
             webpage_url = data.get('webpage_url', data.get('url'))
             info = await cls.get_processed_info(cls, webpage_url, loop)
             if info is None:
