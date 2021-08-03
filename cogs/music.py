@@ -361,7 +361,7 @@ class Music(commands.Cog):
 
             embeds.append(Embed(title=f'{len(ctx.voice_state.songs)} tracks', description=queue)
                     .set_footer(text='Viewing page {}/{}'.format(page, pages)))
-        EmbedPaginator.start(ctx, embeds)
+        await EmbedPaginator.start(ctx, embeds)
 
     @commands.command(name='shuffle', description="Shuffles the queue.", aliases=['sh'])
     async def _shuffle(self, ctx: ApolloContext):
