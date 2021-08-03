@@ -1,7 +1,6 @@
 from inspect import Parameter
 from io import BytesIO
 from typing import Optional
-from utils.metrics import Error
 
 import discord
 from PIL import Image as PILImage

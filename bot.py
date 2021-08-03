@@ -21,7 +21,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 from utils.context import ApolloContext
-from utils.metrics import Embed, Error
+from utils.metrics import Embed
 
 load_dotenv()
 

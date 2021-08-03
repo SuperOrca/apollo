@@ -7,14 +7,13 @@ from datetime import timedelta
 from typing import Optional
 
 import discord
-from discord import member
 import youtube_dl
 import humanize
 from async_timeout import timeout
 from discord.ext import commands
 
 from utils.context import ApolloContext
-from utils.metrics import Embed, Error
+from utils.metrics import Embed
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''

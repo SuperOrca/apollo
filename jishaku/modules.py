@@ -13,7 +13,6 @@ Functions for managing and searching modules.
 
 import pathlib
 import typing
-from utils.metrics import Error
 
 import pkg_resources
 from braceexpand import UnbalancedBracesError, braceexpand

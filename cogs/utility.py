@@ -9,7 +9,7 @@ from discord.ext import commands
 
 from jishaku.codeblocks import codeblock_converter
 from utils.context import ApolloContext
-from utils.metrics import Embed, Error
+from utils.metrics import Embed
 
 
 class Utility(commands.Cog):

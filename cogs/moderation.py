@@ -6,7 +6,7 @@ from discord.ext import commands
 
 from utils.checks import check_hierarchy
 from utils.context import ApolloContext
-from utils.metrics import Embed, Error
+from utils.metrics import Embed
 
 
 class Moderation(commands.Cog):
