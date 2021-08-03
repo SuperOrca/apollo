@@ -96,11 +96,15 @@ class YTDLSource(discord.PCMVolumeTransformer):
                     raise commands.UserInputError(
                         'Couldn\'t find anything that matches `{}`'.format(search))
 
+        print(data)
+        # b = functools.partial(cls.ytdl.extract_info, webpage_url, download=False)
+        # d = await loop.run_in_executor(None, b)
+        # print(d)
+
         output = []
         for process_info in entries:
             webpage_url = process_info.get('webpage_url', process_info.get('url'))
-            partial = functools.partial(
-                cls.ytdl.extract_info, webpage_url, download=False)
+            partial = functools.partial(cls.ytdl.extract_info, webpage_url, download=False)
             processed_info = await loop.run_in_executor(None, partial)
 
             if processed_info is None:
