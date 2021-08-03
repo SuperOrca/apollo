@@ -53,8 +53,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.uploader = data.get('uploader')
         self.uploader_url = data.get('uploader_url')
         date = data.get('upload_date')
-        if date is not None:
-            self.upload_date = date[6:8] + '.' + date[4:6] + '.' + date[0:4]
+        self.upload_date = date[6:8] + '.' + date[4:6] + '.' + date[0:4]
         self.title = data.get('title')
         self.thumbnail = data.get('thumbnail')
         self.description = data.get('description')
