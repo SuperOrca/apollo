@@ -267,12 +267,19 @@ class Music(commands.Cog):
     @commands.command(name='join', description="Joins a voice channel.", aliases=['connect'])
     async def _join(self, ctx: ApolloContext):
         destination = ctx.author.voice.channel
+        if ctx.voice_state.voice:
+            await ctx.voice_state.voice.move_to(destination)
+            return
+
         ctx.voice_state.voice = await destination.connect()
         await ctx.tick()
 
     @commands.command(name='leave', description="Clears the queue and leaves the voice channel.",
                       aliases=['disconnect', 'stop', 'dc'])
     async def _leave(self, ctx: ApolloContext):
+        if not ctx.voice_state.voice:
+            return await ctx.send('Not connected to any voice channel.')
+
         await ctx.voice_state.stop()
         del self.voice_states[ctx.guild.id]
         await ctx.tick()
@@ -400,6 +407,7 @@ class Music(commands.Cog):
 
     @_join.before_invoke
     @_play.before_invoke
+    @_leave.before_invoke
     async def ensure_voice_state(self, ctx: ApolloContext):
         if not ctx.author.voice or not ctx.author.voice.channel:
             raise commands.UserInputError('You are not connected to any voice channel.')
