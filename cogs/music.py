@@ -6,6 +6,7 @@ import random
 from typing import Optional
 
 import discord
+from discord import member
 import youtube_dl
 from async_timeout import timeout
 from discord.ext import commands
@@ -169,9 +170,9 @@ class SongQueue(asyncio.Queue):
 
 
 class VoiceState:
-    def __init__(self, bot: commands.Bot, ctx: ApolloContext):
+    def __init__(self, bot: commands.Bot, guild: discord.Guild):
         self.bot = bot
-        self._ctx = ctx
+        self._guild = guild
 
         self.current = None
         self.voice = None
@@ -260,11 +261,11 @@ class Music(commands.Cog):
         else:
             return True
 
-    def get_voice_state(self, ctx: ApolloContext):
-        state = self.voice_states.get(ctx.guild.id)
+    def get_voice_state(self, guild: discord.Guild):
+        state = self.voice_states.get(guild.id)
         if not state:
-            state = VoiceState(self.bot, ctx)
-            self.voice_states[ctx.guild.id] = state
+            state = VoiceState(self.bot, guild)
+            self.voice_states[guild.id] = state
 
         return state
 
@@ -273,7 +274,7 @@ class Music(commands.Cog):
             self.bot.loop.create_task(state.stop())
 
     async def cog_before_invoke(self, ctx: ApolloContext):
-        ctx.voice_state = self.get_voice_state(ctx)
+        ctx.voice_state = self.get_voice_state(ctx.guild)
 
     @commands.command(name='join', description="Joins a voice channel.", aliases=['connect'])
     async def _join(self, ctx: ApolloContext):
@@ -402,6 +403,13 @@ class Music(commands.Cog):
 
         await ctx.voice_state.songs.put(song)
         await ctx.reply(embed=Embed(description=f"Queued [{source.title}]({source.url}) | {ctx.author.mention}"))
+
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+        if member == self.bot:
+            voice_state = self.get_voice_state(member.guild)
+            await voice_state.stop()
+            del self.voice_states[member.guild.id]
 
     @_join.before_invoke
     @_play.before_invoke
