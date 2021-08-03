@@ -96,9 +96,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         output = []
         for process_info in entries:
-            print(process_info)
-            webpage_url = process_info['webpage_url']
-            print(webpage_url)
+            webpage_url = process_info.get('webpage_url', process_info.get('url'))
             partial = functools.partial(
                 cls.ytdl.extract_info, webpage_url, download=False)
             processed_info = await loop.run_in_executor(None, partial)
