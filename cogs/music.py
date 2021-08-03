@@ -1,5 +1,4 @@
 import asyncio
-from bot import Apollo
 import functools
 import itertools
 import math
