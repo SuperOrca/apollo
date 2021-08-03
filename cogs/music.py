@@ -392,7 +392,7 @@ class Music(commands.Cog):
         if len(source) > 1:
             await ctx.reply(embed=Embed(description=f"Queued `{len(source)}` songs | {ctx.author.mention}"))
         else:
-            await ctx.reply(embed=Embed(description=f"Queued [{source.title}]({source.url}) | {ctx.author.mention}"))
+            await ctx.reply(embed=Embed(description=f"Queued [{source[0].title}]({source[0].url}) | {ctx.author.mention}"))
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
