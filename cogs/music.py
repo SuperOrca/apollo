@@ -266,6 +266,8 @@ class Music(commands.Cog):
 
     @commands.command(name='join', description="Joins a voice channel.", aliases=['connect'])
     async def _join(self, ctx: ApolloContext):
+        await self.ensure_voice_state(ctx)
+
         destination = ctx.author.voice.channel
         if ctx.voice_state.voice:
             await ctx.voice_state.voice.move_to(destination)
@@ -277,6 +279,8 @@ class Music(commands.Cog):
     @commands.command(name='leave', description="Clears the queue and leaves the voice channel.",
                       aliases=['disconnect', 'stop', 'dc'])
     async def _leave(self, ctx: ApolloContext):
+        await self.ensure_voice_state(ctx)
+
         if not ctx.voice_state.voice:
             raise commands.UserInputError('Not connected to any voice channel.')
 
@@ -372,6 +376,8 @@ class Music(commands.Cog):
 
     @commands.command(name='play', description="Plays a song.", aliases=['p'])
     async def _play(self, ctx: ApolloContext, *, search: str):
+        await self.ensure_voice_state(ctx)
+
         if not ctx.voice_state.voice:
             await ctx.invoke(self._join)
 
@@ -405,16 +411,13 @@ class Music(commands.Cog):
                     await voice_state.stop()
                     del self.voice_states[member.guild.id]
 
-    @_join.before_invoke
-    @_play.before_invoke
     async def ensure_voice_state(self, ctx: ApolloContext):
-        await self.bot.send_owner("hey")
         if not ctx.author.voice or not ctx.author.voice.channel:
             raise commands.UserInputError('You are not connected to any voice channel.')
 
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise commands.UserInputError('Bot is already in a voice channel.')
+                raise commands.UserInputError('Bot is already in a different voice channel.')
 
 def setup(bot):
     bot.add_cog(Music(bot))
