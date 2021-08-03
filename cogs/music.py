@@ -407,7 +407,7 @@ class Music(commands.Cog):
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         await self.bot.send_owner(str(member))
-        if member == self.bot:
+        if member == self.bot.user:
             await self.bot.send_owner("member is bot")
             if after is None:
                 await self.bot.send_owner("channel is none")
