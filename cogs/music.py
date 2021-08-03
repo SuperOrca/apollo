@@ -104,7 +104,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
             raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
 
         print(process_info)
-        
+
         if 'entries' not in processed_info:
             info = processed_info
         else:
@@ -433,7 +433,7 @@ class Music(commands.Cog):
 
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise commands.UserInputError('Bot is already in a different voice channel.')
+                raise commands.UserInputError('The bot is already in a voice channel.')
 
 def setup(bot):
     bot.add_cog(Music(bot))
