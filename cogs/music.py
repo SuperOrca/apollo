@@ -408,6 +408,9 @@ class Music(commands.Cog):
     @_join.before_invoke
     @_play.before_invoke
     @_leave.before_invoke
+    @_pause.before_invoke
+    @_resume.before_invoke
+    @_skip.before_invoke
     async def ensure_voice_state(self, ctx: ApolloContext):
         if not ctx.author.voice or not ctx.author.voice.channel:
             raise commands.UserInputError('You are not connected to any voice channel.')
