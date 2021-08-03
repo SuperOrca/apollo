@@ -301,7 +301,7 @@ class Music(commands.Cog):
 
     @commands.command(name='pause', description="Pauses the currently playing song.")
     async def _pause(self, ctx: ApolloContext):
-        if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
+        if ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
             ctx.voice_state.voice.pause()
             await ctx.tick()
 
