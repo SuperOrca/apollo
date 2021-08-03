@@ -81,7 +81,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
     async def create_source(cls, ctx: ApolloContext, search: str, *, loop: Optional[asyncio.BaseEventLoop] = None):
         loop = loop or asyncio.get_event_loop()
 
-        data = await cls.get_processed_info(cls, search, process=False)
+        data = await cls.get_processed_info(cls, search, loop, process=False)
 
         if data is None:
             raise commands.UserInputError('Couldn\'t find anything that matches `{}`'.format(search))
