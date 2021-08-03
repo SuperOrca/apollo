@@ -209,8 +209,6 @@ class Apollo(commands.AutoShardedBot):
         if isinstance(error, _input):
             m = str(error).replace('"', '`')
 
-        if isinstance(error, Error):
-            return await self.send_error_embed(ctx, str(error))
         if isinstance(error, commands.CommandNotFound):
             return await ctx.tick(False)
         if isinstance(error, commands.MissingRequiredArgument):
