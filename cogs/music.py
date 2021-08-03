@@ -395,7 +395,9 @@ class Music(commands.Cog):
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         if member == self.bot.user:
             if after.channel is None:
+                print("1")
                 if not self.voice_states.get(member.guild.id):
+                    print("2")
                     voice_state = self.get_voice_state(member.guild)
                     await voice_state.stop()
                     del self.voice_states[member.guild.id]
