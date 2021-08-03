@@ -3,11 +3,13 @@ import functools
 import itertools
 import math
 import random
+from datetime import timedelta
 from typing import Optional
 
 import discord
 from discord import member
 import youtube_dl
+import humanize
 from async_timeout import timeout
 from discord.ext import commands
 
@@ -56,7 +58,9 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.title = data.get('title')
         self.thumbnail = data.get('thumbnail')
         self.description = data.get('description')
-        self.duration = self.parse_duration(int(data.get('duration')))
+        self.raw_duration = int(data.get('duration'))
+        td = timedelta(seconds=self.raw_duration)
+        self.duration = humanize.precisedelta(td)
         self.tags = data.get('tags')
         self.url = data.get('webpage_url')
         self.views = data.get('view_count')
@@ -65,7 +69,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.stream_url = data.get('url')
 
     def __str__(self):
-        return '**{0.title}** by **{0.uploader}**'.format(self)
+        return self.title
 
     @classmethod
     async def create_source(cls, ctx: ApolloContext, search: str, *, loop: Optional[asyncio.BaseEventLoop] = None):
@@ -109,24 +113,6 @@ class YTDLSource(discord.PCMVolumeTransformer):
                     raise Error('Couldn\'t retrieve any matches for `{}`'.format(webpage_url))
 
         return cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS), data=info)
-
-    @staticmethod
-    def parse_duration(duration: int):
-        minutes, seconds = divmod(duration, 60)
-        hours, minutes = divmod(minutes, 60)
-        days, hours = divmod(hours, 24)
-
-        duration = []
-        if days > 0:
-            duration.append('{} days'.format(days))
-        if hours > 0:
-            duration.append('{} hours'.format(hours))
-        if minutes > 0:
-            duration.append('{} minutes'.format(minutes))
-        if seconds > 0:
-            duration.append('{} seconds'.format(seconds))
-
-        return ', '.join(duration)
 
 
 class Song:
@@ -386,6 +372,10 @@ class Music(commands.Cog):
             await ctx.invoke(self._join)
 
         source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
+
+        if source.raw_duration > 3600:
+            raise Error("Song duration is greater than 1 hour.")
+
         song = Song(source)
 
         await ctx.voice_state.songs.put(song)
