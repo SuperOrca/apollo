@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import time
 
 import discord
@@ -56,3 +57,9 @@ class Timer:
         if self._end is None:
             raise ValueError("Timer has not been ended.")
         return self._end - self._start
+
+
+def dtu(conversion: datetime):
+    x = conversion.replace(tzinfo=timezone.utc).timestamp()
+    y = "{:.0f}".format(x)
+    return int(y)

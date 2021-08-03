@@ -305,20 +305,19 @@ class Music(commands.Cog):
         if not ctx.voice_state.voice:
             raise Error('Not connected to any voice channel.')
 
-        await ctx.voice_state.stop()
-        del self.voice_states[ctx.guild.id]
+        await ctx.voice_state.voice.disconnect()
         await ctx.tick()
 
-    # @commands.command(name='volume', description="Sets the volume of the player.")
-    # async def _volume(self, ctx: ApolloContext, *, volume: int):
-    #     if not ctx.voice_state.is_playing:
-    #         raise Error('Nothing being played at the moment.')
+    @commands.command(name='volume', description="Sets the volume of the player.")
+    async def _volume(self, ctx: ApolloContext, volume: int):
+        if not ctx.voice_state.is_playing:
+            raise Error('Nothing being played at the moment.')
 
-    #     if 0 > volume > 100:
-    #         raise Error('Volume must be between 0 and 100')
+        if 0 > volume > 100:
+            raise Error('Volume must be between 0 and 100')
 
-    #     ctx.voice_state.volume = volume / 100
-    #     await ctx.tick()
+        ctx.voice_state.volume = volume / 100
+        await ctx.tick()
 
     @commands.command(name='now', description="Displays the currently playing song.", aliases=['current', 'playing', 'np'])
     async def _now(self, ctx: ApolloContext):
