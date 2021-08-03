@@ -406,10 +406,14 @@ class Music(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+        await self.bot.send_owner(str(member))
         if member == self.bot:
-            voice_state = self.get_voice_state(member.guild)
-            await voice_state.stop()
-            del self.voice_states[member.guild.id]
+            await self.bot.send_owner("member is bot")
+            if after is None:
+                await self.bot.send_owner("channel is none")
+                voice_state = self.get_voice_state(member.guild)
+                await voice_state.stop()
+                del self.voice_states[member.guild.id]
 
     @_join.before_invoke
     @_play.before_invoke
