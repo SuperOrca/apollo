@@ -53,7 +53,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.uploader = data.get('uploader')
         self.uploader_url = data.get('uploader_url')
         date = data.get('upload_date')
-        self.upload_date = date[6:8] + '.' + date[4:6] + '.' + date[0:4]
+        if date is not None:
+            self.upload_date = date[6:8] + '.' + date[4:6] + '.' + date[0:4]
         self.title = data.get('title')
         self.thumbnail = data.get('thumbnail')
         self.description = data.get('description')
@@ -94,7 +95,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
                 raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
 
             for entry in info['entries']:
-                output.append(cls(ctx, discord.FFmpegPCMAudio(entry.get('url'), **cls.FFMPEG_OPTIONS), data=info))
+                print(entry)
+                output.append(cls(ctx, discord.FFmpegPCMAudio(entry.get('webpage_url', data.get('url')), **cls.FFMPEG_OPTIONS), data=info))
         else:
             for entry in data['entries']:
                 if not entry:
@@ -105,7 +107,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
             if info is None:
                 raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
 
-            output.append(cls(ctx, discord.FFmpegPCMAudio(info.get('url'), **cls.FFMPEG_OPTIONS), data=info))
+            output.append(cls(ctx, discord.FFmpegPCMAudio(data.get('webpage_url', data.get('url')), **cls.FFMPEG_OPTIONS), data=info))
 
         return output
 
@@ -343,7 +345,7 @@ class Music(commands.Cog):
 
         queue = ''
         for i, song in enumerate(ctx.voice_state.songs[start:end], start=start):
-            queue += '**{0}.** [{1.source.title}]({1.source.url}) | {1.source.requester.mention}\n'.format(
+            queue += '{0}. [{1.source.title}]({1.source.url}) | {1.source.requester.mention}\n'.format(
                 i + 1, song)
 
         # **{} tracks:**\n\n || .format(len(ctx.voice_state.songs))
