@@ -305,7 +305,7 @@ class Music(commands.Cog):
             ctx.voice_state.voice.pause()
             await ctx.tick()
 
-        await ctx.tick(False)
+        raise Error('Player is already paused.')
 
     @commands.command(name='resume', description="Resumes a currently paused song.", aliases=['unpause'])
     async def _resume(self, ctx: ApolloContext):
@@ -313,7 +313,7 @@ class Music(commands.Cog):
             ctx.voice_state.voice.resume()
             await ctx.tick()
 
-        await ctx.tick(False)
+        raise Error('Player is already playing.')
 
     @commands.command(name='skip', description="Skip a song.", aliases=['s'])
     async def _skip(self, ctx: ApolloContext):
