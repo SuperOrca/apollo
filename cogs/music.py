@@ -82,41 +82,41 @@ class YTDLSource(discord.PCMVolumeTransformer):
             raise commands.UserInputError(
                 'Couldn\'t find anything that matches `{}`'.format(search))
 
+        entries = []
+
         if 'entries' not in data:
-            process_info = data
+            entries.append(data)
         else:
-            process_info = None
             for entry in data['entries']:
                 if entry:
-                    process_info = entry
-                    break
-
-            if process_info is None:
-                raise commands.UserInputError(
-                    'Couldn\'t find anything that matches `{}`'.format(search))
-
-        print(process_info)
-
-        webpage_url = process_info['webpage_url']
-        partial = functools.partial(
-            cls.ytdl.extract_info, webpage_url, download=False)
-        processed_info = await loop.run_in_executor(None, partial)
-
-        if processed_info is None:
-            raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
-
-        if 'entries' not in processed_info:
-            info = processed_info
-        else:
-            info = None
-            while info is None:
-                try:
-                    info = processed_info['entries'].pop(0)
-                except IndexError:
+                    entries.append(entry)
+                else:
                     raise commands.UserInputError(
-                        'Couldn\'t retrieve any matches for `{}`'.format(webpage_url))
+                        'Couldn\'t find anything that matches `{}`'.format(search))
 
-        return (cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS), data=info),)
+        output = []
+        for process_info in entries:
+            webpage_url = process_info['webpage_url']
+            partial = functools.partial(
+                cls.ytdl.extract_info, webpage_url, download=False)
+            processed_info = await loop.run_in_executor(None, partial)
+
+            if processed_info is None:
+                raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
+
+            if 'entries' not in processed_info:
+                info = processed_info
+            else:
+                info = None
+                while info is None:
+                    try:
+                        info = processed_info['entries'].pop(0)
+                    except IndexError:
+                        raise commands.UserInputError(
+                            'Couldn\'t retrieve any matches for `{}`'.format(webpage_url))
+            output.append(cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS), data=info))
+
+        return output
 
 
 class Song:
