@@ -80,7 +80,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         data = await loop.run_in_executor(None, partial)
 
         if data is None:
-            raise Error(
+            raise commands.UserInputError(
                 'Couldn\'t find anything that matches `{}`'.format(search))
 
         if 'entries' not in data:
@@ -93,7 +93,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
                     break
 
             if process_info is None:
-                raise Error(
+                raise commands.UserInputError(
                     'Couldn\'t find anything that matches `{}`'.format(search))
 
         webpage_url = process_info['webpage_url']
@@ -102,7 +102,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         processed_info = await loop.run_in_executor(None, partial)
 
         if processed_info is None:
-            raise Error('Couldn\'t fetch `{}`'.format(webpage_url))
+            raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
 
         if 'entries' not in processed_info:
             info = processed_info
@@ -112,7 +112,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
                 try:
                     info = processed_info['entries'].pop(0)
                 except IndexError:
-                    raise Error(
+                    raise commands.UserInputError(
                         'Couldn\'t retrieve any matches for `{}`'.format(webpage_url))
 
         return (cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS), data=info),)
@@ -217,7 +217,7 @@ class VoiceState:
 
     def play_next_song(self, error=None):
         if error:
-            raise Error(str(error))
+            raise commands.UserInputError(str(error))
 
         self.next.set()
 
@@ -264,10 +264,10 @@ class Music(commands.Cog):
 
     async def cog_before_invoke(self, ctx: ApolloContext):
         if not ctx.author.voice or not ctx.author.voice.channel:
-            raise Error('You are not connected to any voice channel.')
+            raise commands.UserInputError('You are not connected to any voice channel.')
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise Error('Bot is already in a different voice channel.')
+                raise commands.UserInputError('Bot is already in a different voice channel.')
 
         ctx.voice_state = self.get_voice_state(ctx.guild)
 
@@ -287,10 +287,10 @@ class Music(commands.Cog):
     @commands.command(name='volume', description="Sets the volume of the player.")
     async def _volume(self, ctx: ApolloContext, volume: int):
         if not ctx.voice_state.is_playing:
-            raise Error('Nothing being played at the moment.')
+            raise commands.UserInputError('Nothing being played at the moment.')
 
         if 0 > volume > 100:
-            raise Error('Volume must be between 0 and 100')
+            raise commands.UserInputError('Volume must be between 0 and 100')
 
         ctx.voice_state.volume = volume / 100
         await ctx.tick()
@@ -304,21 +304,23 @@ class Music(commands.Cog):
         if ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
             ctx.voice_state.voice.pause()
             await ctx.tick()
+            return
 
-        raise Error('Player is already paused.')
+        raise commands.UserInputError('Player is already paused.')
 
     @commands.command(name='resume', description="Resumes a currently paused song.", aliases=['unpause'])
     async def _resume(self, ctx: ApolloContext):
         if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
             ctx.voice_state.voice.resume()
             await ctx.tick()
+            return
 
-        raise Error('Player is already playing.')
+        raise commands.UserInputError('Player is already playing.')
 
     @commands.command(name='skip', description="Skip a song.", aliases=['s'])
     async def _skip(self, ctx: ApolloContext):
         if not ctx.voice_state.is_playing:
-            raise Error('Not playing any music right now...')
+            raise commands.UserInputError('Not playing any music right now...')
 
         ctx.voice_state.skip()
         await ctx.tick()
@@ -326,7 +328,7 @@ class Music(commands.Cog):
     @commands.command(name='queue', description="Shows the player's queue.", aliases=['q'])
     async def _queue(self, ctx: ApolloContext, *, page: Optional[int] = 1):
         if len(ctx.voice_state.songs) == 0:
-            raise Error('Empty queue.')
+            raise commands.UserInputError('Empty queue.')
 
         items_per_page = 10
         pages = math.ceil(len(ctx.voice_state.songs) / items_per_page)
@@ -347,7 +349,7 @@ class Music(commands.Cog):
     @commands.command(name='shuffle', description="Shuffles the queue.", aliases=['sh'])
     async def _shuffle(self, ctx: ApolloContext):
         if len(ctx.voice_state.songs) == 0:
-            raise Error('Empty queue.')
+            raise commands.UserInputError('Empty queue.')
 
         ctx.voice_state.songs.shuffle()
         await ctx.tick()
@@ -355,7 +357,7 @@ class Music(commands.Cog):
     @commands.command(name='remove', description="Removes a song from the queue at a given index.", aliases=['rm'])
     async def _remove(self, ctx: ApolloContext, index: int):
         if len(ctx.voice_state.songs) == 0:
-            raise Error('Empty queue.')
+            raise commands.UserInputError('Empty queue.')
 
         ctx.voice_state.songs.remove(index - 1)
         await ctx.tick()
@@ -363,7 +365,7 @@ class Music(commands.Cog):
     @commands.command(name='loop', description="Loops the currently playing song.")
     async def _loop(self, ctx: ApolloContext):
         if not ctx.voice_state.is_playing:
-            raise Error('Nothing being played at the moment.')
+            raise commands.UserInputError('Nothing being played at the moment.')
 
         ctx.voice_state.loop = not ctx.voice_state.loop
         await ctx.tick()
@@ -377,13 +379,13 @@ class Music(commands.Cog):
 
         if len(source) > 1:
             if sum([s.raw_duration for s in source]) > 36000:
-                raise Error("Playlist duration is greater than 10 hours.")
+                raise commands.UserInputError("Playlist duration is greater than 10 hours.")
         else:
             if source[0].raw_duration > 3600:
-                raise Error("Song duration is greater than 1 hour.")
+                raise commands.UserInputError("Song duration is greater than 1 hour.")
 
         if (len(ctx.voice_state.songs) + len(source)) > 99:
-            raise Error("Cannot enqueue more than 99 songs.")
+            raise commands.UserInputError("Cannot enqueue more than 99 songs.")
 
         for s in source:
             song = Song(s)

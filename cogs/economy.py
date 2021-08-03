@@ -63,6 +63,7 @@ class Economy(commands.Cog):
             await ctx.reply(
                 embed=Embed(description="Sorry, I have no cash today. :("))
 
+
 # TODO more commands
 
 

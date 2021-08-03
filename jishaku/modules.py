@@ -94,4 +94,4 @@ class ExtensionConverter(commands.Converter):  # pylint: disable=too-few-public-
 		try:
 			return resolve_extensions(ctx.bot, argument)
 		except UnbalancedBracesError as exc:
-			raise Error(str(exc))
+			raise commands.UserInputError(str(exc))

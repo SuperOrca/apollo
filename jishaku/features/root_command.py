@@ -216,7 +216,7 @@ class RootCommand(Feature):
 			return await ctx.reply(f"Cancelled {task_count} tasks.")
 
 		if isinstance(index, str):
-			raise Error('Literal for "index" not recognized.')
+			raise commands.UserInputError('Literal for "index" not recognized.')
 
 		if index == -1:
 			task = self.tasks.pop()

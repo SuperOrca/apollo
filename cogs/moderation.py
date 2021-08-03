@@ -32,7 +32,7 @@ class Moderation(commands.Cog):
     async def _purge(self, ctx: ApolloContext, limit: int,
                      channel: Optional[commands.TextChannelConverter] = None) -> None:
         if limit < 1 or limit > 100:
-            raise Error("Limit must been between 1 and 100.")
+            raise commands.UserInputError("Limit must been between 1 and 100.")
 
         channel = channel or ctx.channel
         msgs = await channel.purge(limit=limit)
@@ -79,7 +79,7 @@ class Moderation(commands.Cog):
     async def _slowmode(self, ctx: ApolloContext, seconds: int,
                         channel: Optional[commands.TextChannelConverter] = None) -> None:
         if seconds < 0 or seconds > 21600:
-            raise Error(
+            raise commands.UserInputError(
                 "Slowmode must been between 0 and 21,600.")
 
         channel = channel or ctx.channel

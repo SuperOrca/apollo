@@ -10,9 +10,9 @@ import aiohttp
 import asyncdagpi
 import coloredlogs
 import discord
+import humanize
 import mystbin
 import psutil
-import humanize
 import traceback
 from aiogtts import aiogTTS
 from async_tio import Tio
@@ -124,7 +124,8 @@ class Apollo(commands.AutoShardedBot):
 
     async def get_guild_prefix(self, message: discord.Message) -> list:
         try:
-            prefix = self.cache["prefixes"].get(message.guild.id, (await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id}))[1])
+            prefix = self.cache["prefixes"].get(message.guild.id, (
+                await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id}))[1])
         except AttributeError:
             prefix = getenv('DEFAULT_PREFIX')
         if hasattr(self, "cache"):
