@@ -58,7 +58,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.thumbnail = data.get('thumbnail')
         self.description = data.get('description')
         self.raw_duration = int(data.get('duration'))
-        print(self.raw_duration)
+        if self.raw_duration == 0:
+            raise commands.UserInputError("Cannot enqueue streams.")
         td = timedelta(seconds=self.raw_duration)
         self.duration = humanize.precisedelta(td)
         self.tags = data.get('tags')
