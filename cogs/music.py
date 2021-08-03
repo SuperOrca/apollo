@@ -286,26 +286,14 @@ class Music(commands.Cog):
         ctx.voice_state.voice = await destination.connect()
         await ctx.tick()
 
-    # @commands.command(name='summon', description="Summons the bot to a voice channel.")
-    # async def _summon(self, ctx: ApolloContext, *, channel: Optional[commands.VoiceChannelConverter] = None):
-    #     if not channel and not ctx.author.voice:
-    #         raise Error('You are neither connected to a voice channel nor specified a channel to join.')
-
-    #     destination = channel or ctx.author.voice.channel
-    #     if ctx.voice_state.voice:
-    #         await ctx.voice_state.voice.move_to(destination)
-    #         return
-
-    #     ctx.voice_state.voice = await destination.connect()
-    #     await ctx.tick()
-
     @commands.command(name='leave', description="Clears the queue and leaves the voice channel.",
                       aliases=['disconnect', 'stop', 'dc'])
     async def _leave(self, ctx: ApolloContext):
         if not ctx.voice_state.voice:
             raise Error('Not connected to any voice channel.')
 
-        await ctx.voice_state.voice.disconnect()
+        await ctx.voice_state.stop()
+        del self.voice_states[ctx.guild.id]
         await ctx.tick()
 
     @commands.command(name='volume', description="Sets the volume of the player.")
@@ -407,10 +395,10 @@ class Music(commands.Cog):
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         if member == self.bot.user:
             if after.channel is None:
-                await self.bot.send_owner("channel is none")
-                voice_state = self.get_voice_state(member.guild)
-                await voice_state.stop()
-                del self.voice_states[member.guild.id]
+                if not self.voice_states.get(member.guild.id):
+                    voice_state = self.get_voice_state(member.guild)
+                    await voice_state.stop()
+                    del self.voice_states[member.guild.id]
 
     @_join.before_invoke
     @_play.before_invoke
