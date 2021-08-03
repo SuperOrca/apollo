@@ -89,13 +89,14 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         output = []
         if 'entries' in data:
+            entries = []
             for entry in data['entries']:
-                if not entry:
-                    data['entries'].remove(entry)
-            if len(data['entries']) < 1:
+                if entry:
+                    entries.append(entry)
+            if len(entries) < 1:
                 raise commands.UserInputError(
                         'Couldn\'t find anything that matches `{}`'.format(search))
-            print(data['entries'][0])
+            print(entries[0])
             webpage_url = data.get('webpage_url', data.get('url'))
             info = await cls.get_processed_info(cls, webpage_url, loop)
             if info is None:
