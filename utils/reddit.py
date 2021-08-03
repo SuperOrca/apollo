@@ -38,7 +38,7 @@ async def getpost(bot, ctx, subreddit) -> discord.Embed:
 
     class RedditView(ui.View):
         def __init__(self):
-            super().__init__(timeout=120)
+            super().__init__(timeout=180)
 
         async def interaction_check(self, interaction: discord.Interaction):
             if not self.ctx.author == interaction.user:

@@ -2,7 +2,6 @@ import asyncio
 import functools
 import itertools
 import math
-import json
 import random
 from datetime import timedelta
 from typing import Optional
@@ -15,6 +14,7 @@ from discord.ext import commands
 
 from utils.context import ApolloContext
 from utils.metrics import Embed
+from utils.paginator import EmbedPaginator
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -342,25 +342,26 @@ class Music(commands.Cog):
         await ctx.tick()
 
     @commands.command(name='queue', description="Shows the player's queue.", aliases=['q'])
-    async def _queue(self, ctx: ApolloContext, *, page: Optional[int] = 1):
+    async def _queue(self, ctx: ApolloContext):
         if len(ctx.voice_state.songs) == 0:
             raise commands.UserInputError('Empty queue.')
 
+        embeds = []
         items_per_page = 10
         pages = math.ceil(len(ctx.voice_state.songs) / items_per_page)
 
-        start = (page - 1) * items_per_page
-        end = start + items_per_page
+        for page in range(1, (pages + 1)):
+            start = (page - 1) * items_per_page
+            end = start + items_per_page
 
-        queue = ''
-        for i, song in enumerate(ctx.voice_state.songs[start:end], start=start):
-            queue += '{0}. [{1.source.title}]({1.source.url}) | {1.source.requester.mention}\n'.format(
-                i + 1, song)
+            queue = ''
+            for i, song in enumerate(ctx.voice_state.songs[start:end], start=start):
+                queue += '{0}. [{1.source.title}]({1.source.url}) | {1.source.requester.mention}\n'.format(
+                    i + 1, song)
 
-        # **{} tracks:**\n\n || .format(len(ctx.voice_state.songs))
-        embed = (Embed(description=queue)
-                 .set_footer(text='Viewing page {}/{}'.format(page, pages)))
-        await ctx.reply(embed=embed)
+            embeds.append(Embed(title=f'{len(ctx.voice_state.songs)} tracks', description=queue)
+                    .set_footer(text='Viewing page {}/{}'.format(page, pages)))
+        EmbedPaginator.start(ctx, embeds)
 
     @commands.command(name='shuffle', description="Shuffles the queue.", aliases=['sh'])
     async def _shuffle(self, ctx: ApolloContext):
