@@ -2,6 +2,7 @@ import asyncio
 import functools
 import itertools
 import math
+import json
 import random
 from datetime import timedelta
 from typing import Optional
@@ -50,7 +51,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.channel = ctx.channel
         self.data = data
 
-        print(data)
+        with open("test.json", 'w') as f:
+            json.dump(data, f)
 
         self.uploader = data.get('uploader')
         self.uploader_url = data.get('uploader_url')
