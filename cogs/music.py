@@ -292,18 +292,18 @@ class Music(commands.Cog):
         del self.voice_states[ctx.guild.id]
         await ctx.tick()
 
-    @commands.command(name='volume', description="Sets the volume of the player.")
-    async def _volume(self, ctx: ApolloContext, volume: int):
-        await self.ensure_voice_state(ctx)
+    # @commands.command(name='volume', description="Sets the volume of the player.")
+    # async def _volume(self, ctx: ApolloContext, volume: int):
+    #     await self.ensure_voice_state(ctx)
 
-        if not ctx.voice_state.is_playing:
-            raise commands.UserInputError('Nothing being played at the moment.')
+    #     if not ctx.voice_state.is_playing:
+    #         raise commands.UserInputError('Nothing being played at the moment.')
 
-        if 0 > volume > 100:
-            raise commands.UserInputError('Volume must be between 0 and 100')
+    #     if 0 > volume > 100:
+    #         raise commands.UserInputError('Volume must be between 0 and 100')
 
-        ctx.voice_state.volume = volume / 100
-        await ctx.tick()
+    #     ctx.voice_state.volume = volume / 100
+    #     await ctx.tick()
 
     @commands.command(name='now', description="Displays the currently playing song.", aliases=['current', 'playing', 'np'])
     async def _now(self, ctx: ApolloContext):
