@@ -396,7 +396,7 @@ class Music(commands.Cog):
         if member == self.bot.user:
             if after.channel is None:
                 voice_state = self.voice_states.get(member.guild.id)
-                if not voice_state:
+                if voice_state:
                     await voice_state.stop()
                     del self.voice_states[member.guild.id]
 
