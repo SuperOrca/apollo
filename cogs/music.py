@@ -246,12 +246,6 @@ class Music(commands.Cog):
         if retry_after:
             raise commands.CommandOnCooldown(
                 self._cd, retry_after, self._cd_type)
-        elif not ctx.author.voice or not ctx.author.voice.channel:
-            raise commands.UserInputError('You are not connected to any voice channel.')
-
-        elif ctx.voice_client:
-            if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise commands.UserInputError('Bot is already in a voice channel.')
         else:
             return True
 
@@ -411,19 +405,15 @@ class Music(commands.Cog):
                     await voice_state.stop()
                     del self.voice_states[member.guild.id]
 
-    # @_join.before_invoke
-    # @_play.before_invoke
-    # @_leave.before_invoke
-    # @_pause.before_invoke
-    # @_resume.before_invoke
-    # @_skip.before_invoke
-    # async def ensure_voice_state(self, ctx: ApolloContext):
-    #     if not ctx.author.voice or not ctx.author.voice.channel:
-    #         raise commands.UserInputError('You are not connected to any voice channel.')
+    @_join.before_invoke
+    @_play.before_invoke
+    async def ensure_voice_state(self, ctx: ApolloContext):
+        if not ctx.author.voice or not ctx.author.voice.channel:
+            raise commands.CommandError('You are not connected to any voice channel.')
 
-    #     if ctx.voice_client:
-    #         if ctx.voice_client.channel != ctx.author.voice.channel:
-    #             raise commands.UserInputError('Bot is already in a voice channel.')
+        if ctx.voice_client:
+            if ctx.voice_client.channel != ctx.author.voice.channel:
+                raise commands.CommandError('Bot is already in a voice channel.')
 
 def setup(bot):
     bot.add_cog(Music(bot))
