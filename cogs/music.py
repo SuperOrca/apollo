@@ -410,11 +410,11 @@ class Music(commands.Cog):
     async def ensure_voice_state(self, ctx: ApolloContext):
         await self.bot.send_owner("hey")
         if not ctx.author.voice or not ctx.author.voice.channel:
-            raise commands.CommandError('You are not connected to any voice channel.')
+            raise commands.UserInputError('You are not connected to any voice channel.')
 
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise commands.CommandError('Bot is already in a voice channel.')
+                raise commands.UserInputError('Bot is already in a voice channel.')
 
 def setup(bot):
     bot.add_cog(Music(bot))
