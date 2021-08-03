@@ -73,32 +73,21 @@ class YTDLSource(discord.PCMVolumeTransformer):
         return self.title
 
     @staticmethod
-    async def get_processed_info(cls, url, loop):
-        partial = functools.partial(cls.ytdl.extract_info, url, download=False)
+    async def get_processed_info(cls, search, loop, process=True):
+        partial = functools.partial(cls.ytdl.extract_info, search, download=False, process=process)
         return await loop.run_in_executor(None, partial)
 
     @classmethod
     async def create_source(cls, ctx: ApolloContext, search: str, *, loop: Optional[asyncio.BaseEventLoop] = None):
         loop = loop or asyncio.get_event_loop()
 
-        partial = functools.partial(cls.ytdl.extract_info, search, download=False, process=False)
-        data = await loop.run_in_executor(None, partial)
+        data = await cls.get_processed_info(cls, search, process=False)
 
         if data is None:
             raise commands.UserInputError('Couldn\'t find anything that matches `{}`'.format(search))
 
-
-        if 'entries' not in data:
-            playlist = False
-        else:
-            for entry in data['entries']:
-                if not entry:
-                    raise commands.UserInputError(
-                        'Couldn\'t find anything that matches `{}`'.format(search))
-            playlist = True
-
         output = []
-        if playlist:
+        if 'entries' in data:
             webpage_url = data.get('webpage_url')
             info = await cls.get_processed_info(cls, webpage_url, loop)
             if info is None:
@@ -107,6 +96,10 @@ class YTDLSource(discord.PCMVolumeTransformer):
             for entry in info['entries']:
                 output.append(cls(ctx, discord.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS), data=info))
         else:
+            for entry in data['entries']:
+                if not entry:
+                    raise commands.UserInputError(
+                        'Couldn\'t find anything that matches `{}`'.format(search))
             webpage_url = data.get('webpage_url')
             info = await cls.get_processed_info(cls, webpage_url, loop)
             if info is None:
