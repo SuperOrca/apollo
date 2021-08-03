@@ -51,13 +51,10 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.channel = ctx.channel
         self.data = data
 
-        with open("test.json", 'w') as f:
-            json.dump(data, f, indent=4)
-
         self.uploader = data.get('uploader')
         self.uploader_url = data.get('uploader_url')
-        # date = data.get('upload_date')
-        # self.upload_date = date[6:8] + '.' + date[4:6] + '.' + date[0:4]
+        date = data.get('upload_date')
+        self.upload_date = date[6:8] + '.' + date[4:6] + '.' + date[0:4]
         self.title = data.get('title')
         self.thumbnail = data.get('thumbnail')
         self.description = data.get('description')
