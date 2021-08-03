@@ -264,7 +264,9 @@ class Music(commands.Cog):
     async def cog_before_invoke(self, ctx: ApolloContext):
         if not ctx.author.voice or not ctx.author.voice.channel:
             raise commands.UserInputError('You are not connected to any voice channel.')
+        print(self.voice_states.get(ctx.guild.id))
         if self.voice_states.get(ctx.guild.id):
+            print(ctx.voice_client.channel != ctx.author.voice.channel)
             if ctx.voice_client.channel != ctx.author.voice.channel:
                 raise commands.UserInputError('Bot is already in a different voice channel.')
         ctx.voice_state = self.get_voice_state(ctx.guild)
