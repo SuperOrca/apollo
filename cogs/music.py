@@ -52,7 +52,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.data = data
 
         with open("test.json", 'w') as f:
-            json.dump(data, f)
+            json.dump(data, f, indent=4)
 
         self.uploader = data.get('uploader')
         self.uploader_url = data.get('uploader_url')
