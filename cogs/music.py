@@ -278,7 +278,7 @@ class Music(commands.Cog):
                       aliases=['disconnect', 'stop', 'dc'])
     async def _leave(self, ctx: ApolloContext):
         if not ctx.voice_state.voice:
-            return await ctx.send('Not connected to any voice channel.')
+            raise commands.UserInputError('Not connected to any voice channel.')
 
         await ctx.voice_state.stop()
         del self.voice_states[ctx.guild.id]
