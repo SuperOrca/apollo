@@ -94,7 +94,6 @@ class YTDLSource(discord.PCMVolumeTransformer):
                     raise commands.UserInputError(
                         'Couldn\'t find anything that matches `{}`'.format(search))
 
-        print(entries)
         output = []
         for process_info in entries:
             print(process_info)
