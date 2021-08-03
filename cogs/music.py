@@ -58,6 +58,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.thumbnail = data.get('thumbnail')
         self.description = data.get('description')
         self.raw_duration = int(data.get('duration'))
+        print(self.raw_duration)
         td = timedelta(seconds=self.raw_duration)
         self.duration = humanize.precisedelta(td)
         self.tags = data.get('tags')
@@ -406,7 +407,7 @@ class Music(commands.Cog):
             if source[0].raw_duration > 3600:
                 raise commands.UserInputError("Song duration is greater than 1 hour.")
 
-        if (len(ctx.voice_state.songs) + len(source)) > 99:
+        if (len(ctx.voice_state.songs) + len(source)) > 50:
             raise commands.UserInputError("Cannot enqueue more than 99 songs.")
 
         for s in source:
