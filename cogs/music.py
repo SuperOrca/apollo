@@ -95,6 +95,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
                 raise commands.UserInputError(
                     'Couldn\'t find anything that matches `{}`'.format(search))
 
+        print(process_info)
+
         webpage_url = process_info['webpage_url']
         partial = functools.partial(
             cls.ytdl.extract_info, webpage_url, download=False)
@@ -102,8 +104,6 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         if processed_info is None:
             raise commands.UserInputError('Couldn\'t fetch `{}`'.format(webpage_url))
-
-        print(process_info)
 
         if 'entries' not in processed_info:
             info = processed_info
