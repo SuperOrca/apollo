@@ -129,4 +129,4 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
 
 
 def setup(bot):
-	bot.add_cog(Jishaku(bot))
+	bot.add_cog(Jishaku(bot=bot))
