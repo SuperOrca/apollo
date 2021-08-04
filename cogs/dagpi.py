@@ -13,17 +13,12 @@ _old_transform = commands.Command.transform
 
 def _transform(self, ctx, param):
     if param.annotation is Optional[ImageConverter]:
-        loop = ctx.bot.loop
         if ctx.message.attachments:
             param = Parameter(
-                param.name, param.kind, default=loop.run_until_complete(asyncio.gather(
-                    ImageConverter().convert(ctx, ctx.message.attachments[0].url)
-                )), annotation=ImageConverter)
+                param.name, param.kind, default=asyncio.run(ImageConverter().convert(ctx, ctx.message.attachments[0].url)), annotation=ImageConverter)
         else:
             param = Parameter(
-                param.name, param.kind, default=loop.run_until_complete(asyncio.gather(
-                    ImageConverter().convert(ctx, ctx.author.avatar.url)
-                )), annotation=ImageConverter)
+                param.name, param.kind, default=asyncio.run(ImageConverter().convert(ctx, ctx.author.avatar.url)), annotation=ImageConverter)
 
     return _old_transform(self, ctx, param)
 
