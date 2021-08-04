@@ -24,6 +24,21 @@ def _transform(self, ctx: ApolloContext, param):
 
 commands.Command.transform = _transform
 
+def flip(frame):
+    frame.flip()
+    return
+
+def swirl(frame):
+    frame.swirl(degree=100)
+    return
+
+def blur(frame):
+    frame.blur(sigma=20)
+    return
+
+def sharpen(frame):
+    frame.sharpen(sigma=10)
+    return
 
 class Image(commands.Cog):
     def __init__(self, bot) -> None:
@@ -47,7 +62,7 @@ class Image(commands.Cog):
 
     @commands.command(name='swirl', description="Swirl an image.", usage="[image]")
     async def _swirl(self, ctx: commands.Context, image: Optional[ImageConverter]):
-        await wand_process(ctx, image, lambda frame: frame.swirl(degree=100))
+        await wand_process(ctx, image, swirl)
 
     @commands.command(name='blur', description="Blur an image.", usage="[image]")
     async def _blur(self, ctx: commands.Context, image: Optional[ImageConverter]):
