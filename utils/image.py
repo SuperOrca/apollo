@@ -33,9 +33,9 @@ async def wand_process(ctx: ApolloContext, image: AssetResponse, operation) -> N
 		_format = 'gif'
 		base = Image(blob=blob)
 		with Image() as new:
-			for frame in base.sequence:
+			for i, frame in enumerate(list(base.sequence)):
 				operation(frame)
-				new.sequence.append(frame)
+				new.sequence[i] = frame
 			buffer = new.make_blob(format=_format)
 		base.close()
 	else:
