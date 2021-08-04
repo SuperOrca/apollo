@@ -3,6 +3,7 @@ from discord.ext import commands
 import sys
 import math
 from typing import Optional
+import jishaku
 from jishaku.cog import STANDARD_FEATURES, OPTIONAL_FEATURES
 from jishaku.features.baseclass import Feature
 from jishaku.modules import package_version
@@ -25,6 +26,9 @@ def natural_size(size_in_bytes: int):
 
 
 class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
+	jishaku.Flags.NO_UNDERSCORE = True
+	jishaku.Flags.HIDE = True
+
 	@Feature.Command(name="jishaku", aliases=["jsk"], invoke_without_command=True, ignore_extra=False, hidden=True)
 	async def jsk(self, ctx: commands.Context):  # pylint: disable=too-many-branches
 		summary = [
