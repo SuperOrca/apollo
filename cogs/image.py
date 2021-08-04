@@ -9,7 +9,7 @@ from wand.image import Image as WandImage
 
 from utils.context import ApolloContext
 from utils.converters import ImageConverter
-from utils.image import fileFromBytes, url_to_bytes, wand_process
+from utils.image import wand_process
 
 _old_transform = commands.Command.transform
 
@@ -61,15 +61,15 @@ class Image(commands.Cog):
     async def _sharpen(self, ctx: commands.Context, image: Optional[ImageConverter]):
         await wand_process(ctx, image, lambda frame: frame.sharpen(sigma=10))
 
-    @commands.command(name='eigishf', descripton="Eigishf meme.", usage="[image]")
-    async def _eigishf(self, ctx: ApolloContext, image: Optional[ImageConverter]):
-        image = await url_to_bytes(ctx, image.url)
-        image = PILImage.open(image).convert("RGBA")
-        with PILImage.open('assets/eigishf.jpg') as final:
-            image = image.resize((300, 300))
-            final.paste(image, (250, 770), mask=image)
-        image.close()
-        await ctx.reply(file=fileFromBytes(ctx, final), can_delete=True)
+    # @commands.command(name='eigishf', descripton="Eigishf meme.", usage="[image]")
+    # async def _eigishf(self, ctx: ApolloContext, image: Optional[ImageConverter]):
+    #     image = await url_to_bytes(ctx, image.url)
+    #     image = PILImage.open(image).convert("RGBA")
+    #     with PILImage.open('assets/eigishf.jpg') as final:
+    #         image = image.resize((300, 300))
+    #         final.paste(image, (250, 770), mask=image)
+    #     image.close()
+    #     await ctx.reply(file=file_from_bytes(ctx, final), can_delete=True)
 
 
 def setup(bot) -> None:
