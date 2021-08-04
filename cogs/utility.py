@@ -145,12 +145,11 @@ class Utility(commands.Cog):
             raise commands.UserInputError(
                 "You didn't reply or specify a message.")
 
-        channel = message.channel_id if isinstance(
-            message, discord.MessageReference) else message.channel.id
-        message = message.message_id if isinstance(
-            message, discord.MessageReference) else message.id
+        
+        if hasattr(message, 'resolved'):
+            message = message.resolved
 
-        raw_message = await self.bot.http.get_message(channel, message)
+        raw_message = await self.bot.http.get_message(message.channel.id, message.id)
         raw_message = json.dumps(raw_message, indent=4)
         await ctx.reply(f"```json\n{raw_message}\n```")
 
