@@ -122,8 +122,8 @@ class Apollo(commands.AutoShardedBot):
 		await ctx.trigger_typing()
 
 	async def send_owner(self, content: str = None, **kwargs) -> None:
-		await self.get_channel(868883262272065556).send(content, **kwargs)
 		self.log.error(content)
+		await self.get_channel(868883262272065556).send(content, **kwargs)
 
 	def load(self) -> None:
 		for file in Path('cogs').glob('**/*.py'):
