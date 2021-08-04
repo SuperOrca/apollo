@@ -29,8 +29,8 @@ class EmbedPaginator(ui.View):
 
     @ui.button(emoji='◀', style=discord.ButtonStyle.secondary)
     async def on_back(self, button: ui.Button, interaction: discord.Interaction):
-        if self.page < self.max_page:
-            self.page += 1
+        if self.page > self.first_page:
+            self.page -= 1
             await interaction.message.edit(embed=self.embeds[self.page])
 
     @ui.button(emoji='⏹️', style=discord.ButtonStyle.secondary)
@@ -41,8 +41,8 @@ class EmbedPaginator(ui.View):
 
     @ui.button(emoji='▶', style=discord.ButtonStyle.secondary)
     async def on_forward(self, button: ui.Button, interaction: discord.Interaction):
-        if self.page > self.first_page:
-            self.page -= 1
+        if self.page < self.max_page:
+            self.page += 1
             await interaction.message.edit(embed=self.embeds[self.page])
 
     @ui.button(emoji='⏭', style=discord.ButtonStyle.secondary)
