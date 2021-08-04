@@ -9,7 +9,7 @@ from wand.image import Image as WandImage
 
 from utils.context import ApolloContext
 from utils.converters import ImageConverter
-from utils.image import fileFromBytes, create_minecraft_blocks, process_minecraft, urlToBytes
+from utils.image import fileFromBytes, urlToBytes
 
 _old_transform = commands.Command.transform
 
@@ -32,9 +32,6 @@ commands.Command.transform = _transform
 class Image(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
-        if not hasattr(bot, "minecraft_blocks"):
-            self.bot.minecraft_blocks = {}
-            self.bot.loop.create_task(create_minecraft_blocks(self.bot))
         self._cd_type = commands.BucketType.user
         self._cd = commands.CooldownMapping.from_cooldown(
             1, 10., self._cd_type)
@@ -119,20 +116,6 @@ class Image(commands.Cog):
             final.paste(image, (250, 770), mask=image)
         image.close()
         await ctx.reply(file=fileFromBytes(ctx, final), can_delete=True)
-
-    @commands.command(name='minecraft', description="Get image as minecraft blocks.", usage="[image]",
-                      aliases=['mc'])
-    @commands.cooldown(1, 20, commands.BucketType.guild)
-    async def _minecraft(self, ctx: ApolloContext, image: Optional[ImageConverter],
-                         quality: Optional[int] = 64) -> None:
-        """
-        Credits to The Anime Bot (https://github.com/Cryptex-github/the-anime-bot-bot) (ver cool dude)
-        """
-        if 128 < quality or quality < 1:
-            raise commands.UserInputError("Quality must be between 1 and 128.")
-        image = await urlToBytes(ctx, image)
-        file = discord.File(await process_minecraft(self.bot, image, quality), f"{ctx.command.name}.png")
-        await ctx.reply(file=file, can_delete=True)
 
 
 def setup(bot) -> None:
