@@ -61,8 +61,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.raw_duration = int(data.get('duration'))
         if self.raw_duration == 0:
             raise commands.UserInputError("Cannot enqueue streams.")
-        td = timedelta(seconds=self.raw_duration)
-        self.duration = humanize.precisedelta(td)
+        self.duration = timedelta(seconds=self.raw_duration)
+        self.formatted_duration = str(self.duration)
         self.tags = data.get('tags')
         self.url = data.get('webpage_url')
         self.views = data.get('view_count')
@@ -131,7 +131,7 @@ class Song:
     def create_embed(self):
         embed = Embed(title=f"{self.source.title}", url=self.source.url, description=f"""
 		**Requester**: {self.requester.mention}
-		**Duration**: {self.source.duration}
+		**Duration**: {self.source.formatted_duration}
 		**Artist**: [{self.source.uploader}]({self.source.uploader_url})
 		""")
         embed.set_thumbnail(url=self.source.thumbnail)
@@ -359,7 +359,9 @@ class Music(commands.Cog):
                 queue += '{0}. [{1.source.title}]({1.source.url}) | {1.source.requester.mention}\n'.format(
                     i + 1, song)
 
-            embeds.append(Embed(title=f'{len(ctx.voice_state.songs)} queued', description=queue)
+            embeds.append(Embed(title=f'Queue for {ctx.guild.name}', description=queue + f"""
+            **{len(ctx.voice_state.songs)} songs in queue | {str(sum(song.duration for song in ctx.voice_state.songs))} total length**
+            """)
                     .set_footer(text='Viewing page {}/{}'.format(page, pages)))
         await EmbedPaginator.start(ctx, embeds)
 

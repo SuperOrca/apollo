@@ -52,7 +52,7 @@ class EmbedPaginator(ui.View):
             await interaction.message.edit(embed=self.embeds[self.page])
 
     @classmethod
-    async def start(cls, ctx: ApolloContext, embeds: List[Embed], timeout: Optional[float] = 180):
+    async def start(cls, ctx: ApolloContext, embeds: List[Embed], timeout: Optional[float] = 120):
         cls.ctx = ctx
         cls.embeds = embeds
         cls.last_page = len(embeds) - 1

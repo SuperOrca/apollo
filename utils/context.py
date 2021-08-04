@@ -5,7 +5,7 @@ from discord.ext import commands
 
 class TrashView(ui.View):
     def __init__(self, ctx):
-        super().__init__(timeout=180)
+        super().__init__(timeout=120)
         self.ctx = ctx
 
     async def interaction_check(self, interaction: discord.Interaction):
