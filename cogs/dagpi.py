@@ -15,10 +15,10 @@ def _transform(self, ctx, param):
         loop = ctx.bot.loop
         if ctx.message.attachments:
             param = Parameter(
-                param.name, param.kind, default=loop.run_until_complete(ImageConverter.convert(ctx.message.attachments[0].url)), annotation=ImageConverter)
+                param.name, param.kind, default=loop.run_until_complete(ImageConverter.convert(ctx, ctx.message.attachments[0].url)), annotation=ImageConverter)
         else:
             param = Parameter(
-                param.name, param.kind, default=loop.run_until_complete(ImageConverter.convert(ctx.author.avatar.url)), annotation=ImageConverter)
+                param.name, param.kind, default=loop.run_until_complete(ImageConverter.convert(ctx, ctx.author.avatar.url)), annotation=ImageConverter)
 
     return _old_transform(self, ctx, param)
 
