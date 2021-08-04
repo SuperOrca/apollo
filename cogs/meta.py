@@ -105,12 +105,6 @@ class Meta(commands.Cog):
 			""")
         await ctx.reply(embed=embed)
 
-    @commands.command(name='source', description="Shows source of the bot.", aliases=['src', 'contribute', 'contrib'])
-    async def _source(self, ctx: ApolloContext) -> None:
-        await ctx.reply(
-            embed=Embed(title="Apollo Source",
-                        description="View the bot source [here](https://github.com/SuperOrca/apollo)."))
-
     @commands.command(name='prefix', description="Change the bot prefix.", usage="[prefix]")
     async def _prefix(self, ctx: ApolloContext, prefix: Optional[PrefixConverter] = None) -> None:
         if ctx.author.guild_permissions.administrator and prefix:
