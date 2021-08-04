@@ -5,7 +5,7 @@ import asyncio
 from discord.ext import commands
 
 from utils.context import ApolloContext
-from utils.converters import ImageConverter
+from utils.converters import AssetResponse, ImageConverter
 from utils.image import dagpi_process
 
 _old_transform = commands.Command.transform
@@ -15,10 +15,10 @@ def _transform(self, ctx, param):
     if param.annotation is Optional[ImageConverter]:
         if ctx.message.attachments:
             param = Parameter(
-                param.name, param.kind, default=asyncio.run(ImageConverter().convert(ctx, ctx.message.attachments[0].url)), annotation=ImageConverter)
+                param.name, param.kind, default=AssetResponse(ctx.message.attachments[0].url, 'image/gif'), annotation=ImageConverter)
         else:
             param = Parameter(
-                param.name, param.kind, default=asyncio.run(ImageConverter().convert(ctx, ctx.author.avatar.url)), annotation=ImageConverter)
+                param.name, param.kind, default=AssetResponse(ctx.author.avatar.url, 'image/gif'), annotation=ImageConverter)
 
     return _old_transform(self, ctx, param)
 
