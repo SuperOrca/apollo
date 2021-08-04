@@ -119,7 +119,7 @@ class Apollo(commands.AutoShardedBot):
         return prefix
 
     async def before_invoke_(self, ctx: ApolloContext) -> None:
-        await ctx.trigger_typing()
+        await ctx.typing()
 
     async def send_owner(self, content: str = None, **kwargs) -> None:
         await self.get_channel(868883262272065556).send(content, **kwargs)
@@ -137,7 +137,7 @@ class Apollo(commands.AutoShardedBot):
         self.log.info("Running setup...")
         await self.init()
         if not hasattr(self, 'uptime'):
-            self.uptime = datetime.utcnow()
+            self.uptime = discord.utils.utcnow()
         self.log.info(
             "Bot connected. DWSP latency: " +
             str(round((self.latency * 1000))) + "ms"

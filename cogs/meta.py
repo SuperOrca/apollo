@@ -44,9 +44,9 @@ class Meta(commands.Cog):
 
     def get_uptime(self, breif=False) -> str:
         if breif:
-            return humanize.naturaldelta(datetime.utcnow() - self.bot.uptime)
+            return humanize.naturaldelta(discord.utils.utcnow() - self.bot.uptime)
         else:
-            return humanize.precisedelta(datetime.utcnow() - self.bot.uptime)
+            return humanize.precisedelta(discord.utils.utcnow() - self.bot.uptime)
 
     @commands.command(name='invite', description="Shows the bot invite.")
     async def _invite(self, ctx: ApolloContext) -> None:
