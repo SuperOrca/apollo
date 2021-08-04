@@ -1,4 +1,5 @@
 from io import BytesIO
+from typing import Any
 from utils.converters import AssetResponse
 
 import discord
@@ -9,9 +10,9 @@ from discord.ext import commands
 from utils.context import ApolloContext
 
 
-async def dagpi_process(ctx: ApolloContext, image: AssetResponse, feature: str, **kwargs) -> None:
+async def dagpi_process(ctx: ApolloContext, image: Any, feature: str, **kwargs) -> None:
 	"""A method that uses dagpi to process images."""
-	image = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=image.url, **kwargs)
+	image = (await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=image, **kwargs)) if isinstance(image, str) else (await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=image.url, **kwargs))
 	file = discord.File(image.image, f'render.{image.format}')
 	await ctx.reply(file=file, can_delete=True)
 
@@ -27,7 +28,7 @@ async def url_to_bytes(ctx, url) -> BytesIO:
 	return blob
 
 
-async def wand_process(ctx: ApolloContext, image: AssetResponse, operation) -> None:
+async def wand_process(ctx: ApolloContext, image: Any, operation) -> None:
 	blob = (await url_to_bytes(ctx, image)) if isinstance(image, str) else (await url_to_bytes(ctx, image.url))
 	if image.is_animated():
 		_format = 'gif'
