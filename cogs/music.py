@@ -360,7 +360,7 @@ class Music(commands.Cog):
                     i + 1, song)
 
             embeds.append(Embed(title=f'Queue for {ctx.guild.name}', description=queue + f"""
-            **{len(ctx.voice_state.songs)} songs in queue | {str(sum(song.duration for song in ctx.voice_state.songs))} total length**
+            **{len(ctx.voice_state.songs)} songs in queue | {str(sum([i.duration for i in ctx.voice_state.songs]))} total length**
             """)
                     .set_footer(text='Viewing page {}/{}'.format(page, pages)))
         await EmbedPaginator.start(ctx, embeds)
