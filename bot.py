@@ -215,7 +215,7 @@ class Apollo(commands.AutoShardedBot):
             return await self.send_error_embed(ctx,
                                                f"You are missing the required `{error.param.name}` argument in `{ctx.command}`.")
         if isinstance(error, commands.CheckFailure):
-            print(error.args)
+            print(error.mro())
             m = f"You are not able to use `{ctx.command}`."
         if isinstance(error, commands.CommandOnCooldown):
             return await self.send_error_embed(ctx,
