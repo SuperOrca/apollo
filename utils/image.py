@@ -27,7 +27,7 @@ async def url_to_bytes(ctx, url) -> BytesIO:
 	return blob
 
 
-async def wand_process(ctx: ApolloContext, image: AssetResponse, operation: function) -> None:
+async def wand_process(ctx: ApolloContext, image: AssetResponse, operation) -> None:
 	blob = await url_to_bytes(ctx, image.url)
 	if image.is_animated():
 		_format = 'gif'
