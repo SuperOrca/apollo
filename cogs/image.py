@@ -1,11 +1,7 @@
 from inspect import Parameter
-from io import BytesIO
 from typing import Optional
 
-import discord
-from PIL import Image as PILImage
 from discord.ext import commands
-from wand.image import Image as WandImage
 
 from utils.context import ApolloContext
 from utils.converters import ImageConverter
@@ -14,7 +10,7 @@ from utils.image import wand_process
 _old_transform = commands.Command.transform
 
 
-def _transform(self, ctx, param):
+def _transform(self, ctx: ApolloContext, param):
     if param.annotation is Optional[ImageConverter]:
         if ctx.message.attachments:
             param = Parameter(

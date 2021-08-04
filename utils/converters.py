@@ -51,26 +51,26 @@ class ImageConverter(commands.Converter):
         except commands.BadArgument:
             pass
         else:
-            return await AssetResponse(member.avatar.url, _bot=ctx.bot)
+            return await AssetResponse.from_url(member.avatar.url, _bot=ctx.bot)
 
         try:
             emoji = await commands.EmojiConverter().convert(ctx=ctx, argument=str(argument))
         except commands.EmojiNotFound:
             pass
         else:
-            return await AssetResponse(emoji.url, _bot=ctx.bot)
+            return await AssetResponse.from_url(emoji.url, _bot=ctx.bot)
 
         try:
             partial_emoji = await commands.PartialEmojiConverter().convert(ctx=ctx, argument=str(argument))
         except commands.PartialEmojiConversionFailure:
             pass
         else:
-            return await AssetResponse(str(partial_emoji.url), _bot=ctx.bot)
+            return await AssetResponse.from_url(str(partial_emoji.url), _bot=ctx.bot)
 
         url = f'https://twemoji.maxcdn.com/v/latest/72x72/{ord(argument[0]):x}.png'
         async with ctx.bot.session.get(url) as response:
             if response.status == 200 and 'image/' in response.content_type:
-                return await AssetResponse(url, _format=response.content_type)
+                return await AssetResponse.from_url(url, _format=response.content_type)
 
         if (check := yarl.URL(argument)) and check.scheme and check.host:
             async with ctx.bot.session.get(argument) as response:
