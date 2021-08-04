@@ -1,7 +1,6 @@
 from config import NEWS_TITLE, NEWS_VALUE
 from discord.ext import commands
 
-from utils.git import get_last_commits
 from utils.metrics import Embed
 
 
