@@ -136,7 +136,7 @@ class Apollo(commands.AutoShardedBot):
         await ctx.trigger_typing()
 
     async def send_owner(self, content: str = None, **kwargs) -> None:
-        await self.get_user(self.owner_ids[0]).send(content, **kwargs)
+        await self.get_channel(868883262272065556).send(content, **kwargs)
 
     def load(self) -> None:
         for file in Path('cogs').glob('**/*.py'):
@@ -233,7 +233,7 @@ class Apollo(commands.AutoShardedBot):
                 ctx, "An unknown error has occured. I have contacted the developers."
             )
         await self.send_owner(
-            f"An exception in a {ctx.author}'s ({ctx.author.id}) command:\n```py\n"
+            f"An exception in a {ctx.author}'s ({ctx.author.id}) in guild {ctx.guild.name} ({ctx.guild.id}) command:\n```py\n"
             + "".join(
                 traceback.format_exception(
                     type(error), error, error.__traceback__)
