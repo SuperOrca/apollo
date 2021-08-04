@@ -143,7 +143,6 @@ class Apollo(commands.AutoShardedBot):
             str(round((self.latency * 1000))) + "ms"
         )
         self.load()
-        self.load_extension('jishaku')
         self.log.info(f"Extensions loaded ({len(self.extensions)} loaded)")
         self.log.info("Bot ready!")
 
