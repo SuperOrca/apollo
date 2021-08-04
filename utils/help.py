@@ -39,7 +39,7 @@ Total Commands: `{len(valid_commands)}`
 
     async def send_command_help(self, command: commands.Command):
         embed = Embed(
-            title=f"**`{command.name + command.usage if command.usage is not None else command.name}`**",
+            title=f"**`{command.name + ' ' + command.usage if command.usage is not None else command.name}`**",
             description=command.description)
         embed.add_field(
             name="Module", value=command.cog_name)
