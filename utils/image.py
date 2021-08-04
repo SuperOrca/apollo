@@ -19,16 +19,16 @@ async def dagpi_process(ctx: ApolloContext, image: AssetResponse, feature: str, 
 async def url_to_bytes(ctx, url) -> BytesIO:
 	"""A method that fetches bytes from a url."""
 	response = await ctx.bot.session.get(url)
-	byte = await response.read()
-	if byte.__sizeof__() > 10 * (2 ** 20):
+	buffer = await response.read()
+	if buffer.__sizeof__() > 10 * (2 ** 20):
 		raise commands.UserInputError("Exceeded 10MB.")
-	blob = BytesIO(byte)
+	blob = BytesIO(buffer)
 	blob.seek(0)
 	return blob
 
 
 async def wand_process(ctx: ApolloContext, image: AssetResponse, operation) -> None:
-	blob = await url_to_bytes(ctx, image.url)
+	blob = (await url_to_bytes(ctx, image)) if isinstance(image, str) else (await url_to_bytes(ctx, image.url))
 	if image.is_animated():
 		_format = 'gif'
 		with Image(blob=blob) as new:
