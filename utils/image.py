@@ -32,8 +32,8 @@ async def wand_process(ctx: ApolloContext, image: AssetResponse, operation) -> N
 	if image.is_animated():
 		_format = 'gif'
 		with Image(blob=blob) as new:
-			for i, _ in enumerate(new.sequence):
-				operation(new.sequence[i])
+			for frame in new.sequence:
+				operation(frame)
 			buffer = new.make_blob(format=_format)
 	else:
 		_format = 'png'
