@@ -119,7 +119,7 @@ class Apollo(commands.AutoShardedBot):
         return prefix
 
     async def before_invoke_(self, ctx: ApolloContext) -> None:
-        await ctx.typing()
+        await ctx.trigger_typing()
 
     async def send_owner(self, content: str = None, **kwargs) -> None:
         await self.get_channel(868883262272065556).send(content, **kwargs)
