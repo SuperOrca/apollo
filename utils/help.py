@@ -1,3 +1,4 @@
+from config import NEWS_TITLE, NEWS_VALUE
 from discord.ext import commands
 
 from utils.git import get_last_commits
@@ -34,8 +35,7 @@ Total Commands: `{len(valid_commands)}`
                 f"- `{module.__class__.__name__}`" for module in modules),
             inline=True,
         )
-        embed.add_field(name=":newspaper: Latest Changes",
-                        value=(await get_last_commits(self.context.bot)))
+        embed.add_field(name=NEWS_TITLE, value=NEWS_VALUE)
         await self.context.reply(embed=embed)
 
     async def send_command_help(self, command: commands.Command):

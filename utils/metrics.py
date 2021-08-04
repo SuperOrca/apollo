@@ -1,3 +1,4 @@
+from config import COLOR
 import time
 from datetime import datetime, timezone
 
@@ -16,7 +17,7 @@ def isImage(url):
 
 
 def Embed(*args, **kwargs):
-    return discord.Embed(*args, **kwargs, color=0x2761f3, timestamp=discord.utils.utcnow())
+    return discord.Embed(*args, **kwargs, color=COLOR, timestamp=discord.utils.utcnow())
 
 
 class Timer:

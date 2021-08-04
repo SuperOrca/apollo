@@ -1,3 +1,4 @@
+from config import VIEW_TIMEOUT
 import random
 
 import discord
@@ -38,7 +39,7 @@ async def getpost(bot, ctx, subreddit) -> discord.Embed:
 
     class RedditView(ui.View):
         def __init__(self):
-            super().__init__(timeout=180)
+            super().__init__(timeout=VIEW_TIMEOUT)
 
         async def interaction_check(self, interaction: discord.Interaction):
             if not self.ctx.author == interaction.user:

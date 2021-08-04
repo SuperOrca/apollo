@@ -20,26 +20,16 @@ from databases import Database
 from discord.ext import commands
 from dotenv import load_dotenv
 
+from config import CASE_INSENSITIVE, DAGPI, DESCRIPTION, INTENTS, MAX_MESSAGES, MENTIONS, OWNER_IDS, PREFIX, STRIP_AFTER_PREFIX, TOKEN
 from utils.context import ApolloContext
 from utils.metrics import Embed
 
 load_dotenv()
 
-allowed_mentions = discord.AllowedMentions.none()
 
-intents = discord.Intents(
-    guilds=True,
-    members=True,
-    bans=True,
-    emojis=True,
-    voice_states=True,
-    messages=True,
-    reactions=True
-)
 
-description = """
-An open-source general-use discord.py bot.
-"""
+
+
 
 
 class Apollo(commands.AutoShardedBot):
@@ -51,17 +41,17 @@ class Apollo(commands.AutoShardedBot):
         self.connector = aiohttp.TCPConnector(limit=200)
         super().__init__(
             command_prefix=self._get_prefix,
-            case_insensitive=True,
-            allowed_mentions=allowed_mentions,
-            description=description,
-            intents=intents,
+            case_insensitive=CASE_INSENSITIVE,
+            allowed_mentions=MENTIONS,
+            description=DESCRIPTION,
+            intents=INTENTS,
             activity=discord.Game("@Apollo help"),
-            strip_after_prefix=True,
-            max_messages=10000,
+            strip_after_prefix=STRIP_AFTER_PREFIX,
+            max_messages=MAX_MESSAGES,
             connector=self.connector,
         )
         self.__version__ = "1.0.0"
-        self.owner_ids = (int(getenv('OWNER_ID')),)
+        self.owner_ids = OWNER_IDS
         self.init_logging()
         self.init_constants()
 
@@ -71,9 +61,6 @@ class Apollo(commands.AutoShardedBot):
         await self.db.connect()
         await self.db.execute(
             "CREATE TABLE IF NOT EXISTS prefixes (id BIGINT PRIMARY KEY, prefix TEXT)"
-        )
-        await self.db.execute(
-            "CREATE TABLE IF NOT EXISTS usage (command TEXT PRIMARY KEY, uses BIGINT)"
         )
         await self.db.execute(
             "CREATE TABLE IF NOT EXISTS economy (id BIGINT PRIMARY KEY, wallet INT, bank INT, bankcap INT, multi INT, daily TIMESTAMP)"
@@ -87,8 +74,7 @@ class Apollo(commands.AutoShardedBot):
         )
         self.tio = await Tio(session=self.session, loop=self.loop)
         self.mystbin = mystbin.Client(session=self.session)
-        self.dagpi = asyncdagpi.Client(
-            getenv('DAGPI'), session=self.session, loop=self.loop)
+        self.dagpi = asyncdagpi.Client(DAGPI, session=self.session, loop=self.loop)
         self.tts = aiogTTS()
         self.psutil_process = psutil.Process()
 
@@ -127,7 +113,7 @@ class Apollo(commands.AutoShardedBot):
             prefix = self.cache["prefixes"].get(message.guild.id, (
                 await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id}))[1])
         except AttributeError:
-            prefix = getenv('DEFAULT_PREFIX')
+            prefix = PREFIX
         if hasattr(self, "cache"):
             self.cache["prefixes"][message.guild.id] = prefix
         return prefix
@@ -164,22 +150,11 @@ class Apollo(commands.AutoShardedBot):
     async def on_message(self, message: discord.Message) -> None:
         if message.author.bot or not message.guild:
             return
-        if message.content.startswith('jsk') and message.author.id == int(getenv('OWNER_ID')):
+        if message.content.startswith('jsk') and message.author.id in OWNER_IDS:
             message.content = self.user.mention + " " + message.content
         if message.content in [men.strip() for men in commands.when_mentioned(self, message)]:
             return await message.reply(f"The server prefix is `{await self.get_guild_prefix(message)}`.")
         await self.process_commands(message)
-
-    async def on_command_completion(self, ctx: ApolloContext):
-        if str(ctx.command.parent) != 'jishaku':
-            cmd = str(ctx.command.parent or ctx.command.name)
-            data = await self.db.fetch_one("SELECT * FROM usage WHERE command = :command", values={"command": cmd})
-            if data is None:
-                data = (cmd, 0)
-            await self.db.execute("INSERT OR REPLACE INTO usage VALUES (:command, :uses)", values={
-                "command": data[0],
-                "uses": data[1] + 1
-            })
 
     async def on_guild_remove(self, guild: discord.Guild):
         if not guild:
@@ -252,7 +227,7 @@ class Apollo(commands.AutoShardedBot):
 
     def run(self) -> None:
         self.log.info("Logging in...")
-        super().run(getenv('TOKEN'), reconnect=True)
+        super().run(TOKEN, reconnect=True)
 
     async def close(self) -> None:
         with open("blacklist.json", 'w') as f:

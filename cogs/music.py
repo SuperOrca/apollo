@@ -9,7 +9,6 @@ from typing import Optional
 
 import discord
 import youtube_dl
-import humanize
 from async_timeout import timeout
 from discord.ext import commands
 
