@@ -4,7 +4,6 @@ from utils.converters import AssetResponse
 
 import discord
 from wand.image import Image as Wand
-from PIL import Image as Pillow
 from asyncdagpi import ImageFeatures
 from discord.ext import commands
 
