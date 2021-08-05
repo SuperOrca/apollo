@@ -8,7 +8,6 @@ from asyncdagpi import ImageFeatures
 from discord.ext import commands
 
 from utils.context import ApolloContext
-from utils.decorators import executor
 
 
 async def dagpi_process(ctx: ApolloContext, image: Any, feature: str, **kwargs) -> None:
@@ -37,7 +36,6 @@ def to_asset(image: Any) -> AssetResponse:
 		return AssetResponse(str(image), 'image/gif')
 
 
-@executor()
 async def wand_process(ctx: ApolloContext, image: Any, operation) -> None:
 	image = to_asset(image)
 	blob = await url_to_bytes(ctx, image.url)
