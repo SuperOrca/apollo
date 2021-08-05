@@ -1,3 +1,4 @@
+import functools
 from io import BytesIO
 from typing import Any
 from utils.converters import AssetResponse
@@ -43,12 +44,14 @@ async def wand_process(ctx: ApolloContext, image: Any, operation) -> None:
 		_format = 'gif'
 		with Wand(blob=blob) as new:
 			for i, frame in enumerate(new.sequence):
-				operation(frame)
+				partial = functools.partial(operation, frame)
+				ctx.bot.loop.run_in_executor(None, partial)
 				new.sequence[i] = frame
 			buffer = new.make_blob(format=_format)
 	else:
 		_format = 'png'
 		with Wand(blob=blob) as new:
-			operation(new)
+			partial = functools.partial(operation, new)
+			ctx.bot.loop.run_in_executor(None, partial)
 			buffer = new.make_blob(format=_format)
 	await ctx.reply(file=discord.File(BytesIO(buffer), f'render.{_format}'), can_delete=True)
