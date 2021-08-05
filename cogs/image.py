@@ -51,11 +51,11 @@ class Image(commands.Cog):
 
 	@commands.command(name='blur', description="Blur an image.", usage="[image]")
 	async def _blur(self, ctx: commands.Context, image: Optional[ImageConverter]):
-		await wand_process(ctx, image, lambda frame: frame.blur(sigma=10))
+		await wand_process(ctx, image, lambda frame: frame.blur(sigma=5))
 
 	@commands.command(name='sharpen', description="Sharpen an image.", usage="[image]")
 	async def _sharpen(self, ctx: commands.Context, image: Optional[ImageConverter]):
-		await wand_process(ctx, image, lambda frame: frame.sharpen(sigma=10))
+		await wand_process(ctx, image, lambda frame: frame.sharpen(sigma=5))
 
 	# @commands.command(name='eigishf', descripton="Eigishf meme.", usage="[image]")
 	# async def _eigishf(self, ctx: ApolloContext, image: Optional[ImageConverter]):
