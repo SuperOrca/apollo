@@ -3,11 +3,13 @@ from typing import Any
 from utils.converters import AssetResponse
 
 import discord
-from wand.image import Image
+from wand.image import Image as Wand
+from PIL import Image as Pillow
 from asyncdagpi import ImageFeatures
 from discord.ext import commands
 
 from utils.context import ApolloContext
+from utils.decorators import executor
 
 
 async def dagpi_process(ctx: ApolloContext, image: Any, feature: str, **kwargs) -> None:
@@ -36,19 +38,20 @@ def to_asset(image: Any) -> AssetResponse:
 		return AssetResponse(str(image), 'image/gif')
 
 
+@executor()
 async def wand_process(ctx: ApolloContext, image: Any, operation) -> None:
 	image = to_asset(image)
 	blob = await url_to_bytes(ctx, image.url)
 	if image.is_animated():
 		_format = 'gif'
-		with Image(blob=blob) as new:
+		with Wand(blob=blob) as new:
 			for i, frame in enumerate(new.sequence):
 				operation(frame)
 				new.sequence[i] = frame
 			buffer = new.make_blob(format=_format)
 	else:
 		_format = 'png'
-		with Image(blob=blob) as new:
+		with Wand(blob=blob) as new:
 			operation(new)
 			buffer = new.make_blob(format=_format)
 	await ctx.reply(file=discord.File(BytesIO(buffer), f'render.{_format}'), can_delete=True)
