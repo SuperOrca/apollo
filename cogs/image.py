@@ -51,7 +51,7 @@ class Image(commands.Cog):
 
 	@commands.command(name='blur', description="Blur an image.", usage="[image]")
 	async def _blur(self, ctx: commands.Context, image: Optional[ImageConverter]):
-		await wand_process(ctx, image, lambda frame: frame.blur(sigma=20))
+		await wand_process(ctx, image, lambda frame: frame.blur(sigma=10))
 
 	@commands.command(name='sharpen', description="Sharpen an image.", usage="[image]")
 	async def _sharpen(self, ctx: commands.Context, image: Optional[ImageConverter]):
