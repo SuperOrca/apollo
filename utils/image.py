@@ -43,6 +43,8 @@ async def wand_process(ctx: ApolloContext, image: Any, operation) -> None:
 	if image.is_animated():
 		_format = 'gif'
 		with Wand(blob=blob) as new:
+			if len(new.sequence) > 60:
+				raise commands.UserInputError("Too many frames.")
 			for i, frame in enumerate(new.sequence):
 				operation(frame)
 				new.sequence[i] = frame
