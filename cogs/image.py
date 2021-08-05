@@ -4,7 +4,7 @@ from typing import Optional
 from discord.ext import commands
 
 from utils.context import ApolloContext
-from utils.converters import ImageConverter
+from utils.converters import AssetResponse, ImageConverter
 from utils.image import wand_process
 
 _old_transform = commands.Command.transform
