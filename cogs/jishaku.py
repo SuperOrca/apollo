@@ -27,7 +27,7 @@ def natural_size(size_in_bytes: int):
 
 class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
 	jishaku.Flags.NO_UNDERSCORE = True
-x
+
 	@Feature.Command(name="jishaku", aliases=["jsk"], invoke_without_command=True, ignore_extra=False, hidden=True)
 	async def jsk(self, ctx: commands.Context):  # pylint: disable=too-many-branches
 		summary = [
