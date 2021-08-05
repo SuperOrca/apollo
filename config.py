@@ -13,9 +13,9 @@ DESCRIPTION = """
 An open-source general-use discord.py bot.
 """
 
-NEWS_TITLE = ":newspaper: August 4, 2021"
+NEWS_TITLE = ":newspaper: August 5, 2021"
 NEWS_VALUE = """
-jotte sus
+aura is sussy baka
 """
 
 INTENTS = discord.Intents(
