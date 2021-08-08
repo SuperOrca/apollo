@@ -106,8 +106,13 @@ class Apollo(commands.AutoShardedBot):
 
 	async def get_guild_prefix(self, message: discord.Message) -> list:
 		try:
-			prefix = self.cache.prefixes.get(message.guild.id, (
-				await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id}))[1])
+			prefix = self.cache.prefixes.get(message.guild.id)
+			if prefix is None:
+				prefix = await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id})
+				if prefix is None:
+					raise AttributeError
+				else:
+					prefix = prefix[1]
 		except AttributeError:
 			prefix = PREFIX
 		if hasattr(self, "cache"):

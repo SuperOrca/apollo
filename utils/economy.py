@@ -33,7 +33,7 @@ class Account:
         await self.commit()
 
     async def commit(self):
-        self.bot.cache.economy.[self.member.id] = (self.wallet, self.bank, self.bankcap, self.multi, self.daily)
+        self.bot.cache.economy[self.member.id] = (self.wallet, self.bank, self.bankcap, self.multi, self.daily)
         await self.bot.db.execute(
             "UPDATE economy SET wallet = :wallet, bank = :bank, bankcap = :bankcap, multi = :multi, daily = :daily",
             values={
