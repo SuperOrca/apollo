@@ -23,6 +23,7 @@ from dotenv import load_dotenv
 from config import CASE_INSENSITIVE, DAGPI, DESCRIPTION, INTENTS, MAX_MESSAGES, MENTIONS, OWNER_IDS, PREFIX, STRIP_AFTER_PREFIX, TOKEN
 from utils.context import ApolloContext
 from utils.metrics import Embed
+from utils.cache import ApolloCache
 
 load_dotenv()
 
@@ -56,7 +57,6 @@ class Apollo(commands.AutoShardedBot):
 		self.init_constants()
 
 	async def init(self) -> None:
-		self.init_cache()
 		self.db = Database('sqlite:///bot.db')
 		await self.db.connect()
 		await self.db.execute(
@@ -99,23 +99,19 @@ class Apollo(commands.AutoShardedBot):
 		self.add_check(self.is_blacklisted)
 		self.before_invoke(self.before_invoke_)
 		self._BotBase__cogs = commands.core._CaseInsensitiveDict()
-
-	def init_cache(self):
-		self.cache = {}
-		self.cache["prefixes"] = {}
-		self.cache["economy"] = {}
+		self.cache = ApolloCache()
 
 	async def is_blacklisted(self, ctx: ApolloContext) -> bool:
 		return ctx.author.id not in self.blacklist
 
 	async def get_guild_prefix(self, message: discord.Message) -> list:
 		try:
-			prefix = self.cache["prefixes"].get(message.guild.id, (
+			prefix = self.cache.prefixes.get(message.guild.id, (
 				await self.db.fetch_one(f"SELECT * FROM prefixes WHERE id = :id", values={"id": message.guild.id}))[1])
 		except AttributeError:
 			prefix = PREFIX
 		if hasattr(self, "cache"):
-			self.cache["prefixes"][message.guild.id] = prefix
+			self.cache.prefixes[message.guild.id] = prefix
 		return prefix
 
 	async def before_invoke_(self, ctx: ApolloContext) -> None:
@@ -162,7 +158,8 @@ class Apollo(commands.AutoShardedBot):
 
 		self.db.execute("DELETE FROM prefixes WHERE id = :id",
 						values={"id": guild.id})
-		self.cache["prefixes"].pop(guild.id)
+		if guild.id in self.cache.prefixes:
+			del self.cache.prefixes[guild.id]
 
 	@staticmethod
 	async def send_error_embed(ctx: ApolloContext, content: str, **kwargs) -> None:

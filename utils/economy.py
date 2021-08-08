@@ -33,7 +33,7 @@ class Account:
         await self.commit()
 
     async def commit(self):
-        self.bot.cache["economy"][self.member.id] = (self.wallet, self.bank, self.bankcap, self.multi, self.daily)
+        self.bot.cache.economy.[self.member.id] = (self.wallet, self.bank, self.bankcap, self.multi, self.daily)
         await self.bot.db.execute(
             "UPDATE economy SET wallet = :wallet, bank = :bank, bankcap = :bankcap, multi = :multi, daily = :daily",
             values={
@@ -50,7 +50,7 @@ class Account:
         if member.bot:
             raise commands.UserInputError(
                 "You cannot use this command with a bot.")
-        if not bot.cache["economy"].get(member.id):
+        if not bot.cache.economy.get(member.id):
             data = await bot.db.fetch_one("SELECT * FROM economy WHERE id = :id", values={"id": member.id})
             if data is None:
                 bot.log.info(f"Creating new account for {member} ({member.id}).")
@@ -64,7 +64,7 @@ class Account:
                                          "daily": None
                                      })
                 data = (member.id, 0, 0, 500, 0, None)
-            bot.cache["economy"][member.id] = data
+            bot.cache.economy[member.id] = data
         else:
-            data = bot.cache["economy"].get(member.id)
+            data = bot.cache.economy.get(member.id)
         return cls(bot, member, data)

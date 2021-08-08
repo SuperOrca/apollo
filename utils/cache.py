@@ -1,0 +1,3 @@
+class ApolloCache:
+	economy = {}
+	prefixes = {}
