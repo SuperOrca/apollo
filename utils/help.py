@@ -29,10 +29,10 @@ Total Commands: `{len(valid_commands)}`
 ```
 `{prefix}invite` | `{prefix}info`
 """)
+        modules = (f"- `{module.__class__.__name__}`" for module in modules if module)
         embed.add_field(
             name=f":gear: Modules [{len(modules)}]",
-            value='\n'.join(
-                f"- `{module.__class__.__name__}`" for module in modules if module),
+            value='\n'.join(modules),
             inline=True,
         )
         embed.add_field(name=NEWS_TITLE, value=NEWS_VALUE)
