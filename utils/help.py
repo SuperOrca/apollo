@@ -14,7 +14,7 @@ class ApolloHelp(commands.HelpCommand):
 
     async def send_bot_help(self, mapping: dict):
         prefix = await self.context.bot.get_guild_prefix(self.context.message)
-        modules = list(mapping.keys())[:-2]
+        modules = list(mapping.keys())
         valid_commands = []
         for module in modules:
             valid_commands += module.get_commands()

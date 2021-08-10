@@ -13,7 +13,8 @@ from utils.context import ApolloContext
 
 async def dagpi_process(ctx: ApolloContext, image: Any, feature: str, **kwargs) -> None:
 	"""A method that uses dagpi to process images."""
-	image = to_asset(image)
+	if isinstance(image, str):
+		image = await AssetResponse.from_url(image)
 	image = await ctx.bot.dagpi.image_process(getattr(ImageFeatures, feature)(), url=image.url, **kwargs)
 	file = discord.File(image.image, f'render.{image.format}')
 	await ctx.reply(file=file, can_delete=True)

@@ -1,6 +1,9 @@
 from inspect import Parameter
 from typing import Optional
 
+import discord
+from utils.metrics import isImage
+
 from discord.ext import commands
 
 from utils.context import ApolloContext
@@ -10,14 +13,27 @@ from utils.image import wand_process
 _old_transform = commands.Command.transform
 
 
-def _transform(self, ctx, param):
+def _transform(self, ctx: ApolloContext, param):
 	if param.annotation is Optional[ImageConverter]:
-		if ctx.message.attachments:
+		if ctx.message.reference:
+			ref = ctx.message.reference.resolved
+			if ref.embeds:
+				if ref.embeds[0].image.url != discord.Embed.Empty:
+					if isImage(ref.embeds[0].image.url):
+						param = Parameter(param.name, param.kind, default=ref.embeds[0].image.url, annotation=ImageConverter)
+				if ref.embeds[0].thumbnail.url != discord.Embed.Empty:
+					if isImage(ref.embeds[0].thumbnail.url):
+						param = Parameter(param.name, param.kind, default=ref.embeds[0].thumbnail.url, annotation=ImageConverter)
+			elif ref.attachments:
+				url = ref.attachments[0].url or ref.attachments[0].proxy_url
+				if isImage(url):
+					param = Parameter(param.name, param.kind, default=url, annotation=ImageConverter)
+		elif ctx.message.attachments:
 			param = Parameter(
-				param.name, param.kind, default=AssetResponse(ctx.message.attachments[0].url, 'image/gif'), annotation=ImageConverter)
+				param.name, param.kind, default=ctx.message.attachments[0].url, annotation=ImageConverter)
 		else:
 			param = Parameter(
-				param.name, param.kind, default=AssetResponse(ctx.author.avatar.url, 'image/gif'), annotation=ImageConverter)
+				param.name, param.kind, default=ctx.author.avatar.url, annotation=ImageConverter)
 
 	return _old_transform(self, ctx, param)
 
