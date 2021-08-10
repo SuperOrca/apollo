@@ -30,15 +30,9 @@ async def url_to_bytes(ctx, url) -> BytesIO:
 	return blob
 
 
-def to_asset(image: Any) -> AssetResponse:
-	if isinstance(image, AssetResponse):
-		return image
-	else:
-		return AssetResponse(str(image), 'image/gif')
-
-
 async def wand_process(ctx: ApolloContext, image: Any, operation) -> None:
-	image = to_asset(image)
+	if isinstance(image, str):
+		image = await AssetResponse.from_url(image)
 	blob = await url_to_bytes(ctx, image.url)
 	if image.is_animated():
 		_format = 'gif'
