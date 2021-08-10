@@ -49,13 +49,9 @@ class Image(commands.Cog):
 	async def _swirl(self, ctx: commands.Context, image: Optional[ImageConverter]):
 		await wand_process(ctx, image, lambda frame: frame.swirl(degree=100))
 
-	@commands.command(name='blur', description="Blur an image.", usage="[image]")
-	async def _blur(self, ctx: commands.Context, image: Optional[ImageConverter]):
-		await wand_process(ctx, image, lambda frame: frame.blur(sigma=5))
-
-	@commands.command(name='sharpen', description="Sharpen an image.", usage="[image]")
-	async def _sharpen(self, ctx: commands.Context, image: Optional[ImageConverter]):
-		await wand_process(ctx, image, lambda frame: frame.sharpen(sigma=5))
+	@commands.command(name='invert', description="Invert an image.", usage="[image]")
+	async def _invert(self, ctx: commands.Context, image: Optional[ImageConverter]):
+		await wand_process(ctx, image, lambda frame: frame.negate())
 
 	# @commands.command(name='eigishf', descripton="Eigishf meme.", usage="[image]")
 	# async def _eigishf(self, ctx: ApolloContext, image: Optional[ImageConverter]):
