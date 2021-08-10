@@ -86,11 +86,6 @@ class Dagpi(commands.Cog):
 					  image: Optional[ImageConverter]) -> None:
 		await dagpi_process(ctx, image, "wasted")
 
-	@commands.command(name='invert', description="Shows the image as inverted.", usage="[image]")
-	async def _invert(self, ctx: ApolloContext,
-					  image: Optional[ImageConverter]) -> None:
-		await dagpi_process(ctx, image, "invert")
-
 	@commands.command(name='sobel', description="Shows the image as sobel.", usage="[image]")
 	async def _sobel(self, ctx: ApolloContext,
 					 image: Optional[ImageConverter]) -> None:
