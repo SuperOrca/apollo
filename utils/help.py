@@ -17,7 +17,8 @@ class ApolloHelp(commands.HelpCommand):
         modules = list(mapping.keys())
         valid_commands = []
         for module in modules:
-            valid_commands += module.get_commands()
+            if module:
+                valid_commands += module.get_commands()
         embed = Embed(title="Apollo Help", description=f"""
 Total Commands: `{len(valid_commands)}`
 ```diff
