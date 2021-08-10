@@ -29,7 +29,7 @@ Total Commands: `{len(valid_commands)}`
 ```
 `{prefix}invite` | `{prefix}info`
 """)
-        modules = (f"- `{module.__class__.__name__}`" for module in modules if module)
+        modules = [f"- `{module.__class__.__name__}`" for module in modules if module]
         embed.add_field(
             name=f":gear: Modules [{len(modules)}]",
             value='\n'.join(modules),
