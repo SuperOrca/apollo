@@ -47,6 +47,6 @@ async def wand_process(ctx: ApolloContext, image: Any, operation) -> None:
 	else:
 		_format = 'png'
 		with Wand(blob=blob) as new:
-			await ctx.bot.loop(None, operation, new)
-			buffer = new.make_blob.run_in_executor(format=_format)
+			await ctx.bot.loop.run_in_executor(None, operation, new)
+			buffer = new.make_blob(format=_format)
 	await ctx.reply(file=discord.File(BytesIO(buffer), f'render.{_format}'), can_delete=True)
