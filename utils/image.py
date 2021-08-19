@@ -41,12 +41,12 @@ async def wand_process(ctx: ApolloContext, image: Any, operation) -> None:
 			if len(new.sequence) > 60:
 				raise commands.UserInputError("Too many frames.")
 			for i, frame in enumerate(new.sequence):
-				await ctx.bot.loop(None, operation, frame)
+				await ctx.bot.loop.run_in_executor(None, operation, frame)
 				new.sequence[i] = frame
 			buffer = new.make_blob(format=_format)
 	else:
 		_format = 'png'
 		with Wand(blob=blob) as new:
 			await ctx.bot.loop(None, operation, new)
-			buffer = new.make_blob(format=_format)
+			buffer = new.make_blob.run_in_executor(format=_format)
 	await ctx.reply(file=discord.File(BytesIO(buffer), f'render.{_format}'), can_delete=True)
