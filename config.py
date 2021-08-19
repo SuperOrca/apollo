@@ -7,7 +7,7 @@ TOKEN = "ODQ3NTY2NTM5NjA3NzY5MDg5.YK_72g.g4YzW2p8vDdMQ-bNxdeTctZNuTk"
 DAGPI = "MTYyMjkxOTE5Mw.DX0xYiXv3Et6R1LgoaTNS6iXQJ8PPecM.0b8cc770636b2e1a"
 PREFIX = 'a!'
 OWNER_IDS = (331179093447933963,)
-COLOR = 0xf2c500
+COLOR = 0xc2a6e7
 
 DESCRIPTION = """
 An open-source general-use discord.py bot.
