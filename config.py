@@ -3,19 +3,18 @@ import discord
 
 VIEW_TIMEOUT = 180
 
-TOKEN = "ODQ3NTY2NTM5NjA3NzY5MDg5.YK_72g.g4YzW2p8vDdMQ-bNxdeTctZNuTk"
-DAGPI = "MTYyMjkxOTE5Mw.DX0xYiXv3Et6R1LgoaTNS6iXQJ8PPecM.0b8cc770636b2e1a"
-PREFIX = 'a!'
-OWNER_IDS = (331179093447933963,)
-COLOR = 0xc2a6e7
+TOKEN = ""
+DAGPI = ""
+PREFIX = ''
+OWNER_IDS = ()
+COLOR = 
 
 DESCRIPTION = """
 An open-source general-use discord.py bot.
 """
 
-NEWS_TITLE = ":newspaper: August 5, 2021"
+NEWS_TITLE = ""
 NEWS_VALUE = """
-aura is sussy baka
 """
 
 INTENTS = discord.Intents(
